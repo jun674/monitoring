@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초거대 제조 AI 통합 플랫폼 (Digital Showroom)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        /* 카드 등장 애니메이션 */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-anim { animation: slideUp 0.4s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased overflow-hidden flex flex-col h-screen">
+
+    <header class="bg-slate-900 border-b border-slate-800 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="filterCards('ALL')">
+                <div class="w-8 h-8 bg-sky-600 rounded flex items-center justify-center font-bold text-white shadow-lg shadow-sky-500/30">AI</div>
+                <span class="text-xl font-bold text-white">Hyper-Scale <span class="text-sky-400">ManuAI</span></span>
+            </div>
+            
+            <nav class="hidden md:flex space-x-1">
+                <button onclick="filterCards('ALL')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-bold border-b-2 border-transparent hover:text-sky-400 transition-all text-sky-400 border-sky-500">ALL</button>
+                <button onclick="filterCards('DATA')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all">Data</button>
+                <button onclick="filterCards('AI')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all">AI</button>
+                <button onclick="filterCards('INFRA')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all">Infra</button>
+                <button onclick="filterCards('NETWORK')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all">Network</button>
+                <button onclick="filterCards('ORG')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all">Org</button>
+                <button onclick="filterCards('SERVICE')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all">Service</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="bg-slate-800 border-b border-slate-700 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center">
+            <span class="text-xs font-bold text-slate-500 mr-4 uppercase tracking-wider border-r border-slate-600 pr-4 h-full">Participating Teams</span>
+            <div id="company-list" class="flex flex-wrap gap-2">
+                </div>
+        </div>
+    </div>
+
+    <main class="flex-1 overflow-y-auto p-6 bg-slate-900">
+        <div class="max-w-7xl mx-auto pb-20">
+            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+        </div>
+    </main>
+    
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center">
+         <p class="text-slate-600 text-xs">© 2026 Smart Green Industrial Complex AI Project. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const companies = [
+            // DATA (5)
+            { type: 'DATA', name: '경남대학교', role: 'Standardization', desc: 'AAS 기반 이기종 설비 데이터 표준 모델링', icon: '🧩', color: 'from-blue-600 to-blue-800' },
+            { type: 'DATA', name: '마크베이스', role: 'High-Speed DB', desc: '초당 100만 건 데이터 처리 성능 확보', icon: '⚡', color: 'from-blue-600 to-blue-800' },
+            { type: 'DATA', name: '아미크', role: 'Legacy Connect', desc: '기존 ERP 데이터 연동 파이프라인', icon: '⚙️', color: 'from-blue-600 to-blue-800' },
+            { type: 'DATA', name: '네스트필드', role: 'Interoperability', desc: '이종 시스템 간 데이터 상호운용성', icon: '🔄', color: 'from-blue-600 to-blue-800' },
+            { type: 'DATA', name: 'KETI', role: 'AIoT Edge', desc: '현장 설비 부착형 지능형 엣지 개발', icon: '📟', color: 'from-blue-600 to-blue-800' },
+            // AI (2)
+            { type: 'AI', name: 'KAIST', role: 'Hyperscale AI', desc: '제조 특화 LLM 모델 개발 및 질의응답', icon: '🧠', color: 'from-purple-600 to-purple-800' },
+            { type: 'AI', name: '넥스트스튜디오', role: 'ESG AI', desc: '탄소 배출량 예측 및 저감 관리 모델', icon: '🌿', color: 'from-purple-600 to-purple-800' },
+            // INFRA (1)
+            { type: 'INFRA', name: '메가존클라우드', role: 'Cloud Infra', desc: '하이브리드 AI 클라우드 센터 구축', icon: '☁️', color: 'from-slate-500 to-slate-700' },
+            // NETWORK (1)
+            { type: 'NETWORK', name: '라임씨에스아이', role: '5G Network', desc: '공장 내 음영 구역 없는 5G 특화망', icon: '📶', color: 'from-green-600 to-green-800' },
+            // ORG (1)
+            { type: 'ORG', name: 'KTL', role: 'Verification', desc: 'AI 모델 및 데이터 품질 신뢰성 검증', icon: '📜', color: 'from-orange-500 to-orange-700' },
+            // SERVICE (4)
+            { type: 'SERVICE', name: '소르테크', role: 'Vision AI', desc: '육안 검사 대비 속도 2배 향상 불량 검출', icon: '📸', color: 'from-pink-600 to-pink-800' },
+            { type: 'SERVICE', name: 'DX솔루션즈', role: 'Traceability', desc: '불량 발생 원인 자동 역추적 시스템', icon: '🕵️', color: 'from-pink-600 to-pink-800' },
+            { type: 'SERVICE', name: '에스디테크', role: 'Sensing', desc: '설비 진동/온도 실시간 데이터 수집', icon: '📈', color: 'from-pink-600 to-pink-800' },
+            { type: 'SERVICE', name: '메타아이스퀘어', role: 'Monitoring', desc: '제조 공정 이상 징후 실시간 관제', icon: '🚨', color: 'from-pink-600 to-pink-800' }
+        ];
+
+        function filterCards(filterType) {
+            const grid = document.getElementById('card-grid');
+            const listBar = document.getElementById('company-list');
+            
+            // 1. 데이터 필터링
+            const filtered = filterType === 'ALL' ? companies : companies.filter(c => c.type === filterType);
+
+            // 2. 상단 네비게이션 스타일 업데이트
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                const type = btn.innerText; // 버튼 텍스트 가져오기
+                if (type === filterType || (filterType === 'ALL' && type === 'ALL')) {
+                    btn.className = "nav-item px-4 py-2 rounded-t-lg text-sm font-bold border-b-2 border-sky-500 text-sky-400 bg-slate-800 transition-all";
+                } else {
+                    btn.className = "nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all";
+                }
+            });
+
+            // 3. 업체 명단 바(Bar) 업데이트 (여기가 추가된 기능입니다!)
+            listBar.innerHTML = '';
+            filtered.forEach(item => {
+                // 작은 이름표(Chip) 생성
+                const chip = document.createElement('div');
+                chip.className = `px-3 py-1 rounded-full text-xs font-bold bg-slate-700 text-slate-200 border border-slate-600 flex items-center gap-2 animate-fade-in`;
+                chip.innerHTML = `<span class="text-sky-400">${item.icon}</span> ${item.name}`;
+                listBar.appendChild(chip);
+            });
+
+            // 4. 카드 그리드 업데이트
+            grid.innerHTML = '';
+            filtered.forEach((item, index) => {
+                const card = `
+                    <div class="card-anim bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-sky-500/50 hover:shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all duration-300 group" style="animation-delay: ${index * 50}ms">
+                        <div class="h-40 w-full bg-gradient-to-br ${item.color} relative flex items-center justify-center overflow-hidden">
+                            <div class="absolute inset-0 bg-slate-900/40"></div>
+                            <span class="relative z-10 text-5xl group-hover:scale-110 transition-transform duration-300 drop-shadow-lg">${item.icon}</span>
+                            <div class="absolute bottom-2 right-3 text-[10px] text-white/60 bg-black/20 px-2 py-0.5 rounded backdrop-blur">Image Area</div>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-lg font-bold text-white group-hover:text-sky-400 transition-colors">${item.name}</h3>
+                                <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-900 text-slate-400 border border-slate-700">${item.type}</span>
+                            </div>
+                            <p class="text-sky-400 text-xs font-bold mb-2 uppercase tracking-wide">${item.role}</p>
+                            <p class="text-slate-400 text-sm leading-relaxed">${item.desc}</p>
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', card);
+            });
+        }
+
+        // 초기 실행
+        filterCards('ALL');
+    </script>
+</body>
+</html>
