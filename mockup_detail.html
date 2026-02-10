@@ -131,7 +131,7 @@
             const typeMap = { 'DATA': 'Data', 'AI': 'AI', 'INFRA': 'Infra', 'NETWORK': 'Network', 'ORG': 'Org', 'SERVICE': 'Service' };
             const typeName = typeMap[activeType] || 'Related';
 
-            let sidebarHtml = `<h3 class="text-base font-bold text-cyan-300 mb-4 tracking-wider uppercase">${typeName} 메뉴</h3>`;
+            let sidebarHtml = `<h3 class="text-base font-bold text-cyan-300 mb-4 tracking-wider uppercase">${typeName} </h3>`;
             sidebarHtml += '<ul class="space-y-1">';
             relatedCompanies.forEach(c => {
                 const isActive = c.id === activeCompanyId;
