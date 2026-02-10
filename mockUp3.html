@@ -3,263 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>초거대제조AI - 통합 데이터 흐름 대시보드 v2</title>
+    <title>초거대제조AI - 통합 데이터 흐름 대시보드</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Pretendard', sans-serif; background-color: #0f172a; }
+        body { font-family: 'Pretendard', sans-serif; background-color: #020617; color: #e2e8f0; }
         .font-tech { font-family: 'Rajdhani', sans-serif; }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; }
-        .status-normal { background-color: #22c55e; box-shadow: 0 0 6px #22c55e; }
-        .status-warning { background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
-        .status-danger { background-color: #ef4444; box-shadow: 0 0 6px #ef4444; }
         
-        @keyframes pulse-ring {
-            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        /* Glassmorphism Panel */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-        .animate-pulse-ring { animation: pulse-ring 2s infinite; }
 
-        .glass-bg {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .modal-enter { animation: fadeIn 0.3s ease-out; }
-        .modal-content-enter { animation: slideUp 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* Status Dots */
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .status-normal { background-color: #22c55e; box-shadow: 0 0 8px rgba(34, 197, 94, 0.5); }
+        .status-warning { background-color: #facc15; box-shadow: 0 0 8px rgba(250, 204, 21, 0.5); }
+        .status-danger { background-color: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
     </style>
 </head>
-<body class="text-slate-200 h-screen flex flex-col">
+<body class="h-screen flex flex-col overflow-hidden">
 
-    <header class="glass-bg z-20 sticky top-0">
-        <div class="max-w-screen-xl mx-auto px-4 h-16 flex items-center justify-between">
+    <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 z-30 flex-none h-16">
+        <div class="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-sky-600 rounded flex items-center justify-center font-bold text-white shadow-lg shadow-sky-500/30">AI</div>
-                <h1 class="text-xl font-bold text-white">통합 데이터 흐름 대시보드 V2</h1>
+                <div class="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center font-bold text-white shadow-lg">AI</div>
+                <h1 class="text-xl font-bold text-white">통합 데이터 흐름 대시보드</h1>
             </div>
-             <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2 text-xs">
-                    <div class="status-dot status-normal animate-pulse-ring"></div>
-                    <span>시스템 상태: <span class="font-bold text-green-400">정상</span></span>
+            <div class="flex items-center gap-4 text-xs font-medium text-slate-400">
+                <div class="flex items-center gap-2">
+                    <span class="status-dot status-normal animate-pulse"></span>
+                    <span>System Online</span>
                 </div>
+                <div class="h-4 w-px bg-slate-700"></div>
+                <span class="font-mono" id="clock"></span>
             </div>
         </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto p-6">
-        <div class="max-w-screen-xl mx-auto">
+    <main class="flex-1 overflow-y-auto custom-scroll p-6">
+        <div class="max-w-[1600px] mx-auto space-y-8 pb-10">
             
-            <!-- (A) 글로벌 상태 패널 -->
-            <section id="global-status-panel" class="mb-6">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Global Status Pipeline</h2>
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-slate-700 rounded-lg overflow-hidden shadow-lg">
-                    <div class="p-4 bg-slate-800 text-center">
-                        <p class="text-xs text-slate-400">① 수집</p>
-                        <p class="text-lg font-bold text-green-400">정상</p>
-                    </div>
-                    <div class="p-4 bg-slate-800 text-center">
-                        <p class="text-xs text-slate-400">② 전송</p>
-                        <p class="text-lg font-bold text-green-400">정상</p>
-                    </div>
-                    <div class="p-4 bg-slate-800 text-center">
-                        <p class="text-xs text-slate-400">③ 플랫폼</p>
-                        <p class="text-lg font-bold text-yellow-400">경고</p>
-                    </div>
-                    <div class="p-4 bg-slate-800 text-center">
-                        <p class="text-xs text-slate-400">④ 분석</p>
-                        <p class="text-lg font-bold text-green-400">정상</p>
-                    </div>
-                    <div class="p-4 bg-slate-800 text-center">
-                        <p class="text-xs text-slate-400">⑤ 서비스</p>
-                        <p class="text-lg font-bold text-red-400">위험</p>
-                    </div>
-                     <div class="p-4 bg-slate-800 text-center">
-                        <p class="text-xs text-slate-400">⑥ 총괄</p>
-                        <p class="text-lg font-bold text-green-400">정상</p>
-                    </div>
+            <section>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1 h-6 bg-blue-500 rounded-full"></div>
+                    <h2 class="text-lg font-bold text-blue-400">Step 1. 데이터 수집</h2>
+                    <div class="h-px flex-1 bg-slate-800"></div>
                 </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="stage-1-container"></div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                    <h2 class="text-lg font-bold text-emerald-400">Step 2. 데이터 전송</h2>
+                    <div class="h-px flex-1 bg-slate-800"></div>
+                </div>
+                <div class="grid grid-cols-1 gap-4" id="stage-2-container"></div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                    <h2 class="text-lg font-bold text-indigo-400">Step 3. 플랫폼</h2>
+                    <div class="h-px flex-1 bg-slate-800"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="stage-3-container"></div>
             </section>
             
-                        <div class="space-y-6">
-            
-                            <!-- STAGE 1-3 -->
-                            <div id="stage-1" class="glass-bg p-5 rounded-lg">
-                                <h3 class="font-tech text-xl font-bold text-blue-300 mb-4 border-b border-slate-700 pb-2">①-③ 데이터 수집, 전송 & 플랫폼</h3>
-                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                    <!-- Cards will be injected here -->
-                                </div>
-                            </div>
-            
-                            <!-- STAGE 4 -->
-                             <div id="stage-4" class="glass-bg p-5 rounded-lg">
-                                <h3 class="font-tech text-xl font-bold text-purple-300 mb-4 border-b border-slate-700 pb-2">④ AI 분석</h3>
-                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                    <!-- Cards will be injected here -->
-                                </div>
-                            </div>
-            
-                            <!-- STAGE 5 -->
-                             <div id="stage-5" class="glass-bg p-5 rounded-lg">
-                                <h3 class="font-tech text-xl font-bold text-rose-300 mb-4 border-b border-slate-700 pb-2">⑤ 응용 서비스</h3>
-                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                   <!-- Cards will be injected here -->
-                                </div>
-                            </div>
-                            
-                             <!-- STAGE 6 -->
-                             <div id="stage-6" class="glass-bg p-5 rounded-lg">
-                                <h3 class="font-tech text-xl font-bold text-slate-300 mb-4 border-b border-slate-700 pb-2">⑥ 총괄 및 검증</h3>
-                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                   <!-- Cards will be injected here -->
-                                </div>
-                            </div>
-            
-                        </div>
+            <section>
+               <div class="flex items-center gap-3 mb-4">
+                   <div class="w-1 h-6 bg-purple-500 rounded-full"></div>
+                   <h2 class="text-lg font-bold text-purple-400">Step 4. AI 분석</h2>
+                   <div class="h-px flex-1 bg-slate-800"></div>
+               </div>
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="stage-4-container"></div>
+           </section>
 
+           <section>
+              <div class="flex items-center gap-3 mb-4">
+                  <div class="w-1 h-6 bg-rose-500 rounded-full"></div>
+                  <h2 class="text-lg font-bold text-rose-400">Step 5. 응용 서비스</h2>
+                  <div class="h-px flex-1 bg-slate-800"></div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="stage-5-container"></div>
+          </section>
+
+           <section>
+              <div class="flex items-center gap-3 mb-4">
+                  <div class="w-1 h-6 bg-slate-500 rounded-full"></div>
+                  <h2 class="text-lg font-bold text-slate-400">Step 6. 총괄 및 검증</h2>
+                  <div class="h-px flex-1 bg-slate-800"></div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="stage-6-container"></div>
+          </section>
         </div>
     </main>
-    
-    <!-- (C) 인터랙티브 상세 정보 모달 -->
-    <div id="detail-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden modal-enter">
-        <div class="glass-bg rounded-xl w-full max-w-2xl max-h-[90vh] flex flex-col modal-content-enter">
-            <header class="p-4 border-b border-slate-700 flex justify-between items-center">
-                <div>
-                    <h2 id="modal-title" class="text-xl font-bold">Component Details</h2>
-                    <p id="modal-subtitle" class="text-sm text-slate-400">Real-time status and details</p>
+
+    <div id="info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0">
+        <div class="bg-slate-900 border border-slate-700 rounded-xl w-[95%] h-[90%] max-w-6xl flex flex-col shadow-2xl transform scale-95 transition-transform duration-300 overflow-hidden">
+            
+            <div class="flex justify-between items-center p-4 border-b border-slate-700 bg-slate-800 shrink-0">
+                <div class="flex items-center gap-3">
+                    <h3 id="modal-title" class="text-xl font-bold text-white">업체명</h3>
+                    <span id="modal-badge" class="px-2 py-0.5 rounded text-xs font-bold bg-slate-700 text-slate-300">Role</span>
                 </div>
-                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-700/50 hover:bg-slate-600 transition-colors"><i class="fas fa-times"></i></button>
-            </header>
-            <main id="modal-body" class="p-6 flex-1 overflow-y-auto">
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <p class="text-sm text-slate-400">현재 상태</p>
-                        <p id="modal-status" class="text-2xl font-bold">정상</p>
+                <div class="flex items-center gap-3">
+                    <a id="modal-external-link" href="#" target="_blank" class="text-xs flex items-center gap-1 text-sky-400 hover:text-sky-300 border border-sky-900 bg-sky-900/30 px-3 py-1.5 rounded transition-colors">
+                        <i class="fas fa-external-link-alt"></i> 새 창으로 열기
+                    </a>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-300 transition-colors flex items-center justify-center">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 bg-slate-900 border-b border-slate-700 shrink-0">
+                <div class="flex flex-col md:flex-row gap-6 items-start">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <h4 class="text-sm font-bold text-slate-400">솔루션 개요</h4>
+                            <div class="flex items-center gap-1.5 bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">
+                                <span id="modal-status-dot" class="w-2 h-2 rounded-full bg-green-500"></span>
+                                <span id="modal-status-text" class="text-xs font-bold text-green-400">정상</span>
+                            </div>
+                        </div>
+                        <p id="modal-desc" class="text-slate-200 text-sm leading-relaxed bg-slate-800/50 p-4 rounded border border-slate-700/50">
+                            여기에 회사 설명이 들어갑니다.
+                        </p>
                     </div>
-                     <div>
-                        <p class="text-sm text-slate-400">핵심 지표</p>
-                        <p id="modal-kpi" class="text-2xl font-bold font-tech">Value</p>
+                    <div class="min-w-[150px] bg-slate-800/30 p-4 rounded border border-slate-700/50 hidden md:block">
+                        <p class="text-xs text-slate-500 mb-1">실시간 데이터 처리량</p>
+                        <p id="modal-kpi-value" class="font-tech text-2xl font-bold text-sky-400">0</p>
                     </div>
                 </div>
-                <div>
-                    <p class="text-sm font-bold text-slate-300 mb-2">시간대별 성능 추이</p>
-                    <div class="bg-slate-900/50 p-4 rounded-lg"><canvas id="modal-chart"></canvas></div>
+            </div>
+
+            <div class="flex-1 bg-black relative w-full">
+                <div class="absolute inset-0 flex items-center justify-center text-slate-600 z-0">
+                    <div class="text-center">
+                        <i class="fas fa-spinner fa-spin text-3xl mb-2"></i>
+                        <p class="text-sm">웹사이트 로딩 중...</p>
+                    </div>
                 </div>
-            </main>
+                <iframe id="company-iframe" src="" class="absolute inset-[5px] w-[calc(100%-10px)] h-[calc(100%-10px)] rounded bg-white z-10" frameborder="0"></iframe>
+            </div>
+
         </div>
     </div>
 
-
     <script>
+        // Data populated
         const companies = [
-            { stage: 1, id: 'markbase', name: '마크베이스', role: 'OT 데이터', status: 'normal', kpi: '1.21M rec/s' },
-            { stage: 1, id: 'amiqu', name: '아미크', role: 'IT 데이터', status: 'normal', kpi: '99.8%' },
-            { stage: 1, id: 'keti', name: 'KETI', role: 'AIoT 엣지', status: 'normal', kpi: '24 Devices' },
-            { stage: 2, id: 'limecsi', name: '라임씨에스아이', role: '5G 특화망', status: 'normal', kpi: '1.5ms' },
-            { stage: 3, id: 'megazone', name: '메가존클라우드', role: '인프라', status: 'normal', kpi: '99.98%' },
-            { stage: 3, id: 'kyungnam', name: '경남대학교', role: 'AAS 표준화', status: 'normal', kpi: '1,204 Models' },
-            { stage: 3, id: 'nestfield', name: '네스트필드', role: '인터페이스', status: 'warning', kpi: '85% API' },
-            { stage: 4, id: 'kaist', name: 'KAIST', role: '초거대 AI', status: 'normal', kpi: '92% Accuracy' },
-            { stage: 4, id: 'nextstudio', name: '넥스트스튜디오', role: 'ESG AI', status: 'normal', kpi: '-7.5%' },
-            { stage: 5, id: 'sortech', name: '소르테크', role: '품질검사', status: 'danger', kpi: '15 DPH' },
-            { stage: 5, id: 'dxsolutions', name: 'DX솔루션즈', role: '불량 역추적', status: 'normal', kpi: '3.2 min' },
-            { stage: 5, id: 'sdtech', name: '에스디테크', role: '공정품질', status: 'normal', kpi: '99.7%' },
-            { stage: 5, id: 'metaisquare', name: '메타아이스퀘어', role: '음성인식', status: 'normal', kpi: '38% CER' },
-            { stage: 6, id: 'gntp', name: '경남TP', role: '사업 총괄', status: 'normal', kpi: '85%' },
-            { stage: 6, id: 'ktl', name: 'KTL', role: '기술 검증', status: 'normal', kpi: '7/10 Pass' },
+            // Stage 1
+            { stage: 1, name: "마크베이스", role: "OT 데이터 수집", kpi: "1.21M rec/s", status: "normal", desc: "초고속 시계열 데이터베이스를 활용하여 제조 현장의 센서 데이터를 실시간으로 수집 및 저장합니다.", url: "https://www.machbase.com/" },
+            { stage: 1, name: "아미크", role: "IT 데이터 연동", kpi: "99.8% Success", status: "normal", desc: "ERP, MES 등 레거시 시스템과의 유연한 인터페이스를 통해 데이터 사일로를 제거합니다.", url: "http://www.amiqu.com/" },
+            { stage: 1, name: "KETI", role: "AIoT 엣지", kpi: "24 Devices", status: "normal", desc: "전자부품연구원의 엣지 AI 기술을 적용하여 현장에서 즉각적인 데이터 전처리를 수행합니다.", url: "https://www.keti.re.kr/" },
+            
+            // Stage 2
+            { stage: 2, name: "라임씨에스아이", role: "5G 네트워크", kpi: "1.5ms Latency", status: "normal", desc: "이음5G 기반의 특화망을 구축하여 공장 내 음영 지역 없는 초고속 통신 환경을 제공합니다.", url: "http://www.limecsi.com/" },
+
+            // Stage 3
+            { stage: 3, name: "메가존클라우드", role: "AI 인프라", kpi: "99.98% Uptime", status: "normal", desc: "AWS 기반 하이브리드 클라우드 아키텍처를 설계 및 운영하여 안정적인 서비스를 보장합니다.", url: "https://www.megazone.com/" },
+            
+            // [수정됨] 경남대학교 URL 변경
+            { stage: 3, name: "경남대학교", role: "AAS 표준화", kpi: "1,204 Models", status: "normal", desc: "자산관리쉘(AAS) 표준을 적용하여 제조 데이터의 글로벌 상호운용성을 확보합니다.", url: "https://aas-system.netlify.app/" },
+            
+            { stage: 3, name: "네스트필드", role: "인터페이스", kpi: "85% API rate", status: "warning", desc: "다양한 제조 장비와 시스템 간의 연결을 위한 미들웨어 및 API 게이트웨이를 제공합니다.", url: "http://www.nestfield.co.kr/" },
+
+            // Stage 4
+            { stage: 4, name: "KAIST", role: "LLM 분석", kpi: "92% Accuracy", status: "normal", desc: "제조 도메인 특화 거대언어모델을 통해 비정형 작업 일지 분석 및 솔루션을 제안합니다.", url: "https://www.kaist.ac.kr/" },
+            { stage: 4, name: "넥스트스튜디오", role: "ESG AI", kpi: "-7.5% CO2", status: "normal", desc: "공정 데이터를 분석하여 에너지 효율을 최적화하고 탄소 배출 저감 시나리오를 시뮬레이션합니다.", url: "http://www.next-studio.co.kr/" },
+
+            // Stage 5
+            { stage: 5, name: "소르테크", role: "AI 비전", kpi: "15 Defects/h", status: "danger", desc: "딥러닝 기반 비전 검사 시스템으로 미세 스크래치 및 불량을 자동 검출합니다.", url: "http://www.sortech.co.kr/" },
+            { stage: 5, name: "DX솔루션즈", role: "역추적", kpi: "3.2 min/case", status: "normal", desc: "제품 불량 발생 시 원자재부터 공정 조건까지의 이력을 역추적하여 근본 원인을 규명합니다.", url: "http://www.dxsolutions.co.kr/" },
+             { stage: 5, name: "에스디테크", role: "공정품질", kpi: "99.7%", status: "normal", desc: "공정 파라미터 최적화를 통한 품질 향상 솔루션", url: "#" },
+
+            // Stage 6
+            { stage: 6, name: "경남TP", role: "사업 총괄", kpi: "85% Progress", status: "normal", desc: "지역 제조 산업의 AI 전환을 위한 사업 기획, 관리 및 성과 확산을 주도합니다.", url: "https://www.gntp.or.kr/" },
+            { stage: 6, name: "KTL", role: "품질 검증", kpi: "7/10 Passed", status: "normal", desc: "AI 모델 및 시스템의 기능 안전성, 성능, 신뢰성을 국제 표준에 맞춰 시험 인증합니다.", url: "https://www.ktl.re.kr/" }
         ];
-        
+
         const statusConfig = {
-            normal: { dot: 'status-normal', text: 'text-green-400', name: '정상' },
-            warning: { dot: 'status-warning', text: 'text-yellow-400', name: '경고' },
-            danger: { dot: 'status-danger', text: 'text-red-400', name: '위험' },
+            normal: { class: 'status-normal', text: 'text-green-400', label: '정상', dotColor: 'bg-green-500' },
+            warning: { class: 'status-warning', text: 'text-yellow-400', label: '점검필요', dotColor: 'bg-yellow-500' },
+            danger: { class: 'status-danger', text: 'text-red-400', label: '위험', dotColor: 'bg-red-500' }
         };
 
-        function renderCards() {
-            companies.forEach(company => {
-                const stageContainer = document.querySelector(`#stage-${company.stage} > div`);
-                if (!stageContainer) return;
+        function renderDashboard() {
+            companies.forEach((item, index) => {
+                const container = document.getElementById(`stage-${item.stage}-container`);
+                if(!container) return;
 
-                const status = statusConfig[company.status];
+                const st = statusConfig[item.status];
                 
-                const cardHTML = `
-                    <div onclick="openModal('${company.id}')" class="bg-slate-800 p-3 rounded-lg border border-slate-700 hover:bg-slate-700 hover:border-slate-500 transition-all cursor-pointer">
-                        <div class="flex justify-between items-start">
-                             <p class="text-sm font-bold">${company.name}</p>
-                             <div class="status-dot ${status.dot} mt-1"></div>
+                const card = document.createElement('div');
+                card.className = "glass-panel p-4 rounded-xl hover:bg-slate-800/60 transition-all cursor-pointer group border border-slate-700 hover:border-slate-500";
+                card.onclick = () => openModal(index);
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="font-bold text-slate-100 group-hover:text-white transition-colors text-lg">${item.name}</h3>
+                            <p class="text-xs text-slate-400 mt-0.5">${item.role}</p>
                         </div>
-                        <p class="text-xs text-slate-400">${company.role}</p>
-                        <p class="font-tech text-lg ${status.text} mt-2">${company.kpi}</p>
+                        <span class="status-dot ${st.class} mt-1.5 ring-2 ring-slate-900"></span>
+                    </div>
+                    <div class="flex items-end justify-between border-t border-slate-700/50 pt-3 mt-1">
+                        <span class="text-[11px] text-slate-500 font-medium uppercase">Performance</span>
+                        <span class="font-tech text-xl font-bold ${st.text}">${item.kpi}</span>
                     </div>
                 `;
-                stageContainer.insertAdjacentHTML('beforeend', cardHTML);
+                container.appendChild(card);
             });
         }
-        
 
-        // (C) 인터랙티브 모달
-        const modal = document.getElementById('detail-modal');
-        let modalChart = null;
+        const modal = document.getElementById('info-modal');
+        const iframe = document.getElementById('company-iframe');
 
-        function openModal(companyId) {
-            const company = companies.find(c => c.id === companyId);
-            if (!company) return;
+        function openModal(index) {
+            const item = companies[index];
+            const st = statusConfig[item.status];
 
-            document.getElementById('modal-title').innerText = company.name;
-            document.getElementById('modal-subtitle').innerText = company.role;
+            document.getElementById('modal-title').innerText = item.name;
+            document.getElementById('modal-badge').innerText = item.role;
+            document.getElementById('modal-desc').innerText = item.desc;
+            document.getElementById('modal-kpi-value').innerText = item.kpi;
+            document.getElementById('modal-external-link').href = item.url;
             
-            const status = statusConfig[company.status];
-            const modalStatus = document.getElementById('modal-status');
-            modalStatus.innerText = status.name;
-            modalStatus.className = `text-2xl font-bold ${status.text}`;
+            const statusText = document.getElementById('modal-status-text');
+            statusText.innerText = st.label;
+            statusText.className = `text-xs font-bold ${st.text}`;
+            document.getElementById('modal-status-dot').className = `w-2 h-2 rounded-full ${st.dotColor}`;
 
-            document.getElementById('modal-kpi').innerText = company.kpi;
+            iframe.src = item.url;
 
             modal.classList.remove('hidden');
-
-            // Chart
-            const ctx = document.getElementById('modal-chart').getContext('2d');
-            if(modalChart) modalChart.destroy();
-            
-            modalChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['-60s', '-50s', '-40s', '-30s', '-20s', '-10s', 'Now'],
-                    datasets: [{
-                        label: '성능 추이',
-                        data: Array.from({length: 7}, () => Math.random() * 80 + 10),
-                        borderColor: '#38bdf8',
-                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                        fill: true,
-                        tension: 0.3,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, max: 100, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-                        x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
-                    }
-                }
-            });
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.children[0].classList.remove('scale-95');
+                modal.children[0].classList.add('scale-100');
+            }, 10);
         }
 
         function closeModal() {
-            modal.classList.add('hidden');
+            modal.classList.add('opacity-0');
+            modal.children[0].classList.remove('scale-100');
+            modal.children[0].classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                iframe.src = "";
+            }, 300);
         }
 
-        // 초기화
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCards();
-        });
-    </script>
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toISOString().replace('T', ' ').substring(0, 19);
+        }, 1000);
 
+        renderDashboard();
+    </script>
 </body>
 </html>

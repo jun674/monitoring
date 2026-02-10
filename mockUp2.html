@@ -3,265 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>초거대제조AI - 통합 데이터 흐름 대시보드</title>
+    <title>초거대제조AI - 통합 데이터 흐름 대시보드 (Light Admin)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=Chakra+Petch:wght@500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Pretendard', 'sans-serif'],
+                        tech: ['Chakra Petch', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 800: '#1e293b', 900: '#0f172a' }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body {
-            font-family: 'Pretendard', sans-serif;
-            background-color: #020617; /* slate-950 */
+        /* 밝은 배경에 은은한 그리드 패턴 */
+        body { 
+            background-color: #f8fafc; 
+            color: #1e293b;
+            background-image: 
+                linear-gradient(rgba(203, 213, 225, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(203, 213, 225, 0.4) 1px, transparent 1px);
+            background-size: 40px 40px;
         }
-        .font-tech { font-family: 'Rajdhani', sans-serif; }
+
+        /* Light Modern Card */
+        .modern-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modern-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #cbd5e1;
+        }
         
-        /* 수정됨: 고정 너비 제거 및 높이 100% 설정 */
-        .pipeline-stage {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+        /* 상태별 상단 보더 포인트 */
+        .card-status-normal { border-top: 4px solid #3b82f6; } /* Blue */
+        .card-status-warning { border-top: 4px solid #eab308; } /* Yellow */
+        .card-status-danger { border-top: 4px solid #ef4444; } /* Red */
+
+        /* Sidebar Active State */
+        .nav-item { border-left: 3px solid transparent; }
+        .nav-item.active {
+            background: #eff6ff; /* blue-50 */
+            border-left-color: #3b82f6; /* blue-500 */
+            color: #1d4ed8; /* blue-700 */
+            font-weight: 600;
+        }
+        .nav-item:hover:not(.active) {
+            background: #f1f5f9; /* slate-100 */
+            color: #334155;
         }
 
-        .status-dot {
-            width: 6px; /* 사이즈 약간 축소 */
-            height: 6px;
-            border-radius: 50%;
-            flex-shrink: 0;
+        /* Scrollbar (Light) */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Modal Animation */
+        .modal-enter { animation: modalFadeIn 0.3s forwards; }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
         }
-        .status-normal { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; }
-        .status-warning { background-color: #facc15; box-shadow: 0 0 5px #facc15; }
-        .status-danger { background-color: #ef4444; box-shadow: 0 0 5px #ef4444; }
-
-        @keyframes pulse-normal { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .animate-pulse-normal { animation: pulse-normal 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-
-        @keyframes pulse-danger { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } }
-        .animate-pulse-danger { animation: pulse-danger 1s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        
-        /* 스크롤바 관련 스타일 제거 (더 이상 스크롤 필요 없음) */
     </style>
 </head>
-<body class="text-slate-200 h-screen flex flex-col overflow-hidden">
+<body class="h-screen flex overflow-hidden">
 
-    <header class="bg-slate-900/50 backdrop-blur-sm border-b border-slate-800 z-20 shrink-0">
-        <div class="max-w-screen-2xl mx-auto px-6 h-14 flex items-center justify-between">
+    <aside class="w-64 bg-white/90 backdrop-blur-xl border-r border-slate-200 flex flex-col z-20 shadow-lg">
+        <div class="h-20 flex items-center px-6 border-b border-slate-100">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-sky-600 rounded flex items-center justify-center font-bold text-white shadow-lg shadow-sky-500/30">AI</div>
-                <h1 class="text-lg font-bold text-white">통합 데이터 흐름 대시보드</h1>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2 text-xs">
-                    <div class="status-dot status-normal animate-pulse-normal"></div>
-                    <span>시스템 상태: <span class="font-bold text-green-400">정상</span></span>
+                <div class="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-md shadow-blue-200">
+                    <i class="fas fa-cube"></i>
                 </div>
-                <div class="w-px h-6 bg-slate-700"></div>
-                <span class="text-xs text-slate-400 font-medium">Last Updated: <span class="font-mono">2026-02-09 11:24:00</span></span>
+                <div>
+                    <h1 class="text-sm font-bold text-slate-800 tracking-wide">AI DATA</h1>
+                    <p class="text-[10px] text-slate-500 font-tech font-medium">PIPELINE DASHBOARD</p>
+                </div>
             </div>
         </div>
-    </header>
 
-    <main class="flex-1 p-4 min-h-0">
-        <div id="pipeline-container" class="grid grid-cols-6 gap-3 h-full w-full">
+        <nav class="flex-1 overflow-y-auto py-6 space-y-1">
+            <a href="#stage-1" class="nav-item active flex items-center gap-3 px-6 py-3 text-sm text-slate-500 transition-colors">
+                <i class="fas fa-database w-5 text-center"></i> <span>01. 데이터 수집</span>
+            </a>
+            <a href="#stage-2" class="nav-item flex items-center gap-3 px-6 py-3 text-sm text-slate-500 transition-colors">
+                <i class="fas fa-share-nodes w-5 text-center"></i> <span>02. 데이터 전송</span>
+            </a>
+            <a href="#stage-3" class="nav-item flex items-center gap-3 px-6 py-3 text-sm text-slate-500 transition-colors">
+                <i class="fas fa-layer-group w-5 text-center"></i> <span>03. 플랫폼</span>
+            </a>
+            <a href="#stage-4" class="nav-item flex items-center gap-3 px-6 py-3 text-sm text-slate-500 transition-colors">
+                <i class="fas fa-brain w-5 text-center"></i> <span>04. AI 분석</span>
+            </a>
+            <a href="#stage-5" class="nav-item flex items-center gap-3 px-6 py-3 text-sm text-slate-500 transition-colors">
+                <i class="fas fa-rocket w-5 text-center"></i> <span>05. 응용 서비스</span>
+            </a>
+            <a href="#stage-6" class="nav-item flex items-center gap-3 px-6 py-3 text-sm text-slate-500 transition-colors">
+                <i class="fas fa-check-double w-5 text-center"></i> <span>06. 총괄 및 검증</span>
+            </a>
+        </nav>
 
-            <div class="pipeline-stage gap-3">
-                <div class="text-center shrink-0">
-                    <div class="inline-block px-3 py-1 bg-blue-900/50 border border-blue-700 rounded-full w-full">
-                        <h2 class="font-tech text-lg font-bold text-blue-300 tracking-wider truncate">① 수집</h2>
-                    </div>
-                </div>
-                <div class="flex-1 flex flex-col gap-2 overflow-y-auto pr-1 custom-scroll">
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-blue-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <h3 class="font-bold text-slate-100 text-sm truncate">마크베이스</h3>
-                                <div class="status-dot status-normal"></div>
-                            </div>
-                            <p class="text-[11px] text-slate-400 leading-tight">설비 PLC/센서 실시간</p>
-                        </div>
-                        <div class="bg-slate-900/50 p-2 rounded mt-2">
-                            <p class="font-tech text-lg text-sky-400">1.21M <span class="text-[10px] text-slate-400">rec/s</span></p>
-                        </div>
-                    </div>
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-blue-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-slate-100 text-sm truncate">아미크</h3>
-                            <p class="text-[11px] text-slate-400 leading-tight">ERP/MES 연동</p>
-                        </div>
-                        <div class="bg-slate-900/50 p-2 rounded mt-2">
-                            <p class="font-tech text-lg text-sky-400">99.8% <span class="text-[10px] text-slate-400">성공</span></p>
-                        </div>
-                    </div>
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-blue-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-slate-100 text-sm truncate">KETI</h3>
-                            <p class="text-[11px] text-slate-400 leading-tight">AIoT 엣지 처리</p>
-                        </div>
-                        <div class="bg-slate-900/50 p-2 rounded mt-2">
-                            <p class="font-tech text-lg text-sky-400">24 <span class="text-[10px] text-slate-400">Dev</span></p>
-                        </div>
-                    </div>
-                </div>
+        <div class="p-6 border-t border-slate-100 bg-slate-50">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-500">System Status</span>
+                <span class="flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
             </div>
-
-            <div class="pipeline-stage gap-3">
-                 <div class="text-center shrink-0">
-                    <div class="inline-block px-3 py-1 bg-emerald-900/50 border border-emerald-700 rounded-full w-full">
-                        <h2 class="font-tech text-lg font-bold text-emerald-300 tracking-wider truncate">② 전송</h2>
-                    </div>
-                </div>
-                 <div class="flex-1 flex flex-col gap-2 h-full">
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-emerald-500 transition-all cursor-pointer h-full flex flex-col">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-slate-100 text-sm truncate">라임씨에스아이</h3>
-                            <div class="status-dot status-normal"></div>
-                        </div>
-                        <p class="text-[11px] text-slate-400 mb-auto">5G 특화망 초저지연 네트워크</p>
-                        
-                        <div class="flex-1"></div>
-
-                        <div class="bg-slate-900/50 p-2 rounded flex flex-col gap-2">
-                            <div class="flex justify-between items-end">
-                                <span class="text-[10px] text-slate-500">지연</span>
-                                <span class="font-tech text-lg text-sky-400">1.5 <span class="text-[10px]">ms</span></span>
-                            </div>
-                            <div class="w-full h-px bg-slate-700"></div>
-                            <div class="flex justify-between items-end">
-                                <span class="text-[10px] text-slate-500">전송</span>
-                                <span class="font-tech text-lg text-sky-400">8.2 <span class="text-[10px]">TB</span></span>
-                            </div>
-                        </div>
-                    </div>
-                 </div>
+            <p class="text-[10px] text-slate-400 font-mono mb-2" id="clock">Loading...</p>
+            <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-blue-500 h-1.5 rounded-full" style="width: 98%"></div>
             </div>
+        </div>
+    </aside>
 
-            <div class="pipeline-stage gap-3">
-                <div class="text-center shrink-0">
-                    <div class="inline-block px-3 py-1 bg-indigo-900/50 border border-indigo-700 rounded-full w-full">
-                        <h2 class="font-tech text-lg font-bold text-indigo-300 tracking-wider truncate">③ 플랫폼</h2>
-                    </div>
-                </div>
-                <div class="flex-1 flex flex-col gap-2 overflow-y-auto pr-1">
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-indigo-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-slate-100 text-sm truncate">메가존클라우드</h3>
-                            <p class="text-[11px] text-slate-400 leading-tight">하이브리드 인프라</p>
-                        </div>
-                        <div class="bg-slate-900/50 p-2 rounded mt-2">
-                             <p class="font-tech text-lg text-sky-400">99.9% <span class="text-[10px] text-slate-400">가동</span></p>
-                        </div>
-                    </div>
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-indigo-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-slate-100 text-sm truncate">경남대학교</h3>
-                            <p class="text-[11px] text-slate-400 leading-tight">AAS 표준화 모델</p>
-                        </div>
-                         <div class="bg-slate-900/50 p-2 rounded mt-2">
-                            <p class="font-tech text-lg text-sky-400">1,204 <span class="text-[10px] text-slate-400">AAS</span></p>
-                        </div>
-                    </div>
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-indigo-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <h3 class="font-bold text-slate-100 text-sm truncate">네스트필드</h3>
-                                <div class="status-dot status-warning animate-pulse"></div>
-                            </div>
-                            <p class="text-[11px] text-slate-400 leading-tight">이종 데이터 상호운용</p>
-                        </div>
-                        <div class="bg-slate-900/50 p-2 rounded mt-2">
-                            <p class="font-tech text-lg text-yellow-400">85% <span class="text-[10px] text-slate-400">API</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="pipeline-stage gap-3">
-                <div class="text-center shrink-0">
-                    <div class="inline-block px-3 py-1 bg-purple-900/50 border border-purple-700 rounded-full w-full">
-                        <h2 class="font-tech text-lg font-bold text-purple-300 tracking-wider truncate">④ 분석</h2>
-                    </div>
-                </div>
-                <div class="flex-1 flex flex-col gap-2">
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-purple-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-slate-100 text-sm truncate">KAIST</h3>
-                            <p class="text-[11px] text-slate-400 leading-tight mt-1">제조 특화 LLM 원인분석</p>
-                        </div>
-                        <div class="bg-slate-900/50 p-2 rounded mt-2">
-                           <p class="font-tech text-lg text-sky-400">92% <span class="text-[10px] text-slate-400">정확도</span></p>
-                        </div>
-                    </div>
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-purple-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-slate-100 text-sm truncate">넥스트스튜디오</h3>
-                            <p class="text-[11px] text-slate-400 leading-tight mt-1">탄소 배출량 예측/저감</p>
-                        </div>
-                        <div class="bg-slate-900/50 p-2 rounded mt-2">
-                             <p class="font-tech text-lg text-sky-400">-7.5% <span class="text-[10px] text-slate-400">저감</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <main class="flex-1 overflow-y-auto scroll-smooth p-8 relative">
+        <div class="fixed top-0 left-64 right-0 h-24 bg-gradient-to-b from-[#f8fafc] to-transparent z-10 pointer-events-none"></div>
 
-            <div class="pipeline-stage gap-3">
-                <div class="text-center shrink-0">
-                    <div class="inline-block px-3 py-1 bg-rose-900/50 border border-rose-700 rounded-full w-full">
-                        <h2 class="font-tech text-lg font-bold text-rose-300 tracking-wider truncate">⑤ 응용</h2>
-                    </div>
-                </div>
-                <div class="flex-1 flex flex-col gap-2">
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-rose-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
-                        <div>
-                             <div class="flex justify-between items-center mb-1">
-                                <h3 class="font-bold text-slate-100 text-sm truncate">소르테크</h3>
-                                 <div class="status-dot status-danger animate-pulse-danger"></div>
-                            </div>
-                            <p class="text-[11px] text-slate-400 leading-tight">AI 비전 불량 검출</p>
-                        </div>
-                         <div class="bg-slate-900/50 p-2 rounded mt-2">
-                            <p class="font-tech text-lg text-red-400">15 <span class="text-[10px] text-slate-400">Defects</span></p>
-                        </div>
-                    </div>
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-rose-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-slate-100 text-sm truncate">DX솔루션즈</h3>
-                            <p class="text-[11px] text-slate-400 leading-tight mt-1">불량 원인 역추적</p>
-                        </div>
-                        <div class="bg-slate-900/50 p-2 rounded mt-2">
-                            <p class="font-tech text-lg text-sky-400">3.2 <span class="text-[10px] text-slate-400">min</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="max-w-7xl mx-auto space-y-16 pb-20 pt-4">
 
-            <div class="pipeline-stage gap-3">
-                <div class="text-center shrink-0">
-                    <div class="inline-block px-3 py-1 bg-slate-700/50 border border-slate-600 rounded-full w-full">
-                        <h2 class="font-tech text-lg font-bold text-slate-300 tracking-wider truncate">총괄</h2>
-                    </div>
+            <section id="stage-1" class="scroll-mt-8">
+                <div class="flex items-end gap-4 mb-6 border-b border-slate-200 pb-2">
+                    <h2 class="text-2xl font-bold text-slate-800 font-tech">01. DATA COLLECTION</h2>
+                    <span class="text-sm text-slate-500 mb-1 font-medium">OT/IT 데이터 및 엣지 수집</span>
                 </div>
-                <div class="flex-1 flex flex-col gap-2">
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-slate-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-slate-100 text-sm truncate">경남TP</h3>
-                            <p class="text-[11px] text-slate-400 leading-tight mt-1">사업 총괄 관리</p>
-                        </div>
-                        <div class="bg-slate-900/50 p-2 rounded mt-2">
-                           <p class="font-tech text-lg text-sky-400">85% <span class="text-[10px] text-slate-400">달성</span></p>
-                        </div>
-                    </div>
-                     <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-slate-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-slate-100 text-sm truncate">KTL</h3>
-                            <p class="text-[11px] text-slate-400 leading-tight mt-1">기술/품질 검증</p>
-                        </div>
-                        <div class="bg-slate-900/50 p-2 rounded mt-2">
-                             <p class="font-tech text-lg text-sky-400">7/10 <span class="text-[10px] text-slate-400">Pass</span></p>
-                        </div>
-                    </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="container-1"></div>
+            </section>
+
+            <section id="stage-2" class="scroll-mt-8">
+                <div class="flex items-end gap-4 mb-6 border-b border-slate-200 pb-2">
+                    <h2 class="text-2xl font-bold text-slate-800 font-tech">02. TRANSFER</h2>
+                    <span class="text-sm text-slate-500 mb-1 font-medium">5G 초고속 네트워크</span>
                 </div>
-            </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="container-2"></div>
+            </section>
+
+             <section id="stage-3" class="scroll-mt-8">
+                <div class="flex items-end gap-4 mb-6 border-b border-slate-200 pb-2">
+                    <h2 class="text-2xl font-bold text-slate-800 font-tech">03. PLATFORM</h2>
+                    <span class="text-sm text-slate-500 mb-1 font-medium">인프라, 표준화 및 인터페이스</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="container-3"></div>
+            </section>
+
+             <section id="stage-4" class="scroll-mt-8">
+                <div class="flex items-end gap-4 mb-6 border-b border-slate-200 pb-2">
+                    <h2 class="text-2xl font-bold text-slate-800 font-tech">04. AI ANALYSIS</h2>
+                    <span class="text-sm text-slate-500 mb-1 font-medium">LLM 및 ESG 분석 모델</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="container-4"></div>
+            </section>
+
+             <section id="stage-5" class="scroll-mt-8">
+                <div class="flex items-end gap-4 mb-6 border-b border-slate-200 pb-2">
+                    <h2 class="text-2xl font-bold text-slate-800 font-tech">05. APPLICATION</h2>
+                    <span class="text-sm text-slate-500 mb-1 font-medium">제조 응용 서비스</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="container-5"></div>
+            </section>
+
+             <section id="stage-6" class="scroll-mt-8">
+                <div class="flex items-end gap-4 mb-6 border-b border-slate-200 pb-2">
+                    <h2 class="text-2xl font-bold text-slate-800 font-tech">06. MANAGEMENT</h2>
+                    <span class="text-sm text-slate-500 mb-1 font-medium">총괄 및 품질 검증</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="container-6"></div>
+            </section>
 
         </div>
     </main>
+
+    <div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm hidden">
+        <div class="w-[90%] h-[90%] max-w-[1400px] bg-white border border-slate-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden modal-enter">
+            
+            <div class="h-16 flex items-center justify-between px-6 border-b border-slate-200 bg-slate-50">
+                <div class="flex items-center gap-4">
+                    <h3 id="modal-title" class="text-xl font-bold text-slate-800">업체명</h3>
+                    <span id="modal-badge" class="px-3 py-1 rounded text-xs font-bold bg-white border border-slate-200 text-slate-600">Role</span>
+                    <span class="text-slate-300">|</span>
+                    <div class="flex items-center gap-2 bg-white px-2 py-1 rounded-full border border-slate-200">
+                        <span id="modal-status-dot" class="w-2 h-2 rounded-full bg-green-500"></span>
+                        <span id="modal-status-text" class="text-sm font-bold text-green-600">정상</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a id="modal-link" href="#" target="_blank" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2 shadow-sm shadow-blue-200">
+                        <span>Visit Site</span> <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+                
+                <div class="w-full lg:w-80 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 p-6 overflow-y-auto shrink-0">
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Description</h4>
+                            <p id="modal-desc" class="text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100"></p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Key Performance</h4>
+                            <p id="modal-kpi" class="text-3xl font-tech font-bold text-blue-600">0</p>
+                        </div>
+
+                         <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Tech Stack</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2.5 py-1 text-xs bg-slate-100 text-slate-600 rounded-md border border-slate-200">AI/ML</span>
+                                <span class="px-2.5 py-1 text-xs bg-slate-100 text-slate-600 rounded-md border border-slate-200">Cloud</span>
+                                <span class="px-2.5 py-1 text-xs bg-slate-100 text-slate-600 rounded-md border border-slate-200">Big Data</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 bg-slate-50 relative p-3">
+                     <div class="absolute inset-0 flex items-center justify-center text-slate-400 z-0">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-circle-notch fa-spin text-3xl mb-3 text-blue-300"></i>
+                            <p class="text-sm font-medium">Connecting to secure gateway...</p>
+                        </div>
+                    </div>
+                    <iframe id="company-iframe" src="" class="absolute inset-3 w-[calc(100%-24px)] h-[calc(100%-24px)] rounded-xl bg-white z-10 shadow-sm border border-slate-200" frameborder="0"></iframe>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const companies = [
+            { stage: 1, name: "마크베이스", role: "OT 데이터 수집", kpi: "1.21M rec/s", status: "normal", desc: "초고속 시계열 DBMS로 제조 현장 센서 데이터 실시간 수집 및 저장.", url: "https://www.machbase.com/" },
+            { stage: 1, name: "아미크", role: "IT 데이터 연동", kpi: "99.8% Success", status: "normal", desc: "ERP, MES 등 레거시 시스템과 AI 플랫폼 간 유연한 데이터 연동.", url: "http://www.amiqu.com/" },
+            { stage: 1, name: "KETI", role: "AIoT 엣지", kpi: "24 Devices", status: "normal", desc: "현장 설비에 부착된 엣지 디바이스 관리 및 데이터 전처리.", url: "https://www.keti.re.kr/" },
+            { stage: 2, name: "라임씨에스아이", role: "5G 네트워크", kpi: "1.5ms Latency", status: "normal", desc: "공장 내 초고속/초저지연 이음5G 특화망 네트워크망 구축.", url: "http://www.limecsi.com/" },
+            { stage: 3, name: "메가존클라우드", role: "AI 인프라", kpi: "99.98% Uptime", status: "normal", desc: "AI 학습 및 운영을 위한 고성능 하이브리드 클라우드 인프라.", url: "https://www.megazone.com/" },
+            { stage: 3, name: "경남대학교", role: "AAS 표준화", kpi: "1,204 Models", status: "normal", desc: "글로벌 표준(AAS) 기반 제조 데이터 모델링 및 상호운용성 확보.", url: "https://aas-system.netlify.app/" },
+            { stage: 3, name: "네스트필드", role: "인터페이스", kpi: "85% API rate", status: "warning", desc: "이종 기종 장비 및 시스템 간 데이터 연결을 위한 미들웨어.", url: "http://www.nestfield.co.kr/" },
+            { stage: 4, name: "KAIST", role: "LLM 분석", kpi: "92% Accuracy", status: "normal", desc: "제조 특화 거대언어모델을 활용한 공정 이상 원인 분석 및 제안.", url: "https://www.kaist.ac.kr/" },
+            { stage: 4, name: "넥스트스튜디오", role: "ESG AI", kpi: "-7.5% CO2", status: "normal", desc: "공정 데이터 기반 탄소 배출량 예측 및 에너지 저감 시뮬레이션.", url: "http://www.next-studio.co.kr/" },
+            { stage: 5, name: "소르테크", role: "AI 비전", kpi: "15 Defects/h", status: "danger", desc: "딥러닝 비전 기술을 활용한 실시간 제품 미세 불량 자동 검출.", url: "http://www.sortech.co.kr/" },
+            { stage: 5, name: "DX솔루션즈", role: "역추적", kpi: "3.2 min/case", status: "normal", desc: "불량 발생 시 원인 공정 및 파라미터 역추적 시스템.", url: "http://www.dxsolutions.co.kr/" },
+            { stage: 5, name: "에스디테크", role: "공정품질", kpi: "99.7%", status: "normal", desc: "공정 파라미터 최적화를 통한 품질 향상 솔루션.", url: "#" },
+            { stage: 6, name: "경남TP", role: "사업 총괄", kpi: "85% Progress", status: "normal", desc: "제조 AI 사업 전체 기획, 진도 관리 및 성과 확산 총괄.", url: "https://www.gntp.or.kr/" },
+            { stage: 6, name: "KTL", role: "품질 검증", kpi: "Pass", status: "normal", desc: "AI 모델 및 시스템 성능, 기능 안전성에 대한 시험 인증.", url: "https://www.ktl.re.kr/" }
+        ];
+
+        const statusConfig = {
+            normal: { color: 'text-green-600', dot: 'bg-green-500', label: '정상', border: 'card-status-normal' },
+            warning: { color: 'text-yellow-600', dot: 'bg-yellow-500', label: '점검', border: 'card-status-warning' },
+            danger: { color: 'text-red-600', dot: 'bg-red-500', label: '장애', border: 'card-status-danger' }
+        };
+
+        function renderDashboard() {
+            companies.forEach((item, index) => {
+                const container = document.getElementById(`container-${item.stage}`);
+                if (!container) return;
+
+                const st = statusConfig[item.status];
+
+                const card = document.createElement('div');
+                card.className = `modern-card p-5 cursor-pointer flex flex-col h-full justify-between ${st.border}`;
+                card.onclick = () => openModal(index);
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-lg tracking-tight">${item.name}</h3>
+                                <p class="text-xs text-slate-500 mt-1 font-medium">${item.role}</p>
+                            </div>
+                             <div class="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded border border-slate-200">
+                                <span class="w-1.5 h-1.5 rounded-full ${st.dot}"></span>
+                                <span class="text-[10px] font-bold ${st.color}">${st.label}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-end">
+                        <div>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Performance</p>
+                            <p class="font-tech text-xl font-bold text-slate-700">${item.kpi}</p>
+                        </div>
+                        <i class="fas fa-arrow-right text-slate-300 -rotate-45 group-hover:rotate-0 transition-transform"></i>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Modal Logic
+        const modal = document.getElementById('detail-modal');
+        const iframe = document.getElementById('company-iframe');
+
+        function openModal(index) {
+            const item = companies[index];
+            const st = statusConfig[item.status];
+
+            document.getElementById('modal-title').innerText = item.name;
+            document.getElementById('modal-badge').innerText = item.role;
+            document.getElementById('modal-status-text').innerText = st.label;
+            document.getElementById('modal-status-text').className = `text-sm font-bold ${st.color}`;
+            document.getElementById('modal-status-dot').className = `w-2 h-2 rounded-full ${st.dot}`;
+            
+            document.getElementById('modal-desc').innerText = item.desc;
+            document.getElementById('modal-kpi').innerText = item.kpi;
+            document.getElementById('modal-link').href = item.url;
+
+            iframe.src = item.url;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            iframe.src = "";
+        }
+
+        // Scroll Spy
+        const navLinks = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = '#' + section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Clock
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleString();
+        }, 1000);
+
+        renderDashboard();
+    </script>
 </body>
 </html>

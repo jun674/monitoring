@@ -51,7 +51,7 @@
 
     <header class="glass-panel z-50 sticky top-0">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="mockUp1.html" class="flex items-center gap-3 cursor-pointer group">
+            <a href="mockUp1.html?filter=ALL" class="flex items-center gap-3 cursor-pointer group">
                 <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white text-xl font-bold">AI</div>
                 <div>
                     <h1 class="text-base font-extrabold text-white">초거대제조AI 플랫폼</h1>
@@ -76,7 +76,7 @@
             <!-- Sidebar content will be dynamically inserted here -->
         </aside>
         <main class="flex-1 flex flex-col overflow-y-auto p-8">
-            <div class="max-w-4xl mx-auto w-full">
+            <div class="max-w-5xl mx-auto w-full">
                 
                 <div class="mb-8">
                     <h2 id="content-title" class="text-3xl font-bold text-white"></h2>
@@ -84,7 +84,7 @@
                 </div>
                 <div class="glass-content p-6 rounded-2xl">
                     <h3 class="font-bold text-lg mb-4 text-cyan-300">솔루션 보기</h3>
-                    <div class="iframe-container w-full h-[550px] rounded-md overflow-hidden border border-slate-700">
+                    <div class="iframe-container w-full h-[700px] rounded-md overflow-hidden border border-slate-700">
                         <iframe id="content-iframe" class="w-full h-full" frameborder="0"></iframe>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
 
     <script>
         const companies = [
-            { id: 'gntp', type: 'ORG', name: '경남TP', description: '<h3>역할: 사업 총괄</h3><p>프로젝트의 전반적인 운영 및 관리를 책임지며, 참여 기관 간의 협력을 조율하고 사업 목표 달성을 위한 전략을 수립합니다.</p><p class="mt-2"><b>기술:</b> 프로젝트 관리(PMBOK), 성과 관리</p>', 
+            { id: 'gntp', type: 'ORG', name: '경남TP', description: '<h3>역할: 사업 총괄</h3><p>프로젝트의 전반적인 운영 및 관리를 책임지며, 참여 기관 간의 협력을 조율하고 사업 목표 달성을 위한 전략을 수립합니다.</p><p class="mt-2"><b>기술:</b> 프로젝트 관리(PMBOF), 성과 관리</p>', 
               iframeContent: `<div class="flex items-center justify-center h-full bg-slate-800 text-white"><div class="text-center"><h1 class="text-3xl font-bold">경남TP: 사업 총괄 대시보드</h1></div></div>` },
             { id: 'ktl', type: 'ORG', name: 'KTL', description: '<h3>역할: 기술 검증</h3><p>개발된 AI 모델과 데이터의 품질, 신뢰성을 검증하는 역할을 수행합니다. 객관적인 평가 지표를 통해 솔루션의 완성도를 높입니다.</p><p class="mt-2"><b>기술:</b> 시스템 엔지니어링(SE), 품질 보증(QA)</p>', 
               iframeContent: `<div class="flex items-center justify-center h-full bg-slate-800 text-white"><div class="text-center"><h1 class="text-3xl font-bold">KTL: 품질 검증 시스템</h1></div></div>` },
@@ -132,7 +132,7 @@
             const typeMap = { 'DATA': 'Data', 'AI': 'AI', 'INFRA': 'Infra', 'NETWORK': 'Network', 'ORG': 'Org', 'SERVICE': 'Service' };
             const typeName = typeMap[activeType] || 'Related';
 
-            let sidebarHtml = `<h3 class="text-base font-bold text-cyan-300 mb-4 tracking-wider uppercase">${typeName} </h3>`;
+            let sidebarHtml = `<h3 class="text-base font-bold text-cyan-300 mb-4 tracking-wider uppercase">${typeName} 메뉴</h3>`;
             sidebarHtml += '<ul class="space-y-1">';
             relatedCompanies.forEach(c => {
                 const isActive = c.id === activeCompanyId;
