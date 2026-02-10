@@ -13,14 +13,20 @@
             background-color: #020617; /* slate-950 */
         }
         .font-tech { font-family: 'Rajdhani', sans-serif; }
+        
+        /* 수정됨: 고정 너비 제거 및 높이 100% 설정 */
         .pipeline-stage {
-            min-width: 320px;
-            scroll-snap-align: start;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
+
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px; /* 사이즈 약간 축소 */
+            height: 6px;
             border-radius: 50%;
+            flex-shrink: 0;
         }
         .status-normal { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; }
         .status-warning { background-color: #facc15; box-shadow: 0 0 5px #facc15; }
@@ -32,23 +38,16 @@
         @keyframes pulse-danger { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } }
         .animate-pulse-danger { animation: pulse-danger 1s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         
-        .flow-arrow {
-            color: #334155; /* slate-700 */
-            font-size: 2.5rem;
-            opacity: 0.5;
-        }
-        /* Custom Scrollbar */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* 스크롤바 관련 스타일 제거 (더 이상 스크롤 필요 없음) */
     </style>
 </head>
-<body class="text-slate-200 h-screen flex flex-col">
+<body class="text-slate-200 h-screen flex flex-col overflow-hidden">
 
-    <header class="bg-slate-900/50 backdrop-blur-sm border-b border-slate-800 z-20">
-        <div class="max-w-screen-2xl mx-auto px-6 h-16 flex items-center justify-between">
+    <header class="bg-slate-900/50 backdrop-blur-sm border-b border-slate-800 z-20 shrink-0">
+        <div class="max-w-screen-2xl mx-auto px-6 h-14 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-sky-600 rounded flex items-center justify-center font-bold text-white shadow-lg shadow-sky-500/30">AI</div>
-                <h1 class="text-xl font-bold text-white">통합 데이터 흐름 대시보드</h1>
+                <h1 class="text-lg font-bold text-white">통합 데이터 흐름 대시보드</h1>
             </div>
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2 text-xs">
@@ -61,194 +60,202 @@
         </div>
     </header>
 
-    <main class="flex-1 flex flex-col overflow-hidden min-w-0">
-        <div id="pipeline-container" class="flex-1 flex items-center gap-8 px-8 overflow-x-auto no-scrollbar" style="scroll-snap-type: x mandatory;">
+    <main class="flex-1 p-4 min-h-0">
+        <div id="pipeline-container" class="grid grid-cols-6 gap-3 h-full w-full">
 
-            <!-- Stage 1: 데이터 수집 -->
-            <div class="pipeline-stage flex flex-col gap-6">
-                <div class="text-center">
-                    <div class="inline-block px-4 py-1.5 bg-blue-900/50 border border-blue-700 rounded-full">
-                        <h2 class="font-tech text-xl font-bold text-blue-300 tracking-wider">① 데이터 수집</h2>
+            <div class="pipeline-stage gap-3">
+                <div class="text-center shrink-0">
+                    <div class="inline-block px-3 py-1 bg-blue-900/50 border border-blue-700 rounded-full w-full">
+                        <h2 class="font-tech text-lg font-bold text-blue-300 tracking-wider truncate">① 수집</h2>
                     </div>
-                    <p class="text-sm text-slate-500 mt-1">현장(OT/IT)의 원천 데이터를 디지털로 변환</p>
                 </div>
-                <div class="space-y-4">
-                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-blue-500 transition-all cursor-pointer">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-slate-100">마크베이스 <span class="text-xs font-normal text-slate-400 ml-1">(OT 데이터)</span></h3>
-                            <div class="status-dot status-normal"></div>
+                <div class="flex-1 flex flex-col gap-2 overflow-y-auto pr-1 custom-scroll">
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-blue-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <h3 class="font-bold text-slate-100 text-sm truncate">마크베이스</h3>
+                                <div class="status-dot status-normal"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 leading-tight">설비 PLC/센서 실시간</p>
                         </div>
-                        <p class="text-xs text-slate-400 mb-3">설비 PLC 및 센서 데이터 실시간 수집</p>
-                        <div class="bg-slate-900/50 p-3 rounded">
-                            <p class="font-tech text-2xl text-sky-400">1.21M <span class="text-sm text-slate-400">records/sec</span></p>
-                        </div>
-                    </div>
-                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-blue-500 transition-all cursor-pointer">
-                        <h3 class="font-bold text-slate-100">아미크 <span class="text-xs font-normal text-slate-400 ml-1">(IT 데이터)</span></h3>
-                        <p class="text-xs text-slate-400 mb-3">ERP, MES 등 기간계 시스템 정보 연동</p>
-                        <div class="bg-slate-900/50 p-3 rounded">
-                            <p class="font-tech text-2xl text-sky-400">99.8% <span class="text-sm text-slate-400">연동 성공률</span></p>
+                        <div class="bg-slate-900/50 p-2 rounded mt-2">
+                            <p class="font-tech text-lg text-sky-400">1.21M <span class="text-[10px] text-slate-400">rec/s</span></p>
                         </div>
                     </div>
-                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-blue-500 transition-all cursor-pointer">
-                        <h3 class="font-bold text-slate-100">KETI <span class="text-xs font-normal text-slate-400 ml-1">(AIoT 엣지)</span></h3>
-                        <p class="text-xs text-slate-400 mb-3">비전, 음향 등 비정형 데이터 엣지 처리</p>
-                        <div class="bg-slate-900/50 p-3 rounded">
-                            <p class="font-tech text-2xl text-sky-400">24 <span class="text-sm text-slate-400">Active Devices</span></p>
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-blue-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-100 text-sm truncate">아미크</h3>
+                            <p class="text-[11px] text-slate-400 leading-tight">ERP/MES 연동</p>
+                        </div>
+                        <div class="bg-slate-900/50 p-2 rounded mt-2">
+                            <p class="font-tech text-lg text-sky-400">99.8% <span class="text-[10px] text-slate-400">성공</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-blue-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-100 text-sm truncate">KETI</h3>
+                            <p class="text-[11px] text-slate-400 leading-tight">AIoT 엣지 처리</p>
+                        </div>
+                        <div class="bg-slate-900/50 p-2 rounded mt-2">
+                            <p class="font-tech text-lg text-sky-400">24 <span class="text-[10px] text-slate-400">Dev</span></p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
-
-            <!-- Stage 2: 데이터 전송 -->
-            <div class="pipeline-stage flex flex-col gap-6">
-                 <div class="text-center">
-                    <div class="inline-block px-4 py-1.5 bg-emerald-900/50 border border-emerald-700 rounded-full">
-                        <h2 class="font-tech text-xl font-bold text-emerald-300 tracking-wider">② 데이터 전송</h2>
+            <div class="pipeline-stage gap-3">
+                 <div class="text-center shrink-0">
+                    <div class="inline-block px-3 py-1 bg-emerald-900/50 border border-emerald-700 rounded-full w-full">
+                        <h2 class="font-tech text-lg font-bold text-emerald-300 tracking-wider truncate">② 전송</h2>
                     </div>
-                    <p class="text-sm text-slate-500 mt-1">대용량 데이터를 빠르고 안정적으로 전달</p>
                 </div>
-                 <div class="space-y-4">
-                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-emerald-500 transition-all cursor-pointer">
+                 <div class="flex-1 flex flex-col gap-2 h-full">
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-emerald-500 transition-all cursor-pointer h-full flex flex-col">
                         <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-slate-100">라임씨에스아이</h3>
+                            <h3 class="font-bold text-slate-100 text-sm truncate">라임씨에스아이</h3>
                             <div class="status-dot status-normal"></div>
                         </div>
-                        <p class="text-xs text-slate-400 mb-3">5G 특화망 기반 초고속/초저지연 네트워크</p>
-                        <div class="bg-slate-900/50 p-3 rounded flex justify-around">
-                            <div>
-                                <p class="text-xs text-slate-500">지연시간</p>
-                                <p class="font-tech text-xl text-sky-400">1.5 <span class="text-sm">ms</span></p>
+                        <p class="text-[11px] text-slate-400 mb-auto">5G 특화망 초저지연 네트워크</p>
+                        
+                        <div class="flex-1"></div>
+
+                        <div class="bg-slate-900/50 p-2 rounded flex flex-col gap-2">
+                            <div class="flex justify-between items-end">
+                                <span class="text-[10px] text-slate-500">지연</span>
+                                <span class="font-tech text-lg text-sky-400">1.5 <span class="text-[10px]">ms</span></span>
                             </div>
-                            <div>
-                                <p class="text-xs text-slate-500">전송량</p>
-                                <p class="font-tech text-xl text-sky-400">8.2 <span class="text-sm">TB/day</span></p>
+                            <div class="w-full h-px bg-slate-700"></div>
+                            <div class="flex justify-between items-end">
+                                <span class="text-[10px] text-slate-500">전송</span>
+                                <span class="font-tech text-lg text-sky-400">8.2 <span class="text-[10px]">TB</span></span>
                             </div>
                         </div>
                     </div>
                  </div>
             </div>
 
-            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
-
-            <!-- Stage 3: 플랫폼 -->
-            <div class="pipeline-stage flex flex-col gap-6">
-                <div class="text-center">
-                    <div class="inline-block px-4 py-1.5 bg-indigo-900/50 border border-indigo-700 rounded-full">
-                        <h2 class="font-tech text-xl font-bold text-indigo-300 tracking-wider">③ 플랫폼</h2>
+            <div class="pipeline-stage gap-3">
+                <div class="text-center shrink-0">
+                    <div class="inline-block px-3 py-1 bg-indigo-900/50 border border-indigo-700 rounded-full w-full">
+                        <h2 class="font-tech text-lg font-bold text-indigo-300 tracking-wider truncate">③ 플랫폼</h2>
                     </div>
-                    <p class="text-sm text-slate-500 mt-1">데이터 저장, 표준화 및 AI 학습/운영 환경 제공</p>
                 </div>
-                <div class="space-y-4">
-                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-indigo-500 transition-all cursor-pointer">
-                        <h3 class="font-bold text-slate-100">메가존클라우드 <span class="text-xs font-normal text-slate-400 ml-1">(인프라)</span></h3>
-                        <p class="text-xs text-slate-400 mb-3">하이브리드 AI 클라우드 인프라(EBC) 운영</p>
-                        <div class="bg-slate-900/50 p-3 rounded">
-                             <p class="font-tech text-2xl text-sky-400">99.98% <span class="text-sm text-slate-400">가동률</span></p>
+                <div class="flex-1 flex flex-col gap-2 overflow-y-auto pr-1">
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-indigo-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-100 text-sm truncate">메가존클라우드</h3>
+                            <p class="text-[11px] text-slate-400 leading-tight">하이브리드 인프라</p>
+                        </div>
+                        <div class="bg-slate-900/50 p-2 rounded mt-2">
+                             <p class="font-tech text-lg text-sky-400">99.9% <span class="text-[10px] text-slate-400">가동</span></p>
                         </div>
                     </div>
-                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-indigo-500 transition-all cursor-pointer">
-                        <h3 class="font-bold text-slate-100">경남대학교 <span class="text-xs font-normal text-slate-400 ml-1">(표준화)</span></h3>
-                        <p class="text-xs text-slate-400 mb-3">AAS(자산관리쉘) 기반 데이터 표준화</p>
-                         <div class="bg-slate-900/50 p-3 rounded">
-                            <p class="font-tech text-2xl text-sky-400">1,204 <span class="text-sm text-slate-400">AAS Models</span></p>
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-indigo-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-100 text-sm truncate">경남대학교</h3>
+                            <p class="text-[11px] text-slate-400 leading-tight">AAS 표준화 모델</p>
+                        </div>
+                         <div class="bg-slate-900/50 p-2 rounded mt-2">
+                            <p class="font-tech text-lg text-sky-400">1,204 <span class="text-[10px] text-slate-400">AAS</span></p>
                         </div>
                     </div>
-                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-indigo-500 transition-all cursor-pointer">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-slate-100">네스트필드 <span class="text-xs font-normal text-slate-400 ml-1">(인터페이스)</span></h3>
-                             <div class="status-dot status-warning animate-pulse"></div>
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-indigo-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <h3 class="font-bold text-slate-100 text-sm truncate">네스트필드</h3>
+                                <div class="status-dot status-warning animate-pulse"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 leading-tight">이종 데이터 상호운용</p>
                         </div>
-                        <p class="text-xs text-slate-400 mb-3">이종 시스템 간 데이터 상호운용성 제공</p>
-                        <div class="bg-slate-900/50 p-3 rounded">
-                            <p class="font-tech text-2xl text-yellow-400">85% <span class="text-sm text-slate-400">API 성공률</span></p>
+                        <div class="bg-slate-900/50 p-2 rounded mt-2">
+                            <p class="font-tech text-lg text-yellow-400">85% <span class="text-[10px] text-slate-400">API</span></p>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
             
-            <!-- Stage 4: AI 분석 -->
-             <div class="pipeline-stage flex flex-col gap-6">
-                <div class="text-center">
-                    <div class="inline-block px-4 py-1.5 bg-purple-900/50 border border-purple-700 rounded-full">
-                        <h2 class="font-tech text-xl font-bold text-purple-300 tracking-wider">④ AI 분석</h2>
-                    </div>
-                    <p class="text-sm text-slate-500 mt-1">핵심 AI 모델을 통해 데이터로부터 인사이트 도출</p>
-                </div>
-                <div class="space-y-4">
-                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-purple-500 transition-all cursor-pointer">
-                        <h3 class="font-bold text-slate-100">KAIST <span class="text-xs font-normal text-slate-400 ml-1">(초거대 AI)</span></h3>
-                        <p class="text-xs text-slate-400 mb-3">제조 특화 LLM 기반 원인분석 및 해결책 제안</p>
-                        <div class="bg-slate-900/50 p-3 rounded">
-                           <p class="font-tech text-2xl text-sky-400">92% <span class="text-sm text-slate-400">정확도</span></p>
-                        </div>
-                    </div>
-                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-purple-500 transition-all cursor-pointer">
-                        <h3 class="font-bold text-slate-100">넥스트스튜디오 <span class="text-xs font-normal text-slate-400 ml-1">(ESG AI)</span></h3>
-                        <p class="text-xs text-slate-400 mb-3">탄소 배출량 예측 및 저감 시뮬레이션</p>
-                        <div class="bg-slate-900/50 p-3 rounded">
-                             <p class="font-tech text-2xl text-sky-400">-7.5% <span class="text-sm text-slate-400">예상 저감률</span></p>
-                        </div>
+            <div class="pipeline-stage gap-3">
+                <div class="text-center shrink-0">
+                    <div class="inline-block px-3 py-1 bg-purple-900/50 border border-purple-700 rounded-full w-full">
+                        <h2 class="font-tech text-lg font-bold text-purple-300 tracking-wider truncate">④ 분석</h2>
                     </div>
                 </div>
-            </div>
-
-            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
-
-            <!-- Stage 5: 응용 서비스 -->
-             <div class="pipeline-stage flex flex-col gap-6">
-                <div class="text-center">
-                    <div class="inline-block px-4 py-1.5 bg-rose-900/50 border border-rose-700 rounded-full">
-                        <h2 class="font-tech text-xl font-bold text-rose-300 tracking-wider">⑤ 응용 서비스</h2>
-                    </div>
-                     <p class="text-sm text-slate-500 mt-1">수요 기업의 실제 문제를 해결하는 서비스</p>
-                </div>
-                <div class="space-y-4">
-                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-rose-500 transition-all cursor-pointer">
-                         <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-slate-100">소르테크 <span class="text-xs font-normal text-slate-400 ml-1">(품질검사)</span></h3>
-                             <div class="status-dot status-danger animate-pulse-danger"></div>
+                <div class="flex-1 flex flex-col gap-2">
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-purple-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-100 text-sm truncate">KAIST</h3>
+                            <p class="text-[11px] text-slate-400 leading-tight mt-1">제조 특화 LLM 원인분석</p>
                         </div>
-                        <p class="text-xs text-slate-400 mb-3">AI 비전 기반 불량 검출 자동화</p>
-                         <div class="bg-slate-900/50 p-3 rounded">
-                            <p class="font-tech text-2xl text-red-400">15 <span class="text-sm text-slate-400">Defects/hour</span></p>
+                        <div class="bg-slate-900/50 p-2 rounded mt-2">
+                           <p class="font-tech text-lg text-sky-400">92% <span class="text-[10px] text-slate-400">정확도</span></p>
                         </div>
                     </div>
-                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-rose-500 transition-all cursor-pointer">
-                        <h3 class="font-bold text-slate-100">DX솔루션즈 <span class="text-xs font-normal text-slate-400 ml-1">(불량 역추적)</span></h3>
-                        <p class="text-xs text-slate-400 mb-3">불량 발생 시 연관 공정 및 원인 추적</p>
-                        <div class="bg-slate-900/50 p-3 rounded">
-                            <p class="font-tech text-2xl text-sky-400">3.2 <span class="text-sm text-slate-400">min/case</span></p>
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-purple-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-100 text-sm truncate">넥스트스튜디오</h3>
+                            <p class="text-[11px] text-slate-400 leading-tight mt-1">탄소 배출량 예측/저감</p>
+                        </div>
+                        <div class="bg-slate-900/50 p-2 rounded mt-2">
+                             <p class="font-tech text-lg text-sky-400">-7.5% <span class="text-[10px] text-slate-400">저감</span></p>
                         </div>
                     </div>
                 </div>
             </div>
 
-             <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
-
-            <!-- Stage 6: 총괄 및 검증 -->
-            <div class="pipeline-stage flex flex-col gap-6">
-                <div class="text-center">
-                    <div class="inline-block px-4 py-1.5 bg-slate-700/50 border border-slate-600 rounded-full">
-                        <h2 class="font-tech text-xl font-bold text-slate-300 tracking-wider">총괄 & 검증</h2>
+            <div class="pipeline-stage gap-3">
+                <div class="text-center shrink-0">
+                    <div class="inline-block px-3 py-1 bg-rose-900/50 border border-rose-700 rounded-full w-full">
+                        <h2 class="font-tech text-lg font-bold text-rose-300 tracking-wider truncate">⑤ 응용</h2>
                     </div>
-                     <p class="text-sm text-slate-500 mt-1">프로젝트 관리 및 성과 품질 검증</p>
                 </div>
-                <div class="space-y-4">
-                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-slate-500 transition-all cursor-pointer">
-                        <h3 class="font-bold text-slate-100">경남TP <span class="text-xs font-normal text-slate-400 ml-1">(사업 총괄)</span></h3>
-                        <div class="bg-slate-900/50 p-3 rounded mt-3">
-                           <p class="font-tech text-2xl text-sky-400">85% <span class="text-sm text-slate-400">달성률</span></p>
+                <div class="flex-1 flex flex-col gap-2">
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-rose-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
+                        <div>
+                             <div class="flex justify-between items-center mb-1">
+                                <h3 class="font-bold text-slate-100 text-sm truncate">소르테크</h3>
+                                 <div class="status-dot status-danger animate-pulse-danger"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 leading-tight">AI 비전 불량 검출</p>
+                        </div>
+                         <div class="bg-slate-900/50 p-2 rounded mt-2">
+                            <p class="font-tech text-lg text-red-400">15 <span class="text-[10px] text-slate-400">Defects</span></p>
                         </div>
                     </div>
-                     <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-slate-500 transition-all cursor-pointer">
-                        <h3 class="font-bold text-slate-100">KTL <span class="text-xs font-normal text-slate-400 ml-1">(기술 검증)</span></h3>
-                        <div class="bg-slate-900/50 p-3 rounded mt-3">
-                             <p class="font-tech text-2xl text-sky-400">7/10 <span class="text-sm text-slate-400">항목 통과</span></p>
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-rose-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-100 text-sm truncate">DX솔루션즈</h3>
+                            <p class="text-[11px] text-slate-400 leading-tight mt-1">불량 원인 역추적</p>
+                        </div>
+                        <div class="bg-slate-900/50 p-2 rounded mt-2">
+                            <p class="font-tech text-lg text-sky-400">3.2 <span class="text-[10px] text-slate-400">min</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pipeline-stage gap-3">
+                <div class="text-center shrink-0">
+                    <div class="inline-block px-3 py-1 bg-slate-700/50 border border-slate-600 rounded-full w-full">
+                        <h2 class="font-tech text-lg font-bold text-slate-300 tracking-wider truncate">총괄</h2>
+                    </div>
+                </div>
+                <div class="flex-1 flex flex-col gap-2">
+                    <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-slate-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-100 text-sm truncate">경남TP</h3>
+                            <p class="text-[11px] text-slate-400 leading-tight mt-1">사업 총괄 관리</p>
+                        </div>
+                        <div class="bg-slate-900/50 p-2 rounded mt-2">
+                           <p class="font-tech text-lg text-sky-400">85% <span class="text-[10px] text-slate-400">달성</span></p>
+                        </div>
+                    </div>
+                     <div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-slate-500 transition-all cursor-pointer flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-100 text-sm truncate">KTL</h3>
+                            <p class="text-[11px] text-slate-400 leading-tight mt-1">기술/품질 검증</p>
+                        </div>
+                        <div class="bg-slate-900/50 p-2 rounded mt-2">
+                             <p class="font-tech text-lg text-sky-400">7/10 <span class="text-[10px] text-slate-400">Pass</span></p>
                         </div>
                     </div>
                 </div>
