@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초거대 제조 AI 통합 플랫폼 (Clean Pop)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; }
+        
+        /* 스크롤바 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* 애니메이션 */
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-enter { animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden text-slate-800">
+
+    <header class="bg-white border-b border-slate-200 z-50 sticky top-0">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer select-none" onclick="filterCards('ALL')">
+                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/30">AI</div>
+                <div>
+                    <h1 class="text-lg font-extrabold text-slate-900 leading-none">Hyper-Scale</h1>
+                    <p class="text-[11px] font-bold text-indigo-600 tracking-widest mt-1">MANUFACTURING PLATFORM</p>
+                </div>
+            </div>
+            
+            <nav class="hidden md:flex bg-slate-100 p-1.5 rounded-full gap-1">
+                <button onclick="filterCards('ALL')" class="nav-item px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm bg-white text-indigo-700 ring-1 ring-slate-200">ALL</button>
+                <button onclick="filterCards('DATA')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all">Data</button>
+                <button onclick="filterCards('AI')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all">AI</button>
+                <button onclick="filterCards('INFRA')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all">Infra</button>
+                <button onclick="filterCards('NETWORK')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all">Network</button>
+                <button onclick="filterCards('ORG')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all">Org</button>
+                <button onclick="filterCards('SERVICE')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all">Service</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-20 z-40">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex items-center gap-4 overflow-x-auto no-scrollbar">
+            <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Active Teams</span>
+            <div class="h-4 w-px bg-slate-300"></div>
+            <div id="company-list" class="flex flex-wrap gap-2">
+            </div>
+        </div>
+    </div>
+
+    <main class="flex-1 overflow-y-auto p-8 bg-slate-50">
+        <div class="max-w-7xl mx-auto pb-20">
+            <div class="flex items-end justify-between mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Project Portfolio</h2>
+                    <p class="text-slate-500 text-sm mt-1">DAINOS 6대 전략 분야별 핵심 성과 전시관</p>
+                </div>
+                <div class="hidden sm:block text-right">
+                    <div class="text-3xl font-black text-indigo-600" id="count-display">14</div>
+                    <div class="text-xs font-bold text-slate-400 uppercase">Total Items</div>
+                </div>
+            </div>
+
+            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400 font-medium">
+        © 2026 Smart Green Industrial Complex AI Project. All rights reserved.
+    </footer>
+
+    <script>
+        // 데이터 정의 (imgKeyword 추가: 배경 이미지용 키워드)
+        const companies = [
+            { id: 'kyungnam', type: 'DATA', name: '경남대학교', role: 'Standardization', desc: 'AAS 기반 이기종 설비 데이터 표준 모델링', icon: '🧩', border: 'bg-blue-500', text: 'text-blue-600', bg: 'bg-blue-50', imgKeyword: 'blueprint' },
+            { id: 'markbase', type: 'DATA', name: '마크베이스', role: 'High-Speed DB', desc: '초당 100만 건 데이터 처리 성능 확보', icon: '⚡', border: 'bg-blue-500', text: 'text-blue-600', bg: 'bg-blue-50', imgKeyword: 'server' },
+            { id: 'amiqu', type: 'DATA', name: '아미크', role: 'Legacy Connect', desc: '기존 ERP 데이터 연동 파이프라인 구축', icon: '⚙️', border: 'bg-blue-500', text: 'text-blue-600', bg: 'bg-blue-50', imgKeyword: 'gear' },
+            { id: 'nestfield', type: 'DATA', name: '네스트필드', role: 'Interoperability', desc: '이종 시스템 간 데이터 상호운용성 확보', icon: '🔄', border: 'bg-blue-500', text: 'text-blue-600', bg: 'bg-blue-50', imgKeyword: 'connection' },
+            { id: 'keti', type: 'DATA', name: 'KETI', role: 'AIoT Edge', desc: '현장 설비 부착형 지능형 엣지 디바이스', icon: '📟', border: 'bg-blue-500', text: 'text-blue-600', bg: 'bg-blue-50', imgKeyword: 'chip' },
+            { id: 'kaist', type: 'AI', name: 'KAIST', role: 'Hyperscale AI', desc: '제조 특화 LLM 모델 개발 및 질의응답', icon: '🧠', border: 'bg-purple-500', text: 'text-purple-600', bg: 'bg-purple-50', imgKeyword: 'artificial-intelligence' },
+            { id: 'nextstudio', type: 'AI', name: '넥스트스튜디오', role: 'ESG AI', desc: '탄소 배출량 예측 및 저감 관리 모델', icon: '🌿', border: 'bg-purple-500', text: 'text-purple-600', bg: 'bg-purple-50', imgKeyword: 'nature' },
+            { id: 'megazone', type: 'INFRA', name: '메가존클라우드', role: 'Cloud Infra', desc: '하이브리드 AI 클라우드 센터(EBC) 구축', icon: '☁️', border: 'bg-slate-600', text: 'text-slate-600', bg: 'bg-slate-100', imgKeyword: 'cloud-server' },
+            { id: 'limecsi', type: 'NETWORK', name: '라임씨에스아이', role: '5G Network', desc: '공장 내 음영 구역 없는 5G 특화망 구축', icon: '📶', border: 'bg-emerald-500', text: 'text-emerald-600', bg: 'bg-emerald-50', imgKeyword: 'network' },
+            { id: 'gntp', type: 'ORG', name: '경남TP', role: 'Project Management', desc: '사업 총괄 및 참여 기관 관리', icon: '📋', border: 'bg-orange-500', text: 'text-orange-600', bg: 'bg-orange-50', imgKeyword: 'clipboard' },
+            { id: 'ktl', type: 'ORG', name: 'KTL', role: 'Verification', desc: 'AI 모델 및 데이터 품질 신뢰성 검증', icon: '📜', border: 'bg-orange-500', text: 'text-orange-600', bg: 'bg-orange-50', imgKeyword: 'document' },
+            { id: 'sortech', type: 'SERVICE', name: '소르테크', role: 'Vision AI', desc: '육안 검사 대비 속도 2배 향상 불량 검출', icon: '📸', border: 'bg-pink-500', text: 'text-pink-600', bg: 'bg-pink-50', imgKeyword: 'camera-lens' },
+            { id: 'dxsolutions', type: 'SERVICE', name: 'DX솔루션즈', role: 'Traceability', desc: '불량 발생 원인 자동 역추적 시스템', icon: '🕵️', border: 'bg-pink-500', text: 'text-pink-600', bg: 'bg-pink-50', imgKeyword: 'magnifying-glass' },
+            { id: 'sdtech', type: 'SERVICE', name: '에스디테크', role: 'Sensing', desc: '설비 진동/온도 실시간 데이터 수집', icon: '📈', border: 'bg-pink-500', text: 'text-pink-600', bg: 'bg-pink-50', imgKeyword: 'analytics' },
+            { id: 'metaisquare', type: 'SERVICE', name: '메타아이스퀘어', role: 'Monitoring', desc: '제조 공정 이상 징후 실시간 관제', icon: '🚨', border: 'bg-pink-500', text: 'text-pink-600', bg: 'bg-pink-50', imgKeyword: 'control-room' }
+        ];
+
+        function filterCards(filterType) {
+            const grid = document.getElementById('card-grid');
+            const listBar = document.getElementById('company-list');
+            const countDisplay = document.getElementById('count-display');
+            
+            const filtered = filterType === 'ALL' ? companies : companies.filter(c => c.type === filterType);
+            
+            // 카운트 업데이트
+            countDisplay.innerText = filtered.length;
+
+            // 1. 네비게이션 버튼 스타일 업데이트
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                const type = btn.innerText;
+                if (type === filterType || (filterType === 'ALL' && type === 'ALL')) {
+                    btn.className = "nav-item px-5 py-2 rounded-full text-sm font-bold transition-all shadow-md bg-white text-indigo-700 ring-1 ring-slate-200 scale-105";
+                } else {
+                    btn.className = "nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all";
+                }
+            });
+
+            // 2. 상단 칩 리스트 업데이트
+            listBar.innerHTML = '';
+            filtered.forEach(item => {
+                const chip = document.createElement('span');
+                chip.className = `px-3 py-1.5 rounded-md text-[11px] font-bold bg-white border border-slate-200 text-slate-600 shadow-sm flex items-center gap-1.5 animate-[fadeIn_0.3s_ease-out]`;
+                chip.innerHTML = `<span class="${item.text}">${item.icon}</span> ${item.name}`;
+                listBar.appendChild(chip);
+            });
+
+            // 3. 카드 그리드 업데이트
+            grid.innerHTML = '';
+            filtered.forEach((item, index) => {
+                // 이미지 URL 생성 (Unsplash Source 사용)
+                const bgImage = `https://source.unsplash.com/800x600/?${item.imgKeyword},technology`;
+                
+                const card = `
+                    <a href="mockUp8.html?company=${item.id}" class="block card-enter h-full" style="animation-delay: ${index * 50}ms">
+                        <div class="bg-white rounded-2xl overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.2)] hover:-translate-y-1.5 transition-all duration-500 border border-slate-100 group flex flex-col h-full relative">
+                            
+                            <div class="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out opacity-0 group-hover:opacity-10 group-hover:scale-110 pointer-events-none"
+                                 style="background-image: url('https://source.unsplash.com/random/600x400?${item.imgKeyword},tech');">
+                            </div>
+
+                            <div class="h-1 w-full ${item.border} relative z-10"></div>
+
+                            <div class="p-6 flex flex-col flex-1 relative z-10">
+                                <div class="flex justify-between items-start mb-5">
+                                    <div class="w-14 h-14 rounded-2xl ${item.bg} flex items-center justify-center text-3xl shadow-inner group-hover:scale-110 transition-transform duration-300">
+                                        ${item.icon}
+                                    </div>
+                                    <span class="px-2.5 py-1 rounded bg-slate-100 text-[10px] font-bold text-slate-500 border border-slate-200 uppercase tracking-wide group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                                        ${item.type}
+                                    </span>
+                                </div>
+
+                                <h3 class="text-xl font-bold text-slate-800 mb-1 group-hover:text-indigo-600 transition-colors">${item.name}</h3>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-4">${item.role}</p>
+                                
+                                <p class="text-slate-600 text-sm leading-relaxed flex-1">
+                                    ${item.desc}
+                                </p>
+
+                                <div class="mt-6 pt-2 flex items-center justify-between">
+                                    <span class="text-[10px] text-slate-300 font-medium">Updated just now</span>
+                                    <div class="text-xs font-bold ${item.text} bg-white border border-slate-100 px-3 py-1.5 rounded-lg shadow-sm group-hover:bg-indigo-600 group-hover:text-white group-hover:border-transparent transition-all">
+                                        View Detail →
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                `;
+                grid.insertAdjacentHTML('beforeend', card);
+            });
+        }
+
+        filterCards('ALL');
+    </script>
+</body>
+</html>

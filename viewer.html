@@ -11,38 +11,28 @@
         iframe { border: none; width: 100%; height: 100%; }
     </style>
 </head>
-<body class="h-screen flex overflow-hidden bg-slate-900 text-white">
+<body class="h-screen flex overflow-hidden bg-slate-100 text-slate-800">
 
-    <aside class="w-64 flex flex-col border-r border-slate-700 bg-slate-800 shadow-2xl z-10">
-        <div class="p-6 border-b border-slate-700">
-            <h1 class="text-xl font-bold text-white flex items-center gap-2">
-                <span class="text-indigo-400">❖</span> Mockup Viewer
+    <aside class="w-64 flex flex-col border-r border-slate-200 bg-white shadow-2xl z-10">
+        <div class="p-6 border-b border-slate-200">
+            <h1 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                <span class="text-indigo-500">❖</span> Mockup Viewer
             </h1>
-            <p class="text-xs text-slate-400 mt-2">Select a design to preview</p>
+            <p class="text-xs text-slate-500 mt-2">Select a design to preview</p>
         </div>
 
         <nav class="flex-1 overflow-y-auto p-4 space-y-1" id="file-list">
             </nav>
 
-        <div class="p-4 border-t border-slate-700 bg-slate-900/50">
-            <button onclick="reloadFrame()" class="w-full py-2 px-3 rounded text-sm font-medium bg-slate-700 hover:bg-slate-600 text-slate-200 transition-colors flex items-center justify-center gap-2">
+        <div class="p-4 border-t border-slate-200 bg-slate-50">
+            <button onclick="reloadFrame()" class="w-full py-2 px-3 rounded text-sm font-medium bg-slate-200 hover:bg-slate-300 text-slate-700 transition-colors flex items-center justify-center gap-2">
                 <span>↻</span> Refresh View
             </button>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col relative bg-white">
-        <div class="h-12 bg-slate-100 border-b border-slate-200 flex items-center justify-between px-4">
-            <div class="text-sm font-bold text-slate-600" id="current-file-name">Select a file...</div>
-            <div class="flex items-center gap-2">
-                <span class="text-xs text-slate-400 bg-slate-200 px-2 py-1 rounded">1920 x 1080 (Desktop)</span>
-                <a id="open-new-tab" href="#" target="_blank" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 px-2 py-1">Open in New Tab ↗</a>
-            </div>
-        </div>
-
-        <div class="flex-1 bg-slate-50 relative">
-            <iframe id="preview-frame" src="" class="absolute inset-0 w-full h-full"></iframe>
-        </div>
+    <main class="flex-1 bg-slate-50 relative">
+        <iframe id="preview-frame" src="" class="absolute inset-0 w-full h-full"></iframe>
     </main>
 
     <script>
@@ -50,22 +40,18 @@
         const files = [
             { name: 'Mockup 1', file: 'mockUp1.html' },
             { name: 'Mockup 2', file: 'mockUp2.html' },
-            { name: 'Mockup 3', file: 'mockUp3.html' },
-            { name: 'Mockup 4', file: 'mockUp4.html' },
-            { name: 'Mockup 5', file: 'mockUp5.html' },
+            { name: 'Mockup 3', file: 'mockUp3.html' },            
         ];
 
         const listContainer = document.getElementById('file-list');
         const iframe = document.getElementById('preview-frame');
-        const titleDisplay = document.getElementById('current-file-name');
-        const newTabLink = document.getElementById('open-new-tab');
 
         // 초기 실행
         function init() {
             files.forEach((item, index) => {
                 const btn = document.createElement('button');
                 btn.className = `w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-between group
-                    ${index === 0 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30' : 'text-slate-400 hover:bg-slate-700 hover:text-white'}`;
+                    ${index === 0 ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`;
                 
                 btn.innerHTML = `
                     <span>${item.name}</span>
@@ -85,16 +71,13 @@
             // iframe 주소 변경
             iframe.src = item.file;
             
-            // 상단 정보 업데이트
-            titleDisplay.innerText = item.file;
-            newTabLink.href = item.file;
 
             // 버튼 스타일 업데이트 (Active 상태 변경)
             const allBtns = listContainer.querySelectorAll('button');
             allBtns.forEach(btn => {
-                btn.className = 'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-between group text-slate-400 hover:bg-slate-700 hover:text-white';
+                btn.className = 'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-between group text-slate-600 hover:bg-slate-100 hover:text-slate-900';
             });
-            clickedBtn.className = 'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-between group bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 ring-1 ring-indigo-400';
+            clickedBtn.className = 'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-between group bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 ring-1 ring-indigo-400';
         }
 
         // 새로고침 기능

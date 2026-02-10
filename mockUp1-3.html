@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초거대 제조 AI 통합 플랫폼 (Glass Mode)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Pretendard', sans-serif; }
+        .font-tech { font-family: 'Rajdhani', sans-serif; }
+
+        /* 움직이는 그라데이션 배경 */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animate-bg {
+            background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #172554);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        /* 스크롤바 커스텀 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
+
+        /* 유리 카드 효과 */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 텍스트 글로우 효과 */
+        .text-glow { text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden text-white animate-bg">
+
+    <header class="glass-panel z-50 sticky top-0 border-b-0 border-b-white/10">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="filterCards('ALL')">
+                <div class="relative w-10 h-10 flex items-center justify-center">
+                    <div class="absolute inset-0 bg-cyan-500 blur-lg opacity-40 group-hover:opacity-60 transition-opacity"></div>
+                    <div class="relative w-full h-full bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center border border-white/20">
+                        <span class="font-bold text-white">AI</span>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white group-hover:text-cyan-300 transition-colors">HYPER<span class="font-light text-white/50 mx-1">|</span>SCALE</h1>
+                    <p class="text-[10px] text-cyan-400 font-tech tracking-[0.2em] uppercase">Manufacturing Platform</p>
+                </div>
+            </div>
+            
+            <nav class="hidden md:flex gap-1 bg-white/5 p-1 rounded-full border border-white/10 backdrop-blur-md">
+                <button onclick="filterCards('ALL')" class="nav-item px-6 py-2 rounded-full text-sm font-bold transition-all text-cyan-300 bg-white/10 border border-cyan-500/30 shadow-[0_0_15px_rgba(34,211,238,0.2)]">ALL</button>
+                <button onclick="filterCards('DATA')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Data</button>
+                <button onclick="filterCards('AI')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">AI</button>
+                <button onclick="filterCards('INFRA')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Infra</button>
+                <button onclick="filterCards('NETWORK')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Network</button>
+                <button onclick="filterCards('ORG')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Org</button>
+                <button onclick="filterCards('SERVICE')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Service</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="border-b border-white/5 bg-black/20 backdrop-blur-sm z-40">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex items-center gap-4">
+            <div class="flex items-center gap-2 text-cyan-400 font-tech uppercase tracking-widest text-xs font-bold border-r border-white/10 pr-4">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span> Active
+            </div>
+            <div id="company-list" class="flex flex-wrap gap-2">
+                </div>
+        </div>
+    </div>
+
+    <main class="flex-1 overflow-y-auto p-8 relative">
+        <div class="fixed top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="fixed bottom-1/4 right-1/4 w-96 h-96 bg-cyan-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto pb-20 relative z-10">
+            <div class="mb-10 flex items-end justify-between">
+                <div>
+                    <h2 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-white drop-shadow-lg font-tech">SYSTEM PORTFOLIO</h2>
+                    <p class="text-white/50 mt-2 text-sm font-light tracking-wide">DAINOS 전략 기반 3차년도 핵심 성과 전시관</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-5xl font-tech font-bold text-white/10" id="count-display">14</div>
+                </div>
+            </div>
+
+            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-white/5 bg-black/20 py-6 text-center text-xs text-white/30 font-light">
+        © 2026 Hyper-Scale AI Project. Powered by DAINOS Strategy.
+    </footer>
+
+    <script>
+        // 데이터 (글래스 모드용 색상 조정)
+        const companies = [
+            { id: 'kyungnam', type: 'DATA', name: '경남대학교', role: 'Standardization', desc: 'AAS 기반 이기종 설비 데이터 표준 모델링', icon: '🧩', color: 'text-blue-400', glow: 'shadow-blue-500/20' },
+            { id: 'markbase', type: 'DATA', name: '마크베이스', role: 'High-Speed DB', desc: '초당 100만 건 데이터 처리 성능 확보', icon: '⚡', color: 'text-blue-400', glow: 'shadow-blue-500/20' },
+            { id: 'amiqu', type: 'DATA', name: '아미크', role: 'Legacy Connect', desc: '기존 ERP 데이터 연동 파이프라인 구축', icon: '⚙️', color: 'text-blue-400', glow: 'shadow-blue-500/20' },
+            { id: 'nestfield', type: 'DATA', name: '네스트필드', role: 'Interoperability', desc: '이종 시스템 간 데이터 상호운용성 확보', icon: '🔄', color: 'text-blue-400', glow: 'shadow-blue-500/20' },
+            { id: 'keti', type: 'DATA', name: 'KETI', role: 'AIoT Edge', desc: '현장 설비 부착형 지능형 엣지 개발', icon: '📟', color: 'text-blue-400', glow: 'shadow-blue-500/20' },
+            { id: 'kaist', type: 'AI', name: 'KAIST', role: 'Hyperscale AI', desc: '제조 특화 LLM 모델 개발 및 질의응답', icon: '🧠', color: 'text-purple-400', glow: 'shadow-purple-500/20' },
+            { id: 'nextstudio', type: 'AI', name: '넥스트스튜디오', role: 'ESG AI', desc: '탄소 배출량 예측 및 저감 관리 모델', icon: '🌿', color: 'text-purple-400', glow: 'shadow-purple-500/20' },
+            { id: 'megazone', type: 'INFRA', name: '메가존클라우드', role: 'Cloud Infra', desc: '하이브리드 AI 클라우드 센터(EBC) 구축', icon: '☁️', color: 'text-slate-300', glow: 'shadow-slate-500/20' },
+            { id: 'limecsi', type: 'NETWORK', name: '라임씨에스아이', role: '5G Network', desc: '공장 내 음영 구역 없는 5G 특화망 구축', icon: '📶', color: 'text-emerald-400', glow: 'shadow-emerald-500/20' },
+            { id: 'gntp', type: 'ORG', name: '경남TP', role: 'Project Management', desc: '사업 총괄 및 참여 기관 관리', icon: '📋', color: 'text-orange-400', glow: 'shadow-orange-500/20' },
+            { id: 'ktl', type: 'ORG', name: 'KTL', role: 'Verification', desc: 'AI 모델 및 데이터 품질 신뢰성 검증', icon: '📜', color: 'text-orange-400', glow: 'shadow-orange-500/20' },
+            { id: 'sortech', type: 'SERVICE', name: '소르테크', role: 'Vision AI', desc: '육안 검사 대비 속도 2배 향상 불량 검출', icon: '📸', color: 'text-pink-400', glow: 'shadow-pink-500/20' },
+            { id: 'dxsolutions', type: 'SERVICE', name: 'DX솔루션즈', role: 'Traceability', desc: '불량 발생 원인 자동 역추적 시스템', icon: '🕵️', color: 'text-pink-400', glow: 'shadow-pink-500/20' },
+            { id: 'sdtech', type: 'SERVICE', name: '에스디테크', role: 'Sensing', desc: '설비 진동/온도 실시간 데이터 수집', icon: '📈', color: 'text-pink-400', glow: 'shadow-pink-500/20' },
+            { id: 'metaisquare', type: 'SERVICE', name: '메타아이스퀘어', role: 'Monitoring', desc: '제조 공정 이상 징후 실시간 관제', icon: '🚨', color: 'text-pink-400', glow: 'shadow-pink-500/20' }
+        ];
+
+        function filterCards(filterType) {
+            const grid = document.getElementById('card-grid');
+            const listBar = document.getElementById('company-list');
+            const countDisplay = document.getElementById('count-display');
+            
+            const filtered = filterType === 'ALL' ? companies : companies.filter(c => c.type === filterType);
+            
+            // 카운트 업데이트
+            countDisplay.innerText = filtered.length;
+
+            // 네비게이션 버튼 스타일
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                const type = btn.innerText;
+                if (type === filterType || (filterType === 'ALL' && type === 'ALL')) {
+                    btn.className = "nav-item px-6 py-2 rounded-full text-sm font-bold transition-all text-cyan-300 bg-white/10 border border-cyan-500/50 shadow-[0_0_15px_rgba(34,211,238,0.2)] scale-105";
+                } else {
+                    btn.className = "nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all border border-transparent";
+                }
+            });
+
+            // 칩 업데이트
+            listBar.innerHTML = '';
+            filtered.forEach(item => {
+                const chip = document.createElement('div');
+                chip.className = `px-3 py-1 rounded-full text-[11px] bg-white/5 border border-white/10 text-white/80 flex items-center gap-2 animate-[fadeIn_0.5s] hover:bg-white/10 transition-colors cursor-default`;
+                chip.innerHTML = `<span class="${item.color}">${item.icon}</span> ${item.name}`;
+                listBar.appendChild(chip);
+            });
+
+            // 카드 그리드 업데이트 (글래스 스타일)
+            grid.innerHTML = '';
+            filtered.forEach((item, index) => {
+                // border-t-2 로 상단 컬러 포인트 추가
+                const card = `
+                    <a href="mockUp8.html?company=${item.id}" class="block h-full">
+                        <div class="glass-card rounded-2xl overflow-hidden hover:-translate-y-2 hover:shadow-[0_10px_40px_rgba(0,0,0,0.5)] transition-all duration-500 group flex flex-col h-full animate-[slideUp_0.5s_ease-out_forwards] border-t-2 ${item.color.replace('text', 'border')}" style="animation-delay: ${index * 70}ms; opacity: 0;">
+                            
+                            <div class="h-32 bg-gradient-to-b from-white/5 to-transparent relative flex items-center justify-center group-hover:from-white/10 transition-colors duration-500">
+                                 <div class="absolute w-20 h-20 rounded-full ${item.color.replace('text', 'bg')} blur-[40px] opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                                 
+                                 <div class="relative z-10 text-5xl group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl">
+                                    ${item.icon}
+                                 </div>
+                                 
+                                 <div class="absolute top-3 right-3">
+                                    <span class="text-[10px] font-bold px-2 py-1 rounded border border-white/10 bg-black/30 text-white/70 backdrop-blur-md">
+                                        ${item.type}
+                                    </span>
+                                 </div>
+                            </div>
+
+                            <div class="p-6 flex flex-col flex-1 relative">
+                                <h3 class="text-xl font-bold text-white mb-1 group-hover:text-cyan-300 transition-colors tracking-tight">${item.name}</h3>
+                                <p class="text-xs font-bold ${item.color} uppercase tracking-widest mb-4 opacity-80">${item.role}</p>
+                                
+                                <p class="text-slate-300 text-sm leading-relaxed font-light flex-1 border-t border-white/5 pt-4">
+                                    ${item.desc}
+                                </p>
+                                
+                                <div class="mt-6 flex justify-end">
+                                    <div class="text-xs text-cyan-400/50 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all duration-300 font-tech tracking-wider cursor-pointer">
+                                        VIEW DETAIL >>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                `;
+                grid.insertAdjacentHTML('beforeend', card);
+            });
+        }
+
+        // 애니메이션 정의
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        `;
+        document.head.appendChild(style);
+
+        filterCards('ALL');
+    </script>
+</body>
+</html>

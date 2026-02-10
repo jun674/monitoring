@@ -3,180 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>초거대 제조 AI 통합 플랫폼 (Clean Pop)</title>
+    <title>초거대제조AI - 통합 데이터 흐름 대시보드</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; }
-        
-        /* 스크롤바 */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
-        /* 애니메이션 */
-        @keyframes slideUpFade {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #020617; /* slate-950 */
         }
-        .card-enter { animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .font-tech { font-family: 'Rajdhani', sans-serif; }
+        .pipeline-stage {
+            min-width: 320px;
+            scroll-snap-align: start;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .status-normal { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; }
+        .status-warning { background-color: #facc15; box-shadow: 0 0 5px #facc15; }
+        .status-danger { background-color: #ef4444; box-shadow: 0 0 5px #ef4444; }
+
+        @keyframes pulse-normal { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .animate-pulse-normal { animation: pulse-normal 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+        @keyframes pulse-danger { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } }
+        .animate-pulse-danger { animation: pulse-danger 1s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        
+        .flow-arrow {
+            color: #334155; /* slate-700 */
+            font-size: 2.5rem;
+            opacity: 0.5;
+        }
+        /* Custom Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="h-screen flex flex-col overflow-hidden text-slate-800">
+<body class="text-slate-200 h-screen flex flex-col">
 
-    <header class="bg-white border-b border-slate-200 z-50 sticky top-0">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer select-none" onclick="filterCards('ALL')">
-                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/30">AI</div>
-                <div>
-                    <h1 class="text-lg font-extrabold text-slate-900 leading-none">Hyper-Scale</h1>
-                    <p class="text-[11px] font-bold text-indigo-600 tracking-widest mt-1">MANUFACTURING PLATFORM</p>
-                </div>
+    <header class="bg-slate-900/50 backdrop-blur-sm border-b border-slate-800 z-20">
+        <div class="max-w-screen-2xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-sky-600 rounded flex items-center justify-center font-bold text-white shadow-lg shadow-sky-500/30">AI</div>
+                <h1 class="text-xl font-bold text-white">통합 데이터 흐름 대시보드</h1>
             </div>
-            
-            <nav class="hidden md:flex bg-slate-100 p-1.5 rounded-full gap-1">
-                <button onclick="filterCards('ALL')" class="nav-item px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm bg-white text-indigo-700 ring-1 ring-slate-200">ALL</button>
-                <button onclick="filterCards('DATA')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all">Data</button>
-                <button onclick="filterCards('AI')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all">AI</button>
-                <button onclick="filterCards('INFRA')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all">Infra</button>
-                <button onclick="filterCards('NETWORK')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all">Network</button>
-                <button onclick="filterCards('ORG')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all">Org</button>
-                <button onclick="filterCards('SERVICE')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all">Service</button>
-            </nav>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 text-xs">
+                    <div class="status-dot status-normal animate-pulse-normal"></div>
+                    <span>시스템 상태: <span class="font-bold text-green-400">정상</span></span>
+                </div>
+                <div class="w-px h-6 bg-slate-700"></div>
+                <span class="text-xs text-slate-400 font-medium">Last Updated: <span class="font-mono">2026-02-09 11:24:00</span></span>
+            </div>
         </div>
     </header>
 
-    <div class="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-20 z-40">
-        <div class="max-w-7xl mx-auto px-6 py-3 flex items-center gap-4 overflow-x-auto no-scrollbar">
-            <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Active Teams</span>
-            <div class="h-4 w-px bg-slate-300"></div>
-            <div id="company-list" class="flex flex-wrap gap-2">
-            </div>
-        </div>
-    </div>
+    <main class="flex-1 flex flex-col overflow-hidden min-w-0">
+        <div id="pipeline-container" class="flex-1 flex items-center gap-8 px-8 overflow-x-auto no-scrollbar" style="scroll-snap-type: x mandatory;">
 
-    <main class="flex-1 overflow-y-auto p-8 bg-slate-50">
-        <div class="max-w-7xl mx-auto pb-20">
-            <div class="flex items-end justify-between mb-8">
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-900">Project Portfolio</h2>
-                    <p class="text-slate-500 text-sm mt-1">DAINOS 6대 전략 분야별 핵심 성과 전시관</p>
+            <!-- Stage 1: 데이터 수집 -->
+            <div class="pipeline-stage flex flex-col gap-6">
+                <div class="text-center">
+                    <div class="inline-block px-4 py-1.5 bg-blue-900/50 border border-blue-700 rounded-full">
+                        <h2 class="font-tech text-xl font-bold text-blue-300 tracking-wider">① 데이터 수집</h2>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-1">현장(OT/IT)의 원천 데이터를 디지털로 변환</p>
                 </div>
-                <div class="hidden sm:block text-right">
-                    <div class="text-3xl font-black text-indigo-600" id="count-display">14</div>
-                    <div class="text-xs font-bold text-slate-400 uppercase">Total Items</div>
-                </div>
-            </div>
-
-            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            </div>
-        </div>
-    </main>
-
-    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400 font-medium">
-        © 2026 Smart Green Industrial Complex AI Project. All rights reserved.
-    </footer>
-
-    <script>
-        // 데이터 정의 (imgKeyword 추가: 배경 이미지용 키워드)
-        const companies = [
-            { type: 'DATA', name: '경남대학교', role: 'Standardization', desc: 'AAS 기반 이기종 설비 데이터 표준 모델링', icon: '🧩', border: 'bg-blue-500', text: 'text-blue-600', bg: 'bg-blue-50', imgKeyword: 'blueprint' },
-            { type: 'DATA', name: '마크베이스', role: 'High-Speed DB', desc: '초당 100만 건 데이터 처리 성능 확보', icon: '⚡', border: 'bg-blue-500', text: 'text-blue-600', bg: 'bg-blue-50', imgKeyword: 'server' },
-            { type: 'DATA', name: '아미크', role: 'Legacy Connect', desc: '기존 ERP 데이터 연동 파이프라인 구축', icon: '⚙️', border: 'bg-blue-500', text: 'text-blue-600', bg: 'bg-blue-50', imgKeyword: 'gear' },
-            { type: 'DATA', name: '네스트필드', role: 'Interoperability', desc: '이종 시스템 간 데이터 상호운용성 확보', icon: '🔄', border: 'bg-blue-500', text: 'text-blue-600', bg: 'bg-blue-50', imgKeyword: 'connection' },
-            { type: 'DATA', name: 'KETI', role: 'AIoT Edge', desc: '현장 설비 부착형 지능형 엣지 디바이스', icon: '📟', border: 'bg-blue-500', text: 'text-blue-600', bg: 'bg-blue-50', imgKeyword: 'chip' },
-
-            { type: 'AI', name: 'KAIST', role: 'Hyperscale AI', desc: '제조 특화 LLM 모델 개발 및 질의응답', icon: '🧠', border: 'bg-purple-500', text: 'text-purple-600', bg: 'bg-purple-50', imgKeyword: 'artificial-intelligence' },
-            { type: 'AI', name: '넥스트스튜디오', role: 'ESG AI', desc: '탄소 배출량 예측 및 저감 관리 모델', icon: '🌿', border: 'bg-purple-500', text: 'text-purple-600', bg: 'bg-purple-50', imgKeyword: 'nature' },
-
-            { type: 'INFRA', name: '메가존클라우드', role: 'Cloud Infra', desc: '하이브리드 AI 클라우드 센터(EBC) 구축', icon: '☁️', border: 'bg-slate-600', text: 'text-slate-600', bg: 'bg-slate-100', imgKeyword: 'cloud-server' },
-
-            { type: 'NETWORK', name: '라임씨에스아이', role: '5G Network', desc: '공장 내 음영 구역 없는 5G 특화망 구축', icon: '📶', border: 'bg-emerald-500', text: 'text-emerald-600', bg: 'bg-emerald-50', imgKeyword: 'network' },
-
-            { type: 'ORG', name: 'KTL', role: 'Verification', desc: 'AI 모델 및 데이터 품질 신뢰성 검증', icon: '📜', border: 'bg-orange-500', text: 'text-orange-600', bg: 'bg-orange-50', imgKeyword: 'document' },
-
-            { type: 'SERVICE', name: '소르테크', role: 'Vision AI', desc: '육안 검사 대비 속도 2배 향상 불량 검출', icon: '📸', border: 'bg-pink-500', text: 'text-pink-600', bg: 'bg-pink-50', imgKeyword: 'camera-lens' },
-            { type: 'SERVICE', name: 'DX솔루션즈', role: 'Traceability', desc: '불량 발생 원인 자동 역추적 시스템', icon: '🕵️', border: 'bg-pink-500', text: 'text-pink-600', bg: 'bg-pink-50', imgKeyword: 'magnifying-glass' },
-            { type: 'SERVICE', name: '에스디테크', role: 'Sensing', desc: '설비 진동/온도 실시간 데이터 수집', icon: '📈', border: 'bg-pink-500', text: 'text-pink-600', bg: 'bg-pink-50', imgKeyword: 'analytics' },
-            { type: 'SERVICE', name: '메타아이스퀘어', role: 'Monitoring', desc: '제조 공정 이상 징후 실시간 관제', icon: '🚨', border: 'bg-pink-500', text: 'text-pink-600', bg: 'bg-pink-50', imgKeyword: 'control-room' }
-        ];
-
-        function filterCards(filterType) {
-            const grid = document.getElementById('card-grid');
-            const listBar = document.getElementById('company-list');
-            const countDisplay = document.getElementById('count-display');
-            
-            const filtered = filterType === 'ALL' ? companies : companies.filter(c => c.type === filterType);
-            
-            // 카운트 업데이트
-            countDisplay.innerText = filtered.length;
-
-            // 1. 네비게이션 버튼 스타일 업데이트
-            document.querySelectorAll('.nav-item').forEach(btn => {
-                const type = btn.innerText;
-                if (type === filterType || (filterType === 'ALL' && type === 'ALL')) {
-                    btn.className = "nav-item px-5 py-2 rounded-full text-sm font-bold transition-all shadow-md bg-white text-indigo-700 ring-1 ring-slate-200 scale-105";
-                } else {
-                    btn.className = "nav-item px-5 py-2 rounded-full text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-white transition-all";
-                }
-            });
-
-            // 2. 상단 칩 리스트 업데이트
-            listBar.innerHTML = '';
-            filtered.forEach(item => {
-                const chip = document.createElement('span');
-                chip.className = `px-3 py-1.5 rounded-md text-[11px] font-bold bg-white border border-slate-200 text-slate-600 shadow-sm flex items-center gap-1.5 animate-[fadeIn_0.3s_ease-out]`;
-                chip.innerHTML = `<span class="${item.text}">${item.icon}</span> ${item.name}`;
-                listBar.appendChild(chip);
-            });
-
-            // 3. 카드 그리드 업데이트
-            grid.innerHTML = '';
-            filtered.forEach((item, index) => {
-                // 이미지 URL 생성 (Unsplash Source 사용)
-                const bgImage = `https://source.unsplash.com/800x600/?${item.imgKeyword},technology`;
-                
-                const card = `
-                    <div class="card-enter bg-white rounded-2xl overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.2)] hover:-translate-y-1.5 transition-all duration-500 border border-slate-100 group flex flex-col h-full relative" style="animation-delay: ${index * 50}ms">
-                        
-                        <div class="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out opacity-0 group-hover:opacity-10 group-hover:scale-110 pointer-events-none" 
-                             style="background-image: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600&h=400'); background-image: url('https://source.unsplash.com/random/600x400?${item.imgKeyword},tech');">
+                <div class="space-y-4">
+                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-blue-500 transition-all cursor-pointer">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-slate-100">마크베이스 <span class="text-xs font-normal text-slate-400 ml-1">(OT 데이터)</span></h3>
+                            <div class="status-dot status-normal"></div>
                         </div>
+                        <p class="text-xs text-slate-400 mb-3">설비 PLC 및 센서 데이터 실시간 수집</p>
+                        <div class="bg-slate-900/50 p-3 rounded">
+                            <p class="font-tech text-2xl text-sky-400">1.21M <span class="text-sm text-slate-400">records/sec</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-blue-500 transition-all cursor-pointer">
+                        <h3 class="font-bold text-slate-100">아미크 <span class="text-xs font-normal text-slate-400 ml-1">(IT 데이터)</span></h3>
+                        <p class="text-xs text-slate-400 mb-3">ERP, MES 등 기간계 시스템 정보 연동</p>
+                        <div class="bg-slate-900/50 p-3 rounded">
+                            <p class="font-tech text-2xl text-sky-400">99.8% <span class="text-sm text-slate-400">연동 성공률</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-blue-500 transition-all cursor-pointer">
+                        <h3 class="font-bold text-slate-100">KETI <span class="text-xs font-normal text-slate-400 ml-1">(AIoT 엣지)</span></h3>
+                        <p class="text-xs text-slate-400 mb-3">비전, 음향 등 비정형 데이터 엣지 처리</p>
+                        <div class="bg-slate-900/50 p-3 rounded">
+                            <p class="font-tech text-2xl text-sky-400">24 <span class="text-sm text-slate-400">Active Devices</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="h-1 w-full ${item.border} relative z-10"></div>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
 
-                        <div class="p-6 flex flex-col flex-1 relative z-10">
-                            <div class="flex justify-between items-start mb-5">
-                                <div class="w-14 h-14 rounded-2xl ${item.bg} flex items-center justify-center text-3xl shadow-inner group-hover:scale-110 transition-transform duration-300">
-                                    ${item.icon}
-                                </div>
-                                <span class="px-2.5 py-1 rounded bg-slate-100 text-[10px] font-bold text-slate-500 border border-slate-200 uppercase tracking-wide group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
-                                    ${item.type}
-                                </span>
+            <!-- Stage 2: 데이터 전송 -->
+            <div class="pipeline-stage flex flex-col gap-6">
+                 <div class="text-center">
+                    <div class="inline-block px-4 py-1.5 bg-emerald-900/50 border border-emerald-700 rounded-full">
+                        <h2 class="font-tech text-xl font-bold text-emerald-300 tracking-wider">② 데이터 전송</h2>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-1">대용량 데이터를 빠르고 안정적으로 전달</p>
+                </div>
+                 <div class="space-y-4">
+                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-emerald-500 transition-all cursor-pointer">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-slate-100">라임씨에스아이</h3>
+                            <div class="status-dot status-normal"></div>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-3">5G 특화망 기반 초고속/초저지연 네트워크</p>
+                        <div class="bg-slate-900/50 p-3 rounded flex justify-around">
+                            <div>
+                                <p class="text-xs text-slate-500">지연시간</p>
+                                <p class="font-tech text-xl text-sky-400">1.5 <span class="text-sm">ms</span></p>
                             </div>
-
-                            <h3 class="text-xl font-bold text-slate-800 mb-1 group-hover:text-indigo-600 transition-colors">${item.name}</h3>
-                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 pb-4">${item.role}</p>
-                            
-                            <p class="text-slate-600 text-sm leading-relaxed flex-1">
-                                ${item.desc}
-                            </p>
-
-                            <div class="mt-6 pt-2 flex items-center justify-between">
-                                <span class="text-[10px] text-slate-300 font-medium">Updated just now</span>
-                                <button class="text-xs font-bold ${item.text} bg-white border border-slate-100 px-3 py-1.5 rounded-lg shadow-sm group-hover:bg-indigo-600 group-hover:text-white group-hover:border-transparent transition-all">
-                                    View Detail →
-                                </button>
+                            <div>
+                                <p class="text-xs text-slate-500">전송량</p>
+                                <p class="font-tech text-xl text-sky-400">8.2 <span class="text-sm">TB/day</span></p>
                             </div>
                         </div>
                     </div>
-                `;
-                grid.insertAdjacentHTML('beforeend', card);
-            });
-        }
+                 </div>
+            </div>
 
-        filterCards('ALL');
-    </script>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+
+            <!-- Stage 3: 플랫폼 -->
+            <div class="pipeline-stage flex flex-col gap-6">
+                <div class="text-center">
+                    <div class="inline-block px-4 py-1.5 bg-indigo-900/50 border border-indigo-700 rounded-full">
+                        <h2 class="font-tech text-xl font-bold text-indigo-300 tracking-wider">③ 플랫폼</h2>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-1">데이터 저장, 표준화 및 AI 학습/운영 환경 제공</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-indigo-500 transition-all cursor-pointer">
+                        <h3 class="font-bold text-slate-100">메가존클라우드 <span class="text-xs font-normal text-slate-400 ml-1">(인프라)</span></h3>
+                        <p class="text-xs text-slate-400 mb-3">하이브리드 AI 클라우드 인프라(EBC) 운영</p>
+                        <div class="bg-slate-900/50 p-3 rounded">
+                             <p class="font-tech text-2xl text-sky-400">99.98% <span class="text-sm text-slate-400">가동률</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-indigo-500 transition-all cursor-pointer">
+                        <h3 class="font-bold text-slate-100">경남대학교 <span class="text-xs font-normal text-slate-400 ml-1">(표준화)</span></h3>
+                        <p class="text-xs text-slate-400 mb-3">AAS(자산관리쉘) 기반 데이터 표준화</p>
+                         <div class="bg-slate-900/50 p-3 rounded">
+                            <p class="font-tech text-2xl text-sky-400">1,204 <span class="text-sm text-slate-400">AAS Models</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-indigo-500 transition-all cursor-pointer">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-slate-100">네스트필드 <span class="text-xs font-normal text-slate-400 ml-1">(인터페이스)</span></h3>
+                             <div class="status-dot status-warning animate-pulse"></div>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-3">이종 시스템 간 데이터 상호운용성 제공</p>
+                        <div class="bg-slate-900/50 p-3 rounded">
+                            <p class="font-tech text-2xl text-yellow-400">85% <span class="text-sm text-slate-400">API 성공률</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+            
+            <!-- Stage 4: AI 분석 -->
+             <div class="pipeline-stage flex flex-col gap-6">
+                <div class="text-center">
+                    <div class="inline-block px-4 py-1.5 bg-purple-900/50 border border-purple-700 rounded-full">
+                        <h2 class="font-tech text-xl font-bold text-purple-300 tracking-wider">④ AI 분석</h2>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-1">핵심 AI 모델을 통해 데이터로부터 인사이트 도출</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-purple-500 transition-all cursor-pointer">
+                        <h3 class="font-bold text-slate-100">KAIST <span class="text-xs font-normal text-slate-400 ml-1">(초거대 AI)</span></h3>
+                        <p class="text-xs text-slate-400 mb-3">제조 특화 LLM 기반 원인분석 및 해결책 제안</p>
+                        <div class="bg-slate-900/50 p-3 rounded">
+                           <p class="font-tech text-2xl text-sky-400">92% <span class="text-sm text-slate-400">정확도</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-purple-500 transition-all cursor-pointer">
+                        <h3 class="font-bold text-slate-100">넥스트스튜디오 <span class="text-xs font-normal text-slate-400 ml-1">(ESG AI)</span></h3>
+                        <p class="text-xs text-slate-400 mb-3">탄소 배출량 예측 및 저감 시뮬레이션</p>
+                        <div class="bg-slate-900/50 p-3 rounded">
+                             <p class="font-tech text-2xl text-sky-400">-7.5% <span class="text-sm text-slate-400">예상 저감률</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+
+            <!-- Stage 5: 응용 서비스 -->
+             <div class="pipeline-stage flex flex-col gap-6">
+                <div class="text-center">
+                    <div class="inline-block px-4 py-1.5 bg-rose-900/50 border border-rose-700 rounded-full">
+                        <h2 class="font-tech text-xl font-bold text-rose-300 tracking-wider">⑤ 응용 서비스</h2>
+                    </div>
+                     <p class="text-sm text-slate-500 mt-1">수요 기업의 실제 문제를 해결하는 서비스</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-rose-500 transition-all cursor-pointer">
+                         <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-slate-100">소르테크 <span class="text-xs font-normal text-slate-400 ml-1">(품질검사)</span></h3>
+                             <div class="status-dot status-danger animate-pulse-danger"></div>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-3">AI 비전 기반 불량 검출 자동화</p>
+                         <div class="bg-slate-900/50 p-3 rounded">
+                            <p class="font-tech text-2xl text-red-400">15 <span class="text-sm text-slate-400">Defects/hour</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-rose-500 transition-all cursor-pointer">
+                        <h3 class="font-bold text-slate-100">DX솔루션즈 <span class="text-xs font-normal text-slate-400 ml-1">(불량 역추적)</span></h3>
+                        <p class="text-xs text-slate-400 mb-3">불량 발생 시 연관 공정 및 원인 추적</p>
+                        <div class="bg-slate-900/50 p-3 rounded">
+                            <p class="font-tech text-2xl text-sky-400">3.2 <span class="text-sm text-slate-400">min/case</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+
+            <!-- Stage 6: 총괄 및 검증 -->
+            <div class="pipeline-stage flex flex-col gap-6">
+                <div class="text-center">
+                    <div class="inline-block px-4 py-1.5 bg-slate-700/50 border border-slate-600 rounded-full">
+                        <h2 class="font-tech text-xl font-bold text-slate-300 tracking-wider">총괄 & 검증</h2>
+                    </div>
+                     <p class="text-sm text-slate-500 mt-1">프로젝트 관리 및 성과 품질 검증</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-slate-500 transition-all cursor-pointer">
+                        <h3 class="font-bold text-slate-100">경남TP <span class="text-xs font-normal text-slate-400 ml-1">(사업 총괄)</span></h3>
+                        <div class="bg-slate-900/50 p-3 rounded mt-3">
+                           <p class="font-tech text-2xl text-sky-400">85% <span class="text-sm text-slate-400">달성률</span></p>
+                        </div>
+                    </div>
+                     <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 hover:border-slate-500 transition-all cursor-pointer">
+                        <h3 class="font-bold text-slate-100">KTL <span class="text-xs font-normal text-slate-400 ml-1">(기술 검증)</span></h3>
+                        <div class="bg-slate-900/50 p-3 rounded mt-3">
+                             <p class="font-tech text-2xl text-sky-400">7/10 <span class="text-sm text-slate-400">항목 통과</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
 </body>
 </html>

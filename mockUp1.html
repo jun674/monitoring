@@ -3,139 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>초거대 제조 AI 통합 플랫폼 (Digital Showroom)</title>
+    <title>Hyper-Scale AI Platform (Refined Glass)</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Pretendard:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        
-        /* 카드 등장 애니메이션 */
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        body { font-family: 'Pretendard', sans-serif; }
+        .font-tech { font-family: 'Rajdhani', sans-serif; }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        .card-anim { animation: slideUp 0.4s ease-out forwards; }
+        .animate-bg {
+            background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #172554);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
+
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans antialiased overflow-hidden flex flex-col h-screen">
+<body class="h-screen flex flex-col overflow-hidden text-white animate-bg">
 
-    <header class="bg-slate-900 border-b border-slate-800 z-50">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="filterCards('ALL')">
-                <div class="w-8 h-8 bg-sky-600 rounded flex items-center justify-center font-bold text-white shadow-lg shadow-sky-500/30">AI</div>
-                <span class="text-xl font-bold text-white">Hyper-Scale <span class="text-sky-400">ManuAI</span></span>
+    <header class="glass-panel z-50 sticky top-0">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.href='mockup_detail.html'">
+                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white text-xl font-bold">AI</div>
+                <div>
+                    <h1 class="text-base font-extrabold text-white">초거대제조AI 플랫폼</h1>
+                    <p class="text-xs text-slate-400">참여 기관 솔루션</p>
+                </div>
             </div>
             
-            <nav class="hidden md:flex space-x-1">
-                <button onclick="filterCards('ALL')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-bold border-b-2 border-transparent hover:text-sky-400 transition-all text-sky-400 border-sky-500">ALL</button>
-                <button onclick="filterCards('DATA')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all">Data</button>
-                <button onclick="filterCards('AI')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all">AI</button>
-                <button onclick="filterCards('INFRA')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all">Infra</button>
-                <button onclick="filterCards('NETWORK')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all">Network</button>
-                <button onclick="filterCards('ORG')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all">Org</button>
-                <button onclick="filterCards('SERVICE')" class="nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all">Service</button>
+            <nav class="hidden md:flex gap-1 bg-black/20 p-1 rounded-full border border-white/10">
+                <button onclick="filterCards('ALL')" class="nav-item px-5 py-2 rounded-full text-sm font-semibold transition-all text-cyan-300 bg-white/10 shadow-sm">ALL</button>
+                <button onclick="filterCards('DATA')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Data</button>
+                <button onclick="filterCards('AI')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">AI</button>
+                <button onclick="filterCards('INFRA')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Infra</button>
+                <button onclick="filterCards('NETWORK')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Network</button>
+                <button onclick="filterCards('ORG')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Org</button>
+                <button onclick="filterCards('SERVICE')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Service</button>
             </nav>
         </div>
     </header>
 
-    <div class="bg-slate-800 border-b border-slate-700 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center">
-            <span class="text-xs font-bold text-slate-500 mr-4 uppercase tracking-wider border-r border-slate-600 pr-4 h-full">Participating Teams</span>
-            <div id="company-list" class="flex flex-wrap gap-2">
-                </div>
-        </div>
-    </div>
+    <main class="flex-1 overflow-y-auto p-8 relative">
+        <div class="fixed top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="fixed bottom-1/4 right-1/4 w-96 h-96 bg-cyan-600/20 rounded-full blur-[120px] pointer-events-none"></div>
 
-    <main class="flex-1 overflow-y-auto p-6 bg-slate-900">
-        <div class="max-w-7xl mx-auto pb-20">
-            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="max-w-7xl mx-auto pb-20 relative z-10">
+            <div class="mb-12 text-center">
+                <h2 class="text-5xl font-bold font-tech text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-200 drop-shadow-lg">SYSTEM PORTFOLIO</h2>
+                <p class="text-white/60 mt-3 text-base font-light tracking-wide max-w-2xl mx-auto">DAINOS 전략 기반 3차년도 핵심 성과. 각 카드를 클릭하여 세부 정보를 확인하세요.</p>
+            </div>
+            
+            <div class="flex items-center justify-between mb-8 px-2">
+                 <div id="company-list" class="flex flex-wrap gap-2"></div>
+                 <div class="text-right font-tech">
+                    <span id="count-display" class="text-3xl font-bold text-white">14</span>
+                    <span class="text-sm text-white/50 ml-1">SERVICES ACTIVE</span>
+                </div>
+            </div>
+
+            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 </div>
         </div>
     </main>
-    
-    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center">
-         <p class="text-slate-600 text-xs">© 2026 Smart Green Industrial Complex AI Project. All rights reserved.</p>
-    </footer>
 
     <script>
         const companies = [
-            // DATA (5)
-            { type: 'DATA', name: '경남대학교', role: 'Standardization', desc: 'AAS 기반 이기종 설비 데이터 표준 모델링', icon: '🧩', color: 'from-blue-600 to-blue-800' },
-            { type: 'DATA', name: '마크베이스', role: 'High-Speed DB', desc: '초당 100만 건 데이터 처리 성능 확보', icon: '⚡', color: 'from-blue-600 to-blue-800' },
-            { type: 'DATA', name: '아미크', role: 'Legacy Connect', desc: '기존 ERP 데이터 연동 파이프라인', icon: '⚙️', color: 'from-blue-600 to-blue-800' },
-            { type: 'DATA', name: '네스트필드', role: 'Interoperability', desc: '이종 시스템 간 데이터 상호운용성', icon: '🔄', color: 'from-blue-600 to-blue-800' },
-            { type: 'DATA', name: 'KETI', role: 'AIoT Edge', desc: '현장 설비 부착형 지능형 엣지 개발', icon: '📟', color: 'from-blue-600 to-blue-800' },
-            // AI (2)
-            { type: 'AI', name: 'KAIST', role: 'Hyperscale AI', desc: '제조 특화 LLM 모델 개발 및 질의응답', icon: '🧠', color: 'from-purple-600 to-purple-800' },
-            { type: 'AI', name: '넥스트스튜디오', role: 'ESG AI', desc: '탄소 배출량 예측 및 저감 관리 모델', icon: '🌿', color: 'from-purple-600 to-purple-800' },
-            // INFRA (1)
-            { type: 'INFRA', name: '메가존클라우드', role: 'Cloud Infra', desc: '하이브리드 AI 클라우드 센터 구축', icon: '☁️', color: 'from-slate-500 to-slate-700' },
-            // NETWORK (1)
-            { type: 'NETWORK', name: '라임씨에스아이', role: '5G Network', desc: '공장 내 음영 구역 없는 5G 특화망', icon: '📶', color: 'from-green-600 to-green-800' },
-            // ORG (1)
-            { type: 'ORG', name: 'KTL', role: 'Verification', desc: 'AI 모델 및 데이터 품질 신뢰성 검증', icon: '📜', color: 'from-orange-500 to-orange-700' },
-            // SERVICE (4)
-            { type: 'SERVICE', name: '소르테크', role: 'Vision AI', desc: '육안 검사 대비 속도 2배 향상 불량 검출', icon: '📸', color: 'from-pink-600 to-pink-800' },
-            { type: 'SERVICE', name: 'DX솔루션즈', role: 'Traceability', desc: '불량 발생 원인 자동 역추적 시스템', icon: '🕵️', color: 'from-pink-600 to-pink-800' },
-            { type: 'SERVICE', name: '에스디테크', role: 'Sensing', desc: '설비 진동/온도 실시간 데이터 수집', icon: '📈', color: 'from-pink-600 to-pink-800' },
-            { type: 'SERVICE', name: '메타아이스퀘어', role: 'Monitoring', desc: '제조 공정 이상 징후 실시간 관제', icon: '🚨', color: 'from-pink-600 to-pink-800' }
+            { id: 'kyungnam', type: 'DATA', name: '경남대학교', role: 'Standardization', desc: 'AAS 기반 이기종 설비 데이터 표준 모델링', icon: 'fas fa-project-diagram', color: 'cyan' },
+            { id: 'markbase', type: 'DATA', name: '마크베이스', role: 'High-Speed DB', desc: '초당 100만 건 데이터 처리 성능 확보', icon: 'fas fa-tachometer-alt', color: 'cyan' },
+            { id: 'amiqu', type: 'DATA', name: '아미크', role: 'Legacy Connect', desc: '기존 ERP 데이터 연동 파이프라인 구축', icon: 'fas fa-link', color: 'cyan' },
+            { id: 'nestfield', type: 'DATA', name: '네스트필드', role: 'Interoperability', desc: '이종 시스템 간 데이터 상호운용성 확보', icon: 'fas fa-exchange-alt', color: 'cyan' },
+            { id: 'keti', type: 'DATA', name: 'KETI', role: 'AIoT Edge', desc: '현장 설비 부착형 지능형 엣지 개발', icon: 'fas fa-microchip', color: 'cyan' },
+            { id: 'kaist', type: 'AI', name: 'KAIST', role: 'Hyperscale AI', desc: '제조 특화 LLM 모델 개발 및 질의응답', icon: 'fas fa-brain', color: 'purple' },
+            { id: 'nextstudio', type: 'AI', name: '넥스트스튜디오', role: 'ESG AI', desc: '탄소 배출량 예측 및 저감 관리 모델', icon: 'fas fa-leaf', color: 'purple' },
+            { id: 'megazone', type: 'INFRA', name: '메가존클라우드', role: 'Cloud Infra', desc: '하이브리드 AI 클라우드 센터(EBC) 구축', icon: 'fas fa-cloud', color: 'slate' },
+            { id: 'limecsi', type: 'NETWORK', name: '라임씨에스아이', role: '5G Network', desc: '공장 내 음영 구역 없는 5G 특화망 구축', icon: 'fas fa-wifi', color: 'emerald' },
+            { id: 'gntp', type: 'ORG', name: '경남TP', role: 'Project Management', desc: '사업 총괄 및 참여 기관 관리', icon: 'fas fa-clipboard', color: 'orange' },
+            { id: 'ktl', type: 'ORG', name: 'KTL', role: 'Verification', desc: 'AI 모델 및 데이터 품질 신뢰성 검증', icon: 'fas fa-check-double', color: 'orange' },
+            { id: 'sortech', type: 'SERVICE', name: '소르테크', role: 'Vision AI', desc: '육안 검사 대비 속도 2배 향상 불량 검출', icon: 'fas fa-camera-retro', color: 'pink' },
+            { id: 'dxsolutions', type: 'SERVICE', name: 'DX솔루션즈', role: 'Traceability', desc: '불량 발생 원인 자동 역추적 시스템', icon: 'fas fa-search-location', color: 'pink' },
+            { id: 'sdtech', type: 'SERVICE', name: '에스디테크', role: 'Sensing', desc: '설비 진동/온도 실시간 데이터 수집', icon: 'fas fa-wave-square', color: 'pink' },
+            { id: 'metaisquare', type: 'SERVICE', name: '메타아이스퀘어', role: 'Monitoring', desc: '제조 공정 이상 징후 실시간 관제', icon: 'fas fa-chart-line', color: 'pink' }
         ];
+
+        const colorMap = {
+            cyan: { text: 'text-cyan-300', border: 'border-cyan-400', shadow: 'hover:shadow-cyan-500/50' },
+            purple: { text: 'text-purple-300', border: 'border-purple-400', shadow: 'hover:shadow-purple-500/50' },
+            slate: { text: 'text-slate-300', border: 'border-slate-400', shadow: 'hover:shadow-slate-500/50' },
+            emerald: { text: 'text-emerald-300', border: 'border-emerald-400', shadow: 'hover:shadow-emerald-500/50' },
+            orange: { text: 'text-orange-300', border: 'border-orange-400', shadow: 'hover:shadow-orange-500/50' },
+            pink: { text: 'text-pink-300', border: 'border-pink-400', shadow: 'hover:shadow-pink-500/50' }
+        };
 
         function filterCards(filterType) {
             const grid = document.getElementById('card-grid');
             const listBar = document.getElementById('company-list');
+            const countDisplay = document.getElementById('count-display');
             
-            // 1. 데이터 필터링
             const filtered = filterType === 'ALL' ? companies : companies.filter(c => c.type === filterType);
+            
+            countDisplay.innerText = filtered.length;
 
-            // 2. 상단 네비게이션 스타일 업데이트
             document.querySelectorAll('.nav-item').forEach(btn => {
-                const type = btn.innerText; // 버튼 텍스트 가져오기
-                if (type === filterType || (filterType === 'ALL' && type === 'ALL')) {
-                    btn.className = "nav-item px-4 py-2 rounded-t-lg text-sm font-bold border-b-2 border-sky-500 text-sky-400 bg-slate-800 transition-all";
-                } else {
-                    btn.className = "nav-item px-4 py-2 rounded-t-lg text-sm font-medium text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-800 transition-all";
-                }
+                btn.classList.toggle('bg-white/10', btn.innerText === filterType || (filterType === 'ALL' && btn.innerText === 'ALL'));
+                btn.classList.toggle('text-white/60', !(btn.innerText === filterType || (filterType === 'ALL' && btn.innerText === 'ALL')));
+                btn.classList.toggle('text-cyan-300', btn.innerText === filterType || (filterType === 'ALL' && btn.innerText === 'ALL'));
             });
 
-            // 3. 업체 명단 바(Bar) 업데이트 (여기가 추가된 기능입니다!)
             listBar.innerHTML = '';
             filtered.forEach(item => {
-                // 작은 이름표(Chip) 생성
+                const colors = colorMap[item.color];
                 const chip = document.createElement('div');
-                chip.className = `px-3 py-1 rounded-full text-xs font-bold bg-slate-700 text-slate-200 border border-slate-600 flex items-center gap-2 animate-fade-in`;
-                chip.innerHTML = `<span class="text-sky-400">${item.icon}</span> ${item.name}`;
+                chip.className = `px-3 py-1 rounded-full text-xs bg-black/20 border border-white/10 text-white/80 flex items-center gap-2 cursor-default`;
+                chip.innerHTML = `<i class="${item.icon} ${colors.text}"></i> ${item.name}`;
                 listBar.appendChild(chip);
             });
 
-            // 4. 카드 그리드 업데이트
             grid.innerHTML = '';
             filtered.forEach((item, index) => {
+                const colors = colorMap[item.color];
                 const card = `
-                    <div class="card-anim bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-sky-500/50 hover:shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all duration-300 group" style="animation-delay: ${index * 50}ms">
-                        <div class="h-40 w-full bg-gradient-to-br ${item.color} relative flex items-center justify-center overflow-hidden">
-                            <div class="absolute inset-0 bg-slate-900/40"></div>
-                            <span class="relative z-10 text-5xl group-hover:scale-110 transition-transform duration-300 drop-shadow-lg">${item.icon}</span>
-                            <div class="absolute bottom-2 right-3 text-[10px] text-white/60 bg-black/20 px-2 py-0.5 rounded backdrop-blur">Image Area</div>
-                        </div>
-                        <div class="p-5">
-                            <div class="flex justify-between items-center mb-2">
-                                <h3 class="text-lg font-bold text-white group-hover:text-sky-400 transition-colors">${item.name}</h3>
-                                <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-900 text-slate-400 border border-slate-700">${item.type}</span>
+                    <a href="mockup_detail.html?company=${item.id}" class="block h-full">
+                        <div class="glass-card rounded-2xl overflow-hidden flex flex-col h-full animate-slide-up ${colors.shadow}" style="animation-delay: ${index * 50}ms;">
+                            <div class="p-6">
+                                <div class="flex justify-between items-start">
+                                    <div class="w-12 h-12 bg-black/20 rounded-lg flex items-center justify-center border border-white/10">
+                                        <i class="${item.icon} ${colors.text} text-2xl"></i>
+                                    </div>
+                                    <span class="text-xs font-bold px-3 py-1 rounded-full border border-white/10 bg-black/20 text-white/70">${item.type}</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mt-5 mb-1">${item.name}</h3>
+                                <p class="text-sm font-semibold ${colors.text} uppercase tracking-wider mb-4">${item.role}</p>
                             </div>
-                            <p class="text-sky-400 text-xs font-bold mb-2 uppercase tracking-wide">${item.role}</p>
-                            <p class="text-slate-400 text-sm leading-relaxed">${item.desc}</p>
+                            <div class="px-6 pb-6 flex-grow flex flex-col">
+                                <p class="text-slate-200 text-sm leading-relaxed font-normal flex-grow border-t border-white/10 pt-4">
+                                    ${item.desc}
+                                </p>
+                                 <div class="mt-6 text-sm font-semibold ${colors.text} hover:text-white transition-colors self-end">
+                                    View Details <i class="fas fa-arrow-right ml-1"></i>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 `;
                 grid.insertAdjacentHTML('beforeend', card);
             });
         }
 
-        // 초기 실행
-        filterCards('ALL');
+        const style = document.createElement('style');
+        style.innerHTML = `@keyframes animate-slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } .animate-slide-up { animation: animate-slide-up 0.5s ease-out forwards; opacity: 0; }`;
+        document.head.appendChild(style);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const filterFromUrl = urlParams.get('filter');
+            if (filterFromUrl && ['DATA', 'AI', 'INFRA', 'NETWORK', 'ORG', 'SERVICE'].includes(filterFromUrl.toUpperCase())) {
+                filterCards(filterFromUrl.toUpperCase());
+            } else {
+                filterCards('ALL');
+            }
+        });
     </script>
 </body>
 </html>
