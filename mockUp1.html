@@ -53,11 +53,8 @@
     <header class="glass-panel z-50 sticky top-0">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.href='mockup_detail.html'">
-                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white text-xl font-bold">AI</div>
-                <div>
-                    <h1 class="text-base font-extrabold text-white">초거대제조AI 플랫폼</h1>
-                    <p class="text-xs text-slate-400">참여 기관 솔루션</p>
-                </div>
+                <div class="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center font-bold text-white shadow-lg">AI</div>
+                <h1 class="text-xl font-bold text-white">초거대제조AI 플랫폼</h1>
             </div>
             
             <nav class="hidden md:flex gap-1 bg-black/20 p-1 rounded-full border border-white/10">
@@ -78,8 +75,8 @@
 
         <div class="max-w-7xl mx-auto pb-20 relative z-10">
             <div class="mb-12 text-center">
-                <h2 class="text-5xl font-bold font-tech text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-200 drop-shadow-lg">SYSTEM PORTFOLIO</h2>
-                <p class="text-white/60 mt-3 text-base font-light tracking-wide max-w-2xl mx-auto">DAINOS 전략 기반 3차년도 핵심 성과. 각 카드를 클릭하여 세부 정보를 확인하세요.</p>
+                <h2 class="text-5xl font-bold font-tech text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-200 drop-shadow-lg">Analytics Dashboard</h2>
+                <p class="text-white/60 mt-3 text-base font-light tracking-wide max-w-2xl mx-auto">Real-time manufacturing data flow monitoring</p>
             </div>
             
             <div class="flex items-center justify-between mb-8 px-2">
@@ -95,23 +92,172 @@
         </div>
     </main>
 
+    <!-- 모달 팝업 추가 -->
+    <div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="w-[90%] h-[90%] max-w-[1400px] bg-gray-900/95 backdrop-filter backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+            
+            <!-- 모달 헤더 -->
+            <div class="h-16 flex items-center justify-between px-6 border-b border-white/10 bg-black/30">
+                <div class="flex items-center gap-4">
+                    <h3 id="modal-title" class="text-xl font-bold text-white">업체명</h3>
+                    <span id="modal-badge" class="px-3 py-1 rounded text-xs font-bold bg-white/10 border border-white/20 text-white/80">Role</span>
+                    <span class="text-white/20">|</span>
+                    <span id="modal-type" class="text-sm text-cyan-300 font-medium">TYPE</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white/60 hover:text-white flex items-center justify-center transition-all">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 모달 본문 -->
+            <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+                
+                <!-- 좌측 정보 패널 -->
+                <div class="w-full lg:w-80 bg-black/20 border-b lg:border-b-0 lg:border-r border-white/10 p-6 overflow-y-auto shrink-0">
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-xs font-bold text-white/40 uppercase tracking-wider mb-2">OVERVIEW</h4>
+                            <p id="modal-desc" class="text-sm text-white/70 leading-relaxed bg-white/5 p-4 rounded-lg border border-white/10"></p>
+                        </div>
+                        
+                        <div class="glass-content p-4 rounded-xl">
+                            <h4 class="text-xs font-bold text-white/40 uppercase tracking-wider mb-3">DETAIL INFO</h4>
+                            <div id="modal-details" class="text-sm text-white/60 leading-relaxed space-y-2"></div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-xs font-bold text-white/40 uppercase tracking-wider mb-2">Tech Stack</h4>
+                            <div id="modal-tech-stack" class="flex flex-wrap gap-2">
+                                <!-- 기술 스택이 동적으로 추가됨 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 우측 iframe 영역 -->
+                <div class="flex-1 bg-black/10 relative p-3">
+                    <div class="absolute inset-0 flex items-center justify-center text-white/40 z-0">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-circle-notch fa-spin text-3xl mb-3 text-cyan-400/50"></i>
+                            <p class="text-sm font-medium">Loading solution demo...</p>
+                        </div>
+                    </div>
+                    <iframe id="company-iframe" src="" class="absolute inset-3 w-[calc(100%-24px)] h-[calc(100%-24px)] rounded-xl bg-gray-900 z-10 shadow-inner border border-white/10" frameborder="0"></iframe>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <script>
         const companies = [
-            { id: 'kyungnam', type: 'DATA', name: '경남대학교', role: 'Standardization', desc: 'AAS 기반 이기종 설비 데이터 표준 모델링', icon: 'fas fa-project-diagram', color: 'cyan' },
-            { id: 'markbase', type: 'DATA', name: '마크베이스', role: 'High-Speed DB', desc: '초당 100만 건 데이터 처리 성능 확보', icon: 'fas fa-tachometer-alt', color: 'cyan' },
-            { id: 'amiqu', type: 'DATA', name: '아미크', role: 'Legacy Connect', desc: '기존 ERP 데이터 연동 파이프라인 구축', icon: 'fas fa-link', color: 'cyan' },
-            { id: 'nestfield', type: 'DATA', name: '네스트필드', role: 'Interoperability', desc: '이종 시스템 간 데이터 상호운용성 확보', icon: 'fas fa-exchange-alt', color: 'cyan' },
-            { id: 'keti', type: 'DATA', name: 'KETI', role: 'AIoT Edge', desc: '현장 설비 부착형 지능형 엣지 개발', icon: 'fas fa-microchip', color: 'cyan' },
-            { id: 'kaist', type: 'AI', name: 'KAIST', role: 'Hyperscale AI', desc: '제조 특화 LLM 모델 개발 및 질의응답', icon: 'fas fa-brain', color: 'purple' },
-            { id: 'nextstudio', type: 'AI', name: '넥스트스튜디오', role: 'ESG AI', desc: '탄소 배출량 예측 및 저감 관리 모델', icon: 'fas fa-leaf', color: 'purple' },
-            { id: 'megazone', type: 'INFRA', name: '메가존클라우드', role: 'Cloud Infra', desc: '하이브리드 AI 클라우드 센터(EBC) 구축', icon: 'fas fa-cloud', color: 'slate' },
-            { id: 'limecsi', type: 'NETWORK', name: '라임씨에스아이', role: '5G Network', desc: '공장 내 음영 구역 없는 5G 특화망 구축', icon: 'fas fa-wifi', color: 'emerald' },
-            { id: 'gntp', type: 'ORG', name: '경남TP', role: 'Project Management', desc: '사업 총괄 및 참여 기관 관리', icon: 'fas fa-clipboard', color: 'orange' },
-            { id: 'ktl', type: 'ORG', name: 'KTL', role: 'Verification', desc: 'AI 모델 및 데이터 품질 신뢰성 검증', icon: 'fas fa-check-double', color: 'orange' },
-            { id: 'sortech', type: 'SERVICE', name: '소르테크', role: 'Vision AI', desc: '육안 검사 대비 속도 2배 향상 불량 검출', icon: 'fas fa-camera-retro', color: 'pink' },
-            { id: 'dxsolutions', type: 'SERVICE', name: 'DX솔루션즈', role: 'Traceability', desc: '불량 발생 원인 자동 역추적 시스템', icon: 'fas fa-search-location', color: 'pink' },
-            { id: 'sdtech', type: 'SERVICE', name: '에스디테크', role: 'Sensing', desc: '설비 진동/온도 실시간 데이터 수집', icon: 'fas fa-wave-square', color: 'pink' },
-            { id: 'metaisquare', type: 'SERVICE', name: '메타아이스퀘어', role: 'Monitoring', desc: '제조 공정 이상 징후 실시간 관제', icon: 'fas fa-chart-line', color: 'pink' }
+            {
+                id: 'kyungnam', type: 'DATA', name: '경남대학교', role: 'Standardization',
+                desc: 'AAS 기반 이기종 설비 데이터 표준 모델링', icon: 'fas fa-project-diagram', color: 'cyan',
+                details: '제조 현장에서 수집되는 다양한 형태의 데이터를 자산관리쉘(AAS) 기반의 표준 모델로 변환하여 데이터의 일관성과 활용성을 높입니다.',
+                techStack: ['AAS', '데이터 모델링', 'Knowledge Graph'],
+                iframeSrc: 'https://aas-system.netlify.app'
+            },
+            {
+                id: 'markbase', type: 'DATA', name: '마크베이스', role: 'High-Speed DB',
+                desc: '초당 100만 건 데이터 처리 성능 확보', icon: 'fas fa-tachometer-alt', color: 'cyan',
+                details: '설비의 PLC, 센서 등 OT(운영 기술) 환경에서 발생하는 대용량 시계열 데이터를 초당 100만 건 이상 처리할 수 있는 고성능 데이터베이스를 제공합니다.',
+                techStack: ['시계열 DB', 'Real-time Processing', 'Big Data'],
+                iframeSrc: "https://www.machbase.com/"
+            },
+            {
+                id: 'amiqu', type: 'DATA', name: '아미크', role: 'Legacy Connect',
+                desc: '기존 ERP 데이터 연동 파이프라인 구축', icon: 'fas fa-link', color: 'cyan',
+                details: '기업의 기존 ERP, MES 등 IT(정보기술) 시스템과 초거대 AI 플랫폼을 안정적으로 연동하기 위한 데이터 파이프라인을 구축합니다.',
+                techStack: ['ETL', 'Data Pipeline', 'API Integration'],
+                iframeSrc: "http://www.amiqu.com/"
+            },
+            {
+                id: 'nestfield', type: 'DATA', name: '네스트필드', role: 'Interoperability',
+                desc: '이종 시스템 간 데이터 상호운용성 확보', icon: 'fas fa-exchange-alt', color: 'cyan',
+                details: '다양한 제조 장비와 시스템 간의 데이터 교환을 위한 표준 인터페이스를 제공하여 상호운용성을 보장합니다.',
+                techStack: ['Middleware', 'Protocol Conversion', 'API Gateway'],
+                iframeSrc: "http://www.nestfield.co.kr/"
+            },
+            {
+                id: 'keti', type: 'DATA', name: 'KETI', role: 'AIoT Edge',
+                desc: '현장 설비 부착형 지능형 엣지 개발', icon: 'fas fa-microchip', color: 'cyan',
+                details: '데이터가 발생하는 현장에 AIoT 엣지 디바이스를 설치하여 비전, 음향 등 비정형 데이터를 1차적으로 처리하고 분석합니다.',
+                techStack: ['Edge Computing', 'AIoT', 'Embedded AI'],
+                iframeSrc: "https://www.keti.re.kr/"
+            },
+            {
+                id: 'kaist', type: 'AI', name: 'KAIST', role: 'Hyperscale AI',
+                desc: '제조 특화 LLM 모델 개발 및 질의응답', icon: 'fas fa-brain', color: 'purple',
+                details: '플랫폼의 핵심 두뇌 역할을 하는 제조 특화 초거대 언어모델(LLM)을 개발합니다. 이 모델은 공정 이상 원인 분석, 해결책 제안 등의 기능을 수행합니다.',
+                techStack: ['LLM', '생성형 AI', 'Fine-tuning'],
+                iframeSrc: "https://www.kaist.ac.kr/"
+            },
+            {
+                id: 'nextstudio', type: 'AI', name: '넥스트스튜디오', role: 'ESG AI',
+                desc: '탄소 배출량 예측 및 저감 관리 모델', icon: 'fas fa-leaf', color: 'purple',
+                details: '제조 공정에서 발생하는 탄소 배출량을 예측하고, 생산 계획에 따른 저감 방안을 시뮬레이션하는 ESG 특화 AI 모델을 개발합니다.',
+                techStack: ['예측 모델링', '시뮬레이션', 'ESG Analytics'],
+                iframeSrc: "http://www.next-studio.co.kr/"
+            },
+            {
+                id: 'megazone', type: 'INFRA', name: '메가존클라우드', role: 'Cloud Infra',
+                desc: '하이브리드 AI 클라우드 센터(EBC) 구축', icon: 'fas fa-cloud', color: 'slate',
+                details: 'AI 모델 학습 및 서비스 운영을 위한 하이브리드 클라우드 인프라(EBC)를 구축하고 안정적으로 운영합니다.',
+                techStack: ['Hybrid Cloud', 'Kubernetes', 'MLOps'],
+                iframeSrc: "https://www.megazone.com/"
+            },
+            {
+                id: 'limecsi', type: 'NETWORK', name: '라임씨에스아이', role: '5G Network',
+                desc: '공장 내 음영 구역 없는 5G 특화망 구축', icon: 'fas fa-wifi', color: 'emerald',
+                details: '공장 내 데이터 통신 음영 구역을 해소하고, 대용량 데이터를 초저지연으로 전송하기 위한 5G 특화망 인프라를 구축합니다.',
+                techStack: ['5G', 'Network Slicing', 'Edge Network'],
+                iframeSrc: "http://www.limecsi.com/"
+            },
+            {
+                id: 'gntp', type: 'ORG', name: '경남TP', role: 'Project Management',
+                desc: '사업 총괄 및 참여 기관 관리', icon: 'fas fa-clipboard', color: 'orange',
+                details: '프로젝트의 전반적인 운영 및 관리를 책임지며, 참여 기관 간의 협력을 조율하고 사업 목표 달성을 위한 전략을 수립합니다.',
+                techStack: ['프로젝트 관리', 'PMBOK', '성과 관리'],
+                iframeSrc: "https://www.gntp.or.kr/"
+            },
+            {
+                id: 'ktl', type: 'ORG', name: 'KTL', role: 'Verification',
+                desc: 'AI 모델 및 데이터 품질 신뢰성 검증', icon: 'fas fa-check-double', color: 'orange',
+                details: '개발된 AI 모델과 데이터의 품질, 신뢰성을 검증하는 역할을 수행합니다. 객관적인 평가 지표를 통해 솔루션의 완성도를 높입니다.',
+                techStack: ['시스템 엔지니어링', '품질 보증', 'Testing'],
+                iframeSrc: "https://www.ktl.re.kr/"
+            },
+            {
+                id: 'sortech', type: 'SERVICE', name: '소르테크', role: 'Vision AI',
+                desc: '육안 검사 대비 속도 2배 향상 불량 검출', icon: 'fas fa-camera-retro', color: 'pink',
+                details: 'AI 비전 기술을 활용하여 생산 라인의 제품 불량을 실시간으로 검출합니다. 기존 육안 검사 대비 속도와 정확도를 획기적으로 향상시킵니다.',
+                techStack: ['Computer Vision', 'Deep Learning', 'Object Detection'],
+                iframeSrc: "http://www.sortech.co.kr/"
+            },
+            {
+                id: 'dxsolutions', type: 'SERVICE', name: 'DX솔루션즈', role: 'Traceability',
+                desc: '불량 발생 원인 자동 역추적 시스템', icon: 'fas fa-search-location', color: 'pink',
+                details: '제품 불량 발생 시, 해당 제품의 생산 이력과 데이터를 역추적하여 어떤 공정에서 어떤 원인으로 문제가 발생했는지 자동으로 분석합니다.',
+                techStack: ['Data Tracking', 'AI Analytics', 'Root Cause Analysis'],
+                iframeSrc: "http://www.dxsolutions.co.kr/"
+            },
+            {
+                id: 'sdtech', type: 'SERVICE', name: '에스디테크', role: 'Sensing',
+                desc: '설비 진동/온도 실시간 데이터 수집', icon: 'fas fa-wave-square', color: 'pink',
+                details: '설비의 진동, 온도 등 IIoT 센서 데이터를 실시간으로 수집하고 분석하여 공정 품질을 안정적으로 유지하고 관리합니다.',
+                techStack: ['IIoT', 'Sensor Analytics', 'Predictive Maintenance'],
+                iframeSrc: "#"
+            },
+            {
+                id: 'metaisquare', type: 'SERVICE', name: '메타아이스퀘어', role: 'Monitoring',
+                desc: '제조 공정 이상 징후 실시간 관제', icon: 'fas fa-chart-line', color: 'pink',
+                details: '작업자의 음성 명령을 인식하고, 수집된 데이터를 종합하여 제조 공정의 이상 징후를 실시간으로 관제하는 대시보드를 제공합니다.',
+                techStack: ['음성인식', 'Data Visualization', 'Real-time Monitoring'],
+                iframeContent: '<div class="flex items-center justify-center h-full bg-slate-800 text-white"><h1 class="text-3xl font-bold">메타아이스퀘어: 통합 관제 대시보드</h1></div>'
+            }
         ];
 
         const colorMap = {
@@ -150,8 +296,9 @@
             grid.innerHTML = '';
             filtered.forEach((item, index) => {
                 const colors = colorMap[item.color];
+                const companyIndex = companies.findIndex(c => c.id === item.id);
                 const card = `
-                    <a href="mockup_detail.html?company=${item.id}" class="block h-full">
+                    <div onclick="openModal(${companyIndex})" class="block h-full cursor-pointer">
                         <div class="glass-card rounded-2xl overflow-hidden flex flex-col h-full animate-slide-up ${colors.shadow}" style="animation-delay: ${index * 50}ms;">
                             <div class="p-6">
                                 <div class="flex justify-between items-start">
@@ -172,11 +319,79 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 `;
                 grid.insertAdjacentHTML('beforeend', card);
             });
         }
+
+        // Modal functions
+        const modal = document.getElementById('detail-modal');
+        const iframe = document.getElementById('company-iframe');
+
+        function openModal(index) {
+            const item = companies[index];
+            const colors = colorMap[item.color];
+
+            // Update modal header
+            document.getElementById('modal-title').innerText = item.name;
+            document.getElementById('modal-badge').innerText = item.role;
+            document.getElementById('modal-type').innerText = item.type;
+            
+            // Update modal content
+            document.getElementById('modal-desc').innerText = item.desc;
+            document.getElementById('modal-details').innerText = item.details;
+            
+            // Update tech stack
+            const techStackContainer = document.getElementById('modal-tech-stack');
+            techStackContainer.innerHTML = '';
+            item.techStack.forEach(tech => {
+                const techBadge = document.createElement('span');
+                techBadge.className = 'px-2.5 py-1 text-xs bg-white/10 text-white/70 rounded-md border border-white/20';
+                techBadge.innerText = tech;
+                techStackContainer.appendChild(techBadge);
+            });
+
+            // Set iframe content
+            if (item.iframeSrc) {
+                iframe.src = item.iframeSrc;
+                iframe.removeAttribute('srcdoc');
+            } else {
+                iframe.removeAttribute('src');
+                iframe.srcdoc = `
+                    <html>
+                    <head>
+                        <script src="https://cdn.tailwindcss.com"><\/script>
+                        <style>body { margin: 0; }</style>
+                    </head>
+                    <body>${item.iframeContent}</body>
+                    </html>
+                `;
+            }
+
+            // Show modal
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            iframe.src = "";
+            iframe.removeAttribute('srcdoc');
+        }
+
+        // Close modal on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
 
         const style = document.createElement('style');
         style.innerHTML = `@keyframes animate-slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } .animate-slide-up { animation: animate-slide-up 0.5s ease-out forwards; opacity: 0; }`;
