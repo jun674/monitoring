@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초거대제조AI 플랫폼</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Pretendard', sans-serif; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background-color: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background-color: #f3f4f6; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden bg-gray-50 text-slate-800">
+
+    <aside class="w-72 flex flex-col bg-[#191F28] shadow-2xl z-10">
+        <div class="p-6 border-b border-white/10 flex items-center gap-4">
+            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-900 font-bold text-base shadow-lg">AI</div>
+            <div>
+                <h1 class="text-xl font-bold text-white">초거대제조AI</h1>
+                <p class="text-xs text-slate-400 tracking-tight">Analytics Dashboard</p>
+            </div>
+        </div>
+        <nav id="file-list" class="flex-1 overflow-y-auto p-4 space-y-2"></nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <iframe id="viewer" class="flex-1"></iframe>
+    </main>
+
+    <script>
+        const fileList = document.getElementById('file-list');
+        const viewer = document.getElementById('viewer');
+        const files = [
+            { name: "Introduction", path: "introduce.html" },
+            { name: "Service Flow", path: "process.html" },
+            { name: "Participants", path: "dainos.html" },
+        ];
+
+        function loadFile(file) {
+            viewer.src = file.path;
+            updateActiveLink(file.path);
+        }
+
+        function updateActiveLink(path) {
+            const links = fileList.querySelectorAll('a');
+            links.forEach(link => {
+                // Reset styles
+                link.classList.remove('bg-white', 'text-[#191F28]', 'font-semibold');
+                link.classList.add('text-slate-300', 'hover:bg-white/10');
+
+                // Set active style
+                if (link.dataset.path === path) {
+                    link.classList.add('bg-white', 'text-[#191F28]', 'font-semibold');
+                    link.classList.remove('text-slate-300', 'hover:bg-white/10');
+                }
+            });
+        }
+
+        files.forEach(file => {
+            const a = document.createElement('a');
+            a.href = '#';
+            a.dataset.path = file.path;
+            // px-4 py-3 for padding inside the link, rounded-xl for the corners.
+            a.className = 'flex items-center w-full px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300';
+            a.textContent = file.name;
+            a.onclick = (e) => {
+                e.preventDefault();
+                loadFile(file);
+            };
+            fileList.appendChild(a);
+        });
+
+        if (files.length > 0) {
+            loadFile(files[0]);
+        }
+    </script>
+</body>
+</html>

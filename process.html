@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Pretendard', sans-serif; 
+            background-color: #F5F6F8;
+            color: #191F28;
+            overflow: hidden;
+        }
+        .font-tech { font-family: 'Rajdhani', sans-serif; }
+        .soft-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            border: 1px solid rgba(0,0,0,0.02);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .soft-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.07);
+        }
+        .stage-section:not(:last-child)::before {
+            content: '\f105';
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: -3.5rem;
+            top: 55%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: #D1D5DB; /* gray-300 */
+        }
+        ::-webkit-scrollbar { display: none; }
+        .nav-btn {
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+        .nav-btn.active {
+            background-color: #191F28; /* Black */
+            color: #FFFFFF;
+        }
+        .nav-btn:not(.active) { color: #8B95A1; }
+        .nav-btn:not(.active):hover { background-color: #E8EBED; color: #333D4B; }
+    </style>
+</head>
+<body class="pt-28"> 
+    <header class="bg-white/80 backdrop-blur-xl z-50 fixed top-0 left-0 right-0 border-b border-gray-100">
+        <div class="max-w-[1600px] mx-auto px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-bold shadow-lg">AI</div>
+                <h1 class="text-xl font-bold text-gray-900 tracking-tight">Service Flow</h1>
+            </div>
+            
+            <nav class="flex bg-gray-100/50 p-1.5 rounded-full">
+                <div onclick="scrollToSection('stage-1')" class="nav-btn px-4 py-2 text-xs" id="nav-stage-1"><span>Data</span></div>
+                <div onclick="scrollToSection('stage-2')" class="nav-btn px-4 py-2 text-xs" id="nav-stage-2"><span>Transfer</span></div>
+                <div onclick="scrollToSection('stage-3')" class="nav-btn px-4 py-2 text-xs" id="nav-stage-3"><span>Platform</span></div>
+                <div onclick="scrollToSection('stage-4')" class="nav-btn px-4 py-2 text-xs" id="nav-stage-4"><span>AI</span></div>
+                <div onclick="scrollToSection('stage-5')" class="nav-btn px-4 py-2 text-xs" id="nav-stage-5"><span>App</span></div>
+                <div onclick="scrollToSection('stage-6')" class="nav-btn px-4 py-2 text-xs" id="nav-stage-6"><span>Mgmt</span></div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex overflow-x-auto overflow-y-hidden h-full items-center gap-24 px-20" id="main-scroll">
+        <div class="min-w-[2vw]"></div>
+        <section id="stage-1" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">01</span>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Data Collection</h2>
+                    <p class="text-xs text-gray-500 font-medium">OT/IT 데이터 수집</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-5" id="container-1"></div>
+        </section>
+        <section id="stage-2" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">02</span>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Transfer (5G)</h2>
+                    <p class="text-xs text-gray-500 font-medium">초고속 네트워크</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-5" id="container-2"></div>
+        </section>
+        <section id="stage-3" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">03</span>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Platform & AAS</h2>
+                    <p class="text-xs text-gray-500 font-medium">인프라 및 표준화</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-5" id="container-3"></div>
+        </section>
+        <section id="stage-4" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">04</span>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">AI Analysis</h2>
+                    <p class="text-xs text-gray-500 font-medium">분석 및 모델링</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-5" id="container-4"></div>
+        </section>
+        <section id="stage-5" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">05</span>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Application</h2>
+                    <p class="text-xs text-gray-500 font-medium">응용 서비스</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-5" id="container-5"></div>
+        </section>
+        <section id="stage-6" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">06</span>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Management</h2>
+                    <p class="text-xs text-gray-500 font-medium">총괄 및 검증</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-5" id="container-6"></div>
+        </section>
+        <div class="min-w-[5vw]"></div>
+    </main>
+    
+    <script>
+        const companies = [
+            { stage: 1, name: "마크베이스", role: "High-Speed DB", kpi: "1.21M rec/s", status: "normal", desc: "초고속 시계열 DBMS로 제조 현장 센서 데이터 실시간 수집 및 저장.", details: "설비의 PLC, 센서 등 OT(운영 기술) 환경에서 발생하는 대용량 시계열 데이터를 초당 100만 건 이상 처리할 수 있는 고성능 데이터베이스를 제공합니다.", techStack: ['시계열 DB', 'Real-time Processing', 'Big Data'], url: "https://www.machbase.com/" },
+            { stage: 1, name: "아미크", role: "Legacy Connect", kpi: "99.8% Success", status: "normal", desc: "기존 ERP 데이터 연동 파이프라인 구축", details: "기업의 기존 ERP, MES 등 IT(정보기술) 시스템과 초거대 AI 플랫폼을 안정적으로 연동하기 위한 데이터 파이프라인을 구축합니다.", techStack: ['ETL', 'Data Pipeline', 'API Integration'], url: "http://www.amiqu.com/" },
+            { stage: 1, name: "KETI", role: "AIoT Edge", kpi: "24 Devices", status: "normal", desc: "현장 설비 부착형 지능형 엣지 개발", details: "데이터가 발생하는 현장에 AIoT 엣지 디바이스를 설치하여 비전, 음향 등 비정형 데이터를 1차적으로 처리하고 분석합니다.", techStack: ['Edge Computing', 'AIoT', 'Embedded AI'], url: "https://www.keti.re.kr/" },
+            { stage: 2, name: "라임씨에스아이", role: "5G Network", kpi: "1.5ms Latency", status: "normal", desc: "공장 내 음영 구역 없는 5G 특화망 구축", details: "공장 내 데이터 통신 음영 구역을 해소하고, 대용량 데이터를 초저지연으로 전송하기 위한 5G 특화망 인프라를 구축합니다.", techStack: ['5G', 'Network Slicing', 'Edge Network'], url: "http://www.limecsi.com/" },
+            { stage: 3, name: "메가존클라우드", role: "Cloud Infra", kpi: "99.98% Uptime", status: "normal", desc: "하이브리드 AI 클라우드 센터(EBC) 구축", details: "AI 모델 학습 및 서비스 운영을 위한 하이브리드 클라우드 인프라(EBC)를 구축하고 안정적으로 운영합니다.", techStack: ['Hybrid Cloud', 'Kubernetes', 'MLOps'], url: "https://www.megazone.com/" },
+            { stage: 3, name: "경남대학교", role: "Standardization", kpi: "1,204 Models", status: "normal", desc: "AAS 기반 이기종 설비 데이터 표준 모델링", details: "제조 현장에서 수집되는 다양한 형태의 데이터를 자산관리쉘(AAS) 기반의 표준 모델로 변환하여 데이터의 일관성과 활용성을 높입니다.", techStack: ['AAS', '데이터 모델링', 'Knowledge Graph'], url: "https://aas-system.netlify.app/" },
+            { stage: 3, name: "네스트필드", role: "Interoperability", kpi: "85% API rate", status: "warning", desc: "이종 시스템 간 데이터 상호운용성 확보", details: "다양한 제조 장비와 시스템 간의 데이터 교환을 위한 표준 인터페이스를 제공하여 상호운용성을 보장합니다.", techStack: ['Middleware', 'Protocol Conversion', 'API Gateway'], url: "http://www.nestfield.co.kr/" },
+            { stage: 4, name: "KAIST", role: "Hyperscale AI", kpi: "92% Accuracy", status: "normal", desc: "제조 특화 LLM 모델 개발 및 질의응답", details: "플랫폼의 핵심 두뇌 역할을 하는 제조 특화 초거대 언어모델(LLM)을 개발합니다. 이 모델은 공정 이상 원인 분석, 해결책 제안 등의 기능을 수행합니다.", techStack: ['LLM', '생성형 AI', 'Fine-tuning'], url: "https://www.kaist.ac.kr/" },
+            { stage: 4, name: "넥스트스튜디오", role: "ESG AI", kpi: "-7.5% CO2", status: "normal", desc: "탄소 배출량 예측 및 저감 관리 모델", details: "제조 공정에서 발생하는 탄소 배출량을 예측하고, 생산 계획에 따른 저감 방안을 시뮬레이션하는 ESG 특화 AI 모델을 개발합니다.", techStack: ['예측 모델링', '시뮬레이션', 'ESG Analytics'], url: "http://www.next-studio.co.kr/" },
+            { stage: 5, name: "소르테크", role: "Vision AI", kpi: "15 Defects/h", status: "danger", desc: "육안 검사 대비 속도 2배 향상 불량 검출", details: "AI 비전 기술을 활용하여 생산 라인의 제품 불량을 실시간으로 검출합니다. 기존 육안 검사 대비 속도와 정확도를 획기적으로 향상시킵니다.", techStack: ['Computer Vision', 'Deep Learning', 'Object Detection'], url: "http://www.sortech.co.kr/" },
+            { stage: 5, name: "DX솔루션즈", role: "Traceability", kpi: "3.2 min/case", status: "normal", desc: "불량 발생 원인 자동 역추적 시스템", details: "제품 불량 발생 시, 해당 제품의 생산 이력과 데이터를 역추적하여 어떤 공정에서 어떤 원인으로 문제가 발생했는지 자동으로 분석합니다.", techStack: ['Data Tracking', 'AI Analytics', 'Root Cause Analysis'], url: "http://www.dxsolutions.co.kr/" },
+            { stage: 5, name: "에스디테크", role: "Sensing", kpi: "99.7%", status: "normal", desc: "설비 진동/온도 실시간 데이터 수집", details: "설비의 진동, 온도 등 IIoT 센서 데이터를 실시간으로 수집하고 분석하여 공정 품질을 안정적으로 유지하고 관리합니다.", techStack: ['IIoT', 'Sensor Analytics', 'Predictive Maintenance'], url: "#" },
+            { stage: 6, name: "경남TP", role: "Project Management", kpi: "85% Progress", status: "normal", desc: "사업 총괄 및 참여 기관 관리", details: "프로젝트의 전반적인 운영 및 관리를 책임지며, 참여 기관 간의 협력을 조율하고 사업 목표 달성을 위한 전략을 수립합니다.", techStack: ['프로젝트 관리', 'PMBOK', '성과 관리'], url: "https://www.gntp.or.kr/" },
+            { stage: 6, name: "KTL", role: "Verification", kpi: "Pass", status: "normal", desc: "AI 모델 및 데이터 품질 신뢰성 검증", details: "개발된 AI 모델과 데이터의 품질, 신뢰성을 검증하는 역할을 수행합니다. 객관적인 평가 지표를 통해 솔루션의 완성도를 높입니다.", techStack: ['시스템 엔지니어링', '품질 보증', 'Testing'], url: "https://www.ktl.re.kr/" }
+        ];
+        const statusConfig = {
+            normal: { text: 'text-emerald-600', bg: 'bg-emerald-50', dot: 'bg-emerald-500', label: '정상' },
+            warning: { text: 'text-amber-600', bg: 'bg-amber-50', dot: 'bg-amber-500', label: '점검' },
+            danger: { text: 'text-rose-600', bg: 'bg-rose-50', dot: 'bg-rose-500', label: '장애' }
+        };
+
+        function renderDashboard() {
+            companies.forEach((item, index) => {
+                const container = document.getElementById(`container-${item.stage}`);
+                if (!container) return;
+                const st = statusConfig[item.status];
+                const card = document.createElement('div');
+                card.className = `soft-card p-6 cursor-pointer flex flex-col justify-between group h-[200px] w-full`;
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 shadow-sm transition-transform duration-300">
+                                    <i class="fas fa-cube"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800 text-lg">${item.name}</h3>
+                                    <p class="text-xs text-gray-400 font-medium">${item.role}</p>
+                                </div>
+                            </div>
+                            <div class="px-2.5 py-1 rounded-full ${st.bg} flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full ${st.dot}"></span>
+                                <span class="text-[10px] font-bold ${st.text}">${st.label}</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500 leading-snug line-clamp-2">${item.desc}</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-100 flex justify-between items-center">
+                        <div>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Performance</p>
+                            <p class="font-tech text-lg font-bold text-gray-700">${item.kpi}</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center transition-all duration-300 group-hover:bg-gray-800 group-hover:text-white">
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        const scrollContainer = document.getElementById('main-scroll');
+        scrollContainer.addEventListener('wheel', (evt) => {
+            evt.preventDefault();
+            scrollContainer.scrollLeft += evt.deltaY;
+        });
+
+        scrollContainer.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.stage-section');
+            const navLinks = document.querySelectorAll('.nav-btn');
+            let current = '';
+            const centerPos = scrollContainer.scrollLeft + (window.innerWidth / 2);
+
+            sections.forEach(section => {
+                const offsetLeft = section.offsetLeft;
+                if (centerPos >= offsetLeft && centerPos < offsetLeft + section.offsetWidth + 96) { 
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.id === `nav-${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if(element) {
+                const scrollLeft = element.offsetLeft - (window.innerWidth / 2) + (element.offsetWidth / 2);
+                scrollContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+            }
+        }
+
+        renderDashboard();
+        // Set initial active nav item
+        setTimeout(() => {
+            document.querySelectorAll('.nav-btn')[0].classList.add('active');
+            scrollToSection('stage-1');
+        }, 100);
+    </script>
+</body>
+</html>

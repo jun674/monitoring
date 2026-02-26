@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyper-Scale AI Platform (Soft Minimal)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Pretendard', sans-serif;
+            background-color: #F5F6F8; /* 아주 연한 웜그레이 톤 */
+            color: #191F28;
+        }
+        .font-tech { font-family: 'Rajdhani', sans-serif; }
+
+        /* 스크롤바 숨김 (깔끔함 유지) */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        /* Soft Card Design */
+        .soft-card {
+            background: #FFFFFF;
+            border-radius: 24px; /* 더 둥근 모서리 */
+            border: 1px solid rgba(0,0,0,0.02);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); /* 아주 부드러운 그림자 */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .soft-card:hover {
+            transform: translateY(-8px);
+        }
+
+        /* Nav Button */
+        .nav-btn {
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+        .nav-btn.active {
+            background-color: #191F28; /* Black */
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .nav-btn:not(.active) {
+            color: #8B95A1;
+        }
+        .nav-btn:not(.active):hover {
+            background-color: #E8EBED;
+            color: #333D4B;
+        }
+
+        /* Badge Styles */
+        .badge-soft {
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Animations */
+        @keyframes floatUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-enter {
+            animation: floatUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .card-highlight {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 3px rgba(59, 130, 246, 0.7);
+            transform: translateY(-8px);
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <header class="bg-white/80 backdrop-blur-xl z-50 sticky top-0 border-b border-gray-100">
+        <div class="max-w-[1600px] mx-auto px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer group">
+                <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-bold shadow-lg">AI</div>
+                <h1 class="text-xl font-bold text-gray-900 tracking-tight">Participants</h1>
+            </div>
+            
+            <nav class="hidden md:flex bg-gray-100/50 p-1.5 rounded-full">
+                <button onclick="filterCards('ALL')" class="nav-btn px-4 py-2 text-xs active">ALL</button>
+                <button onclick="filterCards('DATA')" class="nav-btn px-4 py-2 text-xs">Data</button>
+                <button onclick="filterCards('AI')" class="nav-btn px-4 py-2 text-xs">AI</button>
+                <button onclick="filterCards('INFRA')" class="nav-btn px-4 py-2 text-xs">Infra</button>
+                <button onclick="filterCards('NETWORK')" class="nav-btn px-4 py-2 text-xs">Network</button>
+                <button onclick="filterCards('ORG')" class="nav-btn px-4 py-2 text-xs">Org</button>
+                <button onclick="filterCards('SERVICE')" class="nav-btn px-4 py-2 text-xs">Service</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto p-8 lg:p-12 relative">
+        <div class="max-w-[1600px] mx-auto pb-20 relative z-10">
+            
+            <div class="flex items-end justify-between mb-8 px-1">
+                 <div id="company-list" class="flex-1 flex flex-wrap gap-2"></div>
+                 <div class="flex flex-col items-end">
+                    <span class="text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">Total Services</span>
+                    <div class="font-tech flex items-baseline gap-2">
+                        <span id="count-display" class="text-4xl font-bold text-gray-900">15</span>
+                        <span class="text-lg text-gray-400 font-medium">ACTIVE</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            </div>
+        </div>
+    </main>
+
+    <div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/10 backdrop-blur-md hidden transition-opacity duration-300">
+        <div class="w-[90%] h-[90%] max-w-[1400px] bg-white rounded-[32px] shadow-2xl flex flex-col overflow-hidden animate-enter border border-white/50">
+            
+            <div class="h-20 flex items-center justify-between px-8 border-b border-gray-100 bg-white/80 backdrop-blur-md">
+                <div class="flex items-center gap-5">
+                    <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 border border-gray-100">
+                        <i id="modal-icon" class="fas fa-cube"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <h3 id="modal-title" class="text-xl font-bold text-gray-900">업체명</h3>
+                            <span id="modal-type" class="text-xs font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-500">TYPE</span>
+                        </div>
+                        <p id="modal-badge" class="text-sm font-medium text-gray-400 mt-0.5">Role</p>
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-gray-900 flex items-center justify-center transition-all">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 flex flex-col lg:flex-row overflow-hidden bg-gray-50/50">
+                
+                <div class="w-full lg:w-[400px] bg-white border-r border-gray-100 p-8 overflow-y-auto shrink-0">
+                    <div class="space-y-8">
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Description</h4>
+                            <p id="modal-desc" class="text-[15px] text-gray-600 leading-7 font-medium"></p>
+                        </div>
+                        
+                        <div class="p-5 bg-gray-50 rounded-2xl border border-gray-100">
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">주요 역할 및 기술</h4>
+                            <div id="modal-details" class="text-sm text-gray-600 leading-relaxed"></div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Tech Stack</h4>
+                            <div id="modal-tech-stack" class="flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 relative p-6">
+                    <div class="w-full h-full bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
+                         <div class="absolute inset-0 flex items-center justify-center text-gray-300 z-0">
+                            <div class="flex flex-col items-center">
+                                <i class="fas fa-circle-notch fa-spin text-2xl mb-3 text-gray-400"></i>
+                                <p class="text-sm font-medium">Loading...</p>
+                            </div>
+                        </div>
+                        <iframe id="company-iframe" src="" class="absolute inset-0 w-full h-full z-10" frameborder="0"></iframe>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 기존 데이터 그대로 사용
+        const companies = [
+            { id: 'kyungnam', type: 'DATA', name: '경남대학교', role: 'Standardization', desc: 'AAS 기반 이기종 설비 데이터 표준 모델링', icon: 'fas fa-project-diagram', color: 'blue', details: '제조 현장에서 수집되는 다양한 형태의 데이터를 자산관리쉘(AAS) 기반의 표준 모델로 변환하여 데이터의 일관성과 활용성을 높입니다.', techStack: ['AAS', '데이터 모델링', 'Knowledge Graph'], iframeSrc: 'https://aas-system.netlify.app' },
+            { id: 'markbase', type: 'DATA', name: '마크베이스', role: 'High-Speed DB', desc: '초당 100만 건 데이터 처리 성능 확보', icon: 'fas fa-tachometer-alt', color: 'blue', details: '설비의 PLC, 센서 등 OT(운영 기술) 환경에서 발생하는 대용량 시계열 데이터를 초당 100만 건 이상 처리할 수 있는 고성능 데이터베이스를 제공합니다.', techStack: ['시계열 DB', 'Real-time Processing', 'Big Data'], iframeSrc: "https://www.machbase.com/" },
+            { id: 'amiqu', type: 'DATA', name: '아미크', role: 'Legacy Connect', desc: '기존 ERP 데이터 연동 파이프라인 구축', icon: 'fas fa-link', color: 'blue', details: '기업의 기존 ERP, MES 등 IT(정보기술) 시스템과 초거대 AI 플랫폼을 안정적으로 연동하기 위한 데이터 파이프라인을 구축합니다.', techStack: ['ETL', 'Data Pipeline', 'API Integration'], iframeSrc: "http://www.amiqu.com/" },
+            { id: 'nestfield', type: 'DATA', name: '네스트필드', role: 'Interoperability', desc: '이종 시스템 간 데이터 상호운용성 확보', icon: 'fas fa-exchange-alt', color: 'blue', details: '다양한 제조 장비와 시스템 간의 데이터 교환을 위한 표준 인터페이스를 제공하여 상호운용성을 보장합니다.', techStack: ['Middleware', 'Protocol Conversion', 'API Gateway'], iframeSrc: "http://www.nestfield.co.kr/" },
+            { id: 'keti', type: 'DATA', name: 'KETI', role: 'AIoT Edge', desc: '현장 설비 부착형 지능형 엣지 개발', icon: 'fas fa-microchip', color: 'blue', details: '데이터가 발생하는 현장에 AIoT 엣지 디바이스를 설치하여 비전, 음향 등 비정형 데이터를 1차적으로 처리하고 분석합니다.', techStack: ['Edge Computing', 'AIoT', 'Embedded AI'], iframeSrc: "https://www.keti.re.kr/" },
+            { id: 'kaist', type: 'AI', name: 'KAIST', role: 'Hyperscale AI', desc: '제조 특화 LLM 모델 개발 및 질의응답', icon: 'fas fa-brain', color: 'purple', details: '플랫폼의 핵심 두뇌 역할을 하는 제조 특화 초거대 언어모델(LLM)을 개발합니다. 이 모델은 공정 이상 원인 분석, 해결책 제안 등의 기능을 수행합니다.', techStack: ['LLM', '생성형 AI', 'Fine-tuning'], iframeSrc: "https://www.kaist.ac.kr/" },
+            { id: 'nextstudio', type: 'AI', name: '넥스트스튜디오', role: 'ESG AI', desc: '탄소 배출량 예측 및 저감 관리 모델', icon: 'fas fa-leaf', color: 'purple', details: '제조 공정에서 발생하는 탄소 배출량을 예측하고, 생산 계획에 따른 저감 방안을 시뮬레이션하는 ESG 특화 AI 모델을 개발합니다.', techStack: ['예측 모델링', '시뮬레이션', 'ESG Analytics'], iframeSrc: "http://www.next-studio.co.kr/" },
+            { id: 'megazone', type: 'INFRA', name: '메가존클라우드', role: 'Cloud Infra', desc: '하이브리드 AI 클라우드 센터(EBC) 구축', icon: 'fas fa-cloud', color: 'gray', details: 'AI 모델 학습 및 서비스 운영을 위한 하이브리드 클라우드 인프라(EBC)를 구축하고 안정적으로 운영합니다.', techStack: ['Hybrid Cloud', 'Kubernetes', 'MLOps'], iframeSrc: "https://www.megazone.com/" },
+            { id: 'limecsi', type: 'NETWORK', name: '라임씨에스아이', role: '5G Network', desc: '공장 내 음영 구역 없는 5G 특화망 구축', icon: 'fas fa-wifi', color: 'emerald', details: '공장 내 데이터 통신 음영 구역을 해소하고, 대용량 데이터를 초저지연으로 전송하기 위한 5G 특화망 인프라를 구축합니다.', techStack: ['5G', 'Network Slicing', 'Edge Network'], iframeSrc: "http://www.limecsi.com/" },
+            { id: 'gntp', type: 'ORG', name: '경남TP', role: 'Project Management', desc: '사업 총괄 및 참여 기관 관리', icon: 'fas fa-clipboard', color: 'orange', details: '프로젝트의 전반적인 운영 및 관리를 책임지며, 참여 기관 간의 협력을 조율하고 사업 목표 달성을 위한 전략을 수립합니다.', techStack: ['프로젝트 관리', 'PMBOK', '성과 관리'], iframeSrc: "https://www.gntp.or.kr/" },
+            { id: 'ktl', type: 'ORG', name: 'KTL', role: 'Verification', desc: 'AI 모델 및 데이터 품질 신뢰성 검증', icon: 'fas fa-check-double', color: 'orange', details: '개발된 AI 모델과 데이터의 품질, 신뢰성을 검증하는 역할을 수행합니다. 객관적인 평가 지표를 통해 솔루션의 완성도를 높입니다.', techStack: ['시스템 엔지니어링', '품질 보증', 'Testing'], iframeSrc: "https://www.ktl.re.kr/" },
+            { id: 'sortech', type: 'SERVICE', name: '소르테크', role: 'Vision AI', desc: '육안 검사 대비 속도 2배 향상 불량 검출', icon: 'fas fa-camera-retro', color: 'rose', details: 'AI 비전 기술을 활용하여 생산 라인의 제품 불량을 실시간으로 검출합니다. 기존 육안 검사 대비 속도와 정확도를 획기적으로 향상시킵니다.', techStack: ['Computer Vision', 'Deep Learning', 'Object Detection'], iframeSrc: "http://www.sortech.co.kr/" },
+            { id: 'dxsolutions', type: 'SERVICE', name: 'DX솔루션즈', role: 'Traceability', desc: '불량 발생 원인 자동 역추적 시스템', icon: 'fas fa-search-location', color: 'rose', details: '제품 불량 발생 시, 해당 제품의 생산 이력과 데이터를 역추적하여 어떤 공정에서 어떤 원인으로 문제가 발생했는지 자동으로 분석합니다.', techStack: ['Data Tracking', 'AI Analytics', 'Root Cause Analysis'], iframeSrc: "http://www.dxsolutions.co.kr/" },
+            { id: 'sdtech', type: 'SERVICE', name: '에스디테크', role: 'Sensing', desc: '설비 진동/온도 실시간 데이터 수집', icon: 'fas fa-wave-square', color: 'rose', details: '설비의 진동, 온도 등 IIoT 센서 데이터를 실시간으로 수집하고 분석하여 공정 품질을 안정적으로 유지하고 관리합니다.', techStack: ['IIoT', 'Sensor Analytics', 'Predictive Maintenance'], iframeSrc: "#" },
+            { id: 'metaisquare', type: 'SERVICE', name: '메타아이스퀘어', role: 'Monitoring', desc: '제조 공정 이상 징후 실시간 관제', icon: 'fas fa-chart-line', color: 'rose', details: '작업자의 음성 명령을 인식하고, 수집된 데이터를 종합하여 제조 공정의 이상 징후를 실시간으로 관제하는 대시보드를 제공합니다.', techStack: ['음성인식', 'Data Visualization', 'Real-time Monitoring'], iframeContent: '<div class="flex items-center justify-center h-full bg-white text-gray-800"><h1 class="text-3xl font-bold">메타아이스퀘어: 통합 관제 대시보드</h1></div>' }
+        ];
+
+        // Soft Minimal Color Scheme (파스텔 톤 뱃지)
+        const typeStyles = {
+            'DATA': { bg: 'bg-blue-50', text: 'text-blue-600', icon: 'text-blue-500' },
+            'AI': { bg: 'bg-purple-50', text: 'text-purple-600', icon: 'text-purple-500' },
+            'INFRA': { bg: 'bg-gray-100', text: 'text-gray-600', icon: 'text-gray-500' },
+            'NETWORK': { bg: 'bg-emerald-50', text: 'text-emerald-600', icon: 'text-emerald-500' },
+            'ORG': { bg: 'bg-orange-50', text: 'text-orange-600', icon: 'text-orange-500' },
+            'SERVICE': { bg: 'bg-rose-50', text: 'text-rose-600', icon: 'text-rose-500' }
+        };
+
+        function filterCards(filterType) {
+            const grid = document.getElementById('card-grid');
+            const listBar = document.getElementById('company-list');
+            const countDisplay = document.getElementById('count-display');
+            
+            const filtered = filterType === 'ALL' ? companies : companies.filter(c => c.type === filterType);
+            
+            countDisplay.innerText = filtered.length;
+
+            // Nav Button State
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                const btnType = btn.innerText.toUpperCase();
+                if (btnType === filterType) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Top Chip List
+            listBar.innerHTML = '';
+            filtered.forEach(item => {
+                const style = typeStyles[item.type];
+                const chip = document.createElement('div');
+                chip.className = `px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-gray-100 text-gray-600 flex items-center gap-2 shadow-sm cursor-pointer hover:bg-gray-50 transition-colors`;
+                chip.innerHTML = `<i class="${item.icon} ${style.icon}"></i> ${item.name}`;
+                chip.onclick = () => scrollToCard(item.id);
+                listBar.appendChild(chip);
+            });
+
+            // Card Grid Render
+            grid.innerHTML = '';
+            filtered.forEach((item, index) => {
+                const style = typeStyles[item.type];
+                const companyIndex = companies.findIndex(c => c.id === item.id);
+                
+                const card = `
+                    <div id="card-${item.id}" onclick="openModal(${companyIndex})" class="animate-enter" style="animation-delay: ${index * 0.05}s">
+                        <div class="soft-card h-full cursor-pointer flex flex-col p-8 group">
+                            
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="w-12 h-12 rounded-2xl ${style.bg} flex items-center justify-center transition-transform group-hover:scale-110 duration-300">
+                                    <i class="${item.icon} ${style.icon} text-xl"></i>
+                                </div>
+                                <span class="badge-soft ${style.bg} ${style.text}">${item.type}</span>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">${item.name}</h3>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">${item.role}</p>
+                            
+                            <p class="text-sm text-gray-500 leading-relaxed line-clamp-2 mb-6">
+                                ${item.desc}
+                            </p>
+
+                            <div class="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
+                                <span class="text-xs font-bold text-gray-400 group-hover:text-gray-900 transition-colors">Details</span>
+                                <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-black group-hover:text-white transition-all">
+                                    <i class="fas fa-arrow-right text-xs transform -rotate-45 group-hover:rotate-0 transition-transform"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', card);
+            });
+        }
+
+        function scrollToCard(companyId) {
+            const card = document.getElementById(`card-${companyId}`);
+            if (card) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                card.classList.add('card-highlight');
+                setTimeout(() => {
+                    card.classList.remove('card-highlight');
+                }, 2000);
+            }
+        }
+
+        // Modal Functions
+        const modal = document.getElementById('detail-modal');
+        const iframe = document.getElementById('company-iframe');
+
+        function openModal(index) {
+            const item = companies[index];
+            const style = typeStyles[item.type];
+
+            document.getElementById('modal-title').innerText = item.name;
+            document.getElementById('modal-badge').innerText = item.role;
+            document.getElementById('modal-type').innerText = item.type;
+            document.getElementById('modal-icon').className = `${item.icon}`;
+
+            document.getElementById('modal-desc').innerText = item.desc;
+            document.getElementById('modal-details').innerText = item.details;
+
+            const techStackContainer = document.getElementById('modal-tech-stack');
+            techStackContainer.innerHTML = '';
+            item.techStack.forEach(tech => {
+                const techBadge = document.createElement('span');
+                techBadge.className = 'px-3 py-1.5 text-xs font-semibold bg-white text-gray-600 rounded-lg border border-gray-200 shadow-sm';
+                techBadge.innerText = tech;
+                techStackContainer.appendChild(techBadge);
+            });
+
+            if (item.iframeSrc) {
+                iframe.src = item.iframeSrc;
+                iframe.removeAttribute('srcdoc');
+            } else {
+                iframe.removeAttribute('src');
+                iframe.srcdoc = `
+                    <html>
+                    <head>
+                        <script src="https://cdn.tailwindcss.com"><\/script>
+                        <style>body { margin: 0; background-color: #ffffff; }</style>
+                    </head>
+                    <body>${item.iframeContent}</body>
+                    </html>
+                `;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            setTimeout(() => {
+                iframe.src = "";
+                iframe.removeAttribute('srcdoc');
+            }, 200);
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            filterCards('ALL');
+        });
+    </script>
+</body>
+</html>
