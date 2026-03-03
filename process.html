@@ -27,17 +27,6 @@
             transform: translateY(-5px);
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.07);
         }
-        .stage-section:not(:last-child)::before {
-            content: '\f105';
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            position: absolute;
-            right: -3.5rem;
-            top: 55%;
-            transform: translateY(-50%);
-            font-size: 1.5rem;
-            color: #D1D5DB; /* gray-300 */
-        }
         ::-webkit-scrollbar { display: none; }
         .nav-btn {
             border-radius: 20px;
@@ -220,8 +209,23 @@
             }
         }
 
+        function addStageArrows() {
+            const sections = document.querySelectorAll('.stage-section');
+            sections.forEach((section, index) => {
+                if (index < sections.length - 1) {
+                    const nextStageId = `stage-${index + 2}`;
+                    const arrow = document.createElement('div');
+                    arrow.className = 'absolute top-1/2 -right-14 transform -translate-y-1/2 text-gray-300 hover:text-gray-500 cursor-pointer transition-colors';
+                    arrow.innerHTML = `<i class="fas fa-chevron-right text-2xl"></i>`;
+                    arrow.onclick = () => scrollToSection(nextStageId);
+                    section.appendChild(arrow);
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             renderDashboard();
+            addStageArrows();
             // Set initial active nav item
             setTimeout(() => {
                 document.querySelectorAll('.nav-btn')[0].classList.add('active');
