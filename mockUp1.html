@@ -3,407 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyper-Scale AI Platform (Refined Glass)</title>
+    <title>초거대 제조AI - Pipeline Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Pretendard:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Pretendard', sans-serif; }
-        .font-tech { font-family: 'Rajdhani', sans-serif; }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .animate-bg {
-            background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #172554);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
-
-        .glass-panel {
-            background: rgba(17, 24, 39, 0.3);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .glass-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .glass-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.5);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
+        .pipeline-stage { transition: all 0.3s ease; }
+        .pipeline-stage:hover { transform: scale(1.05); }
+        .company-heatmap { position: relative; }
+        .company-bar { position: absolute; background: linear-gradient(90deg, #3b82f6, #1d4ed8); opacity: 0.7; }
+        .card-hover { transition: all 0.2s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="h-screen flex flex-col overflow-hidden text-white animate-bg">
-
-    <header class="glass-panel z-50 sticky top-0">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.href='mockup_detail.html'">
-                <div class="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center font-bold text-white shadow-lg">AI</div>
-                <h1 class="text-xl font-bold text-white">초거대제조AI 플랫폼</h1>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white min-h-screen">
+    
+    <!-- Header -->
+    <header class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                        <span class="font-bold text-xl">AI</span>
+                    </div>
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+                        초거대 제조AI 플랫폼
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-4 text-sm">
+                    <span>2026.03.17</span>
+                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span class="font-semibold text-green-400">실시간</span>
+                </div>
             </div>
-            
-            <nav class="hidden md:flex gap-1 bg-black/20 p-1 rounded-full border border-white/10">
-                <button onclick="filterCards('ALL')" class="nav-item px-5 py-2 rounded-full text-sm font-semibold transition-all text-cyan-300 bg-white/10 shadow-sm">ALL</button>
-                <button onclick="filterCards('DATA')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Data</button>
-                <button onclick="filterCards('AI')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">AI</button>
-                <button onclick="filterCards('INFRA')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Infra</button>
-                <button onclick="filterCards('NETWORK')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Network</button>
-                <button onclick="filterCards('ORG')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Org</button>
-                <button onclick="filterCards('SERVICE')" class="nav-item px-5 py-2 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all">Service</button>
-            </nav>
         </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto p-8 relative">
-        <div class="fixed top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px] pointer-events-none"></div>
-        <div class="fixed bottom-1/4 right-1/4 w-96 h-96 bg-cyan-600/20 rounded-full blur-[120px] pointer-events-none"></div>
-
-        <div class="max-w-7xl mx-auto pb-20 relative z-10">
-            <div class="mb-12 text-center">
-                <h2 class="text-5xl font-bold font-tech text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-200 drop-shadow-lg">Analytics Dashboard</h2>
-                <p class="text-white/60 mt-3 text-base font-light tracking-wide max-w-2xl mx-auto">Real-time manufacturing data flow monitoring</p>
-            </div>
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Pipeline Overview -->
+        <div class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 flex items-center">
+                <span class="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mr-3"></span>
+                서비스 파이프라인 현황
+            </h2>
             
-            <div class="flex items-center justify-between mb-8 px-2">
-                 <div id="company-list" class="flex flex-wrap gap-2"></div>
-                 <div class="text-right font-tech">
-                    <span id="count-display" class="text-3xl font-bold text-white">14</span>
-                    <span class="text-sm text-white/50 ml-1">SERVICES ACTIVE</span>
+            <!-- Pipeline Stages -->
+            <div class="relative bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
+                <div class="pipeline-container flex items-center justify-between relative h-24">
+                    <!-- Stage 1: 데이터수집 -->
+                    <div class="pipeline-stage flex flex-col items-center cursor-pointer group" onclick="highlightCompany('markbase')">
+                        <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center mb-2 shadow-xl group-hover:shadow-2xl">
+                            <span class="font-bold text-lg">데이터</span>
+                        </div>
+                        <span class="text-xs font-medium text-gray-300">1.21M rec/s</span>
+                    </div>
+
+                    <!-- Stage 2: 5G 전송 -->
+                    <div class="pipeline-stage flex flex-col items-center cursor-pointer group" onclick="highlightCompany('amicro')">
+                        <div class="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-2xl flex items-center justify-center mb-2 shadow-xl group-hover:shadow-2xl">
+                            <span class="font-bold text-lg">5G</span>
+                        </div>
+                        <span class="text-xs font-medium text-gray-300">1.5ms</span>
+                    </div>
+
+                    <!-- Stage 3: AAS 플랫폼 -->
+                    <div class="pipeline-stage flex flex-col items-center cursor-pointer group" onclick="highlightCompany('keti')">
+                        <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl flex items-center justify-center mb-2 shadow-xl group-hover:shadow-2xl">
+                            <span class="font-bold text-lg">AAS</span>
+                        </div>
+                        <span class="text-xs font-medium text-gray-300">1,074 Assets</span>
+                    </div>
+
+                    <!-- Stage 4: AI 분석 -->
+                    <div class="pipeline-stage flex flex-col items-center cursor-pointer group" onclick="highlightCompany('kaist')">
+                        <div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-orange-700 rounded-2xl flex items-center justify-center mb-2 shadow-xl group-hover:shadow-2xl">
+                            <span class="font-bold text-lg">AI</span>
+                        </div>
+                        <span class="text-xs font-medium text-gray-300">97.2%</span>
+                    </div>
+
+                    <!-- Stage 5: 앱 -->
+                    <div class="pipeline-stage flex flex-col items-center cursor-pointer group" onclick="highlightCompany('kyungnam')">
+                        <div class="w-20 h-20 bg-gradient-to-br from-pink-500 to-pink-700 rounded-2xl flex items-center justify-center mb-2 shadow-xl group-hover:shadow-2xl">
+                            <span class="font-bold text-lg">앱</span>
+                        </div>
+                        <span class="text-xs font-medium text-gray-300">2,231 Models</span>
+                    </div>
+
+                    <!-- Stage 6: 운영 -->
+                    <div class="pipeline-stage flex flex-col items-center cursor-pointer group" onclick="highlightCompany('megazone')">
+                        <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-2xl flex items-center justify-center mb-2 shadow-xl group-hover:shadow-2xl">
+                            <span class="font-bold text-lg">운영</span>
+                        </div>
+                        <span class="text-xs font-medium text-gray-300">99.8%</span>
+                    </div>
+                </div>
+
+                <!-- Company Heatmap -->
+                <div class="company-heatmap absolute inset-0 flex items-center h-full">
+                    <div class="company-bar w-[20%] h-3 bg-blue-500/70 left-[5%] animate-pulse" data-company="markbase"></div>
+                    <div class="company-bar w-[15%] h-4 bg-emerald-500/70 left-[25%] z-10" data-company="amicro"></div>
+                    <div class="company-bar w-[25%] h-3 bg-purple-500/70 left-[42%] z-20" data-company="keti"></div>
+                    <div class="company-bar w-[30%] h-5 bg-orange-500/70 left-[60%] z-30" data-company="kaist"></div>
+                    <div class="company-bar w-[18%] h-3 bg-pink-500/70 left-[78%] z-10" data-company="kyungnam"></div>
                 </div>
             </div>
-
-            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                </div>
         </div>
-    </main>
 
-    <!-- 모달 팝업 추가 -->
-    <div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
-        <div class="w-[90%] h-[90%] max-w-[1400px] bg-gray-900/95 backdrop-filter backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-            
-            <!-- 모달 헤더 -->
-            <div class="h-16 flex items-center justify-between px-6 border-b border-white/10 bg-black/30">
-                <div class="flex items-center gap-4">
-                    <h3 id="modal-title" class="text-xl font-bold text-white">업체명</h3>
-                    <span id="modal-badge" class="px-3 py-1 rounded text-xs font-bold bg-white/10 border border-white/20 text-white/80">Role</span>
-                    <span class="text-white/20">|</span>
-                    <span id="modal-type" class="text-sm text-cyan-300 font-medium">TYPE</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white/60 hover:text-white flex items-center justify-center transition-all">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+        <!-- Real-time Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
+                <div class="text-3xl font-bold text-blue-400">1,074</div>
+                <div class="text-gray-400">Total AAS Assets</div>
             </div>
+            <div class="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
+                <div class="text-3xl font-bold text-emerald-400">2,231</div>
+                <div class="text-gray-400">Submodels</div>
+            </div>
+            <div class="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
+                <div class="text-3xl font-bold text-purple-400">99.8%</div>
+                <div class="text-gray-400">System Uptime</div>
+            </div>
+        </div>
 
-            <!-- 모달 본문 -->
-            <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
-                
-                <!-- 좌측 정보 패널 -->
-                <div class="w-full lg:w-80 bg-black/20 border-b lg:border-b-0 lg:border-r border-white/10 p-6 overflow-y-auto shrink-0">
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="text-xs font-bold text-white/40 uppercase tracking-wider mb-2">OVERVIEW</h4>
-                            <p id="modal-desc" class="text-sm text-white/70 leading-relaxed bg-white/5 p-4 rounded-lg border border-white/10"></p>
-                        </div>
-                        
-                        <div class="glass-content p-4 rounded-xl">
-                            <h4 class="text-xs font-bold text-white/40 uppercase tracking-wider mb-3">DETAIL INFO</h4>
-                            <div id="modal-details" class="text-sm text-white/60 leading-relaxed space-y-2"></div>
-                        </div>
-
-                        <div>
-                            <h4 class="text-xs font-bold text-white/40 uppercase tracking-wider mb-2">Tech Stack</h4>
-                            <div id="modal-tech-stack" class="flex flex-wrap gap-2">
-                                <!-- 기술 스택이 동적으로 추가됨 -->
-                            </div>
+        <!-- Company Contribution Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 마크베이스 -->
+            <div class="card-hover bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-blue-500/50 cursor-pointer" onclick="openDemo('markbase')">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-blue-500/80 rounded-xl flex items-center justify-center mr-4">
+                        <span class="font-bold text-sm">MB</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg">마크베이스</h3>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            <span class="px-2 py-1 bg-blue-500/30 text-xs rounded-full">DATA</span>
+                            <span class="px-2 py-1 bg-emerald-500/30 text-xs rounded-full">수집</span>
                         </div>
                     </div>
                 </div>
-
-                <!-- 우측 iframe 영역 -->
-                <div class="flex-1 bg-black/10 relative p-3">
-                    <div class="absolute inset-0 flex items-center justify-center text-white/40 z-0">
-                        <div class="flex flex-col items-center">
-                            <i class="fas fa-circle-notch fa-spin text-3xl mb-3 text-cyan-400/50"></i>
-                            <p class="text-sm font-medium">Loading solution demo...</p>
-                        </div>
-                    </div>
-                    <iframe id="company-iframe" src="" class="absolute inset-3 w-[calc(100%-24px)] h-[calc(100%-24px)] rounded-xl bg-gray-900 z-10 shadow-inner border border-white/10" frameborder="0"></iframe>
+                <div class="space-y-2 mb-6">
+                    <div class="flex items-center text-sm"><span class="w-20 text-gray-400">처리량:</span> <span class="font-bold text-blue-400">1.21M rec/s</span></div>
+                    <div class="flex items-center text-sm"><span class="w-20 text-gray-400">성공률:</span> <span class="font-bold text-emerald-400">99.9%</span></div>
+                </div>
+                <div class="flex gap-2">
+                    <button class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-2 rounded-xl font-medium hover:from-blue-600 hover:to-blue-700">결과물</button>
+                    <button class="px-4 py-2 bg-white/10 rounded-xl text-sm hover:bg-white/20">성과</button>
+                    <button class="px-4 py-2 bg-white/10 rounded-xl text-sm hover:bg-white/20">문서</button>
                 </div>
             </div>
 
+            <!-- KAIST -->
+            <div class="card-hover bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-orange-500/50 cursor-pointer" onclick="openDemo('kaist')">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-orange-500/80 rounded-xl flex items-center justify-center mr-4">
+                        <span class="font-bold text-sm">KAIST</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg">KAIST</h3>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            <span class="px-2 py-1 bg-orange-500/30 text-xs rounded-full">AI</span>
+                            <span class="px-2 py-1 bg-purple-500/30 text-xs rounded-full">분석</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-2 mb-6">
+                    <div class="flex items-center text-sm"><span class="w-20 text-gray-400">정확도:</span> <span class="font-bold text-orange-400">97.2%</span></div>
+                    <div class="flex items-center text-sm"><span class="w-20 text-gray-400">모델:</span> <span class="font-bold text-purple-400">85개</span></div>
+                </div>
+                <div class="flex gap-2">
+                    <button class="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-2 rounded-xl font-medium hover:from-orange-600 hover:to-orange-700">결과물</button>
+                    <button class="px-4 py-2 bg-white/10 rounded-xl text-sm hover:bg-white/20">성과</button>
+                    <button class="px-4 py-2 bg-white/10 rounded-xl text-sm hover:bg-white/20">문서</button>
+                </div>
+            </div>
+
+            <!-- KETI -->
+            <div class="card-hover bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-purple-500/50 cursor-pointer" onclick="openDemo('keti')">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-purple-500/80 rounded-xl flex items-center justify-center mr-4">
+                        <span class="font-bold text-sm">KETI</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg">한국전자기술연구원</h3>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            <span class="px-2 py-1 bg-purple-500/30 text-xs rounded-full">AAS</span>
+                            <span class="px-2 py-1 bg-indigo-500/30 text-xs rounded-full">플랫폼</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-2 mb-6">
+                    <div class="flex items-center text-sm"><span class="w-20 text-gray-400">Assets:</span> <span class="font-bold text-purple-400">1,074개</span></div>
+                    <div class="flex items-center text-sm"><span class="w-20 text-gray-400">Submodels:</span> <span class="font-bold text-indigo-400">2,231개</span></div>
+                </div>
+                <div class="flex gap-2">
+                    <button class="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 px-4 py-2 rounded-xl font-medium hover:from-purple-600 hover:to-purple-700">결과물</button>
+                    <button class="px-4 py-2 bg-white/10 rounded-xl text-sm hover:bg-white/20">성과</button>
+                    <button class="px-4 py-2 bg-white/10 rounded-xl text-sm hover:bg-white/20">문서</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Modal -->
+    <div id="demoModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white/10 backdrop-blur-xl rounded-3xl w-full max-w-4xl max-h-[90vh] border border-white/20 overflow-hidden">
+            <div class="p-6 border-b border-white/10 flex items-center justify-between">
+                <h2 class="text-2xl font-bold" id="modalTitle">결과물 미리보기</h2>
+                <button onclick="closeDemo()" class="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center hover:bg-white/30">
+                    <span class="text-xl">&times;</span>
+                </button>
+            </div>
+            <iframe id="demoIframe" class="w-full h-[60vh] border-0 bg-gray-900" src="https://www.aas-idta.org/"></iframe>
+            <div class="p-6 bg-white/5 border-t border-white/10 flex gap-3">
+                <button onclick="fullscreenDemo()" class="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-3 rounded-2xl font-medium hover:from-emerald-600 hover:to-emerald-700">전체화면</button>
+                <button onclick="newTabDemo()" class="px-6 py-3 bg-white/20 rounded-2xl hover:bg-white/30">새창 열기</button>
+                <button onclick="closeDemo()" class="px-6 py-3 bg-white/20 rounded-2xl hover:bg-white/30">닫기</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const companies = [
-            {
-                id: 'kyungnam', type: 'DATA', name: '경남대학교', role: 'Standardization',
-                desc: 'AAS 기반 이기종 설비 데이터 표준 모델링', icon: 'fas fa-project-diagram', color: 'cyan',
-                details: '제조 현장에서 수집되는 다양한 형태의 데이터를 자산관리쉘(AAS) 기반의 표준 모델로 변환하여 데이터의 일관성과 활용성을 높입니다.',
-                techStack: ['AAS', '데이터 모델링', 'Knowledge Graph'],
-                iframeSrc: 'https://aas-system.netlify.app'
-            },
-            {
-                id: 'markbase', type: 'DATA', name: '마크베이스', role: 'High-Speed DB',
-                desc: '초당 100만 건 데이터 처리 성능 확보', icon: 'fas fa-tachometer-alt', color: 'cyan',
-                details: '설비의 PLC, 센서 등 OT(운영 기술) 환경에서 발생하는 대용량 시계열 데이터를 초당 100만 건 이상 처리할 수 있는 고성능 데이터베이스를 제공합니다.',
-                techStack: ['시계열 DB', 'Real-time Processing', 'Big Data'],
-                iframeSrc: "https://www.machbase.com/"
-            },
-            {
-                id: 'amiqu', type: 'DATA', name: '아미크', role: 'Legacy Connect',
-                desc: '기존 ERP 데이터 연동 파이프라인 구축', icon: 'fas fa-link', color: 'cyan',
-                details: '기업의 기존 ERP, MES 등 IT(정보기술) 시스템과 초거대 AI 플랫폼을 안정적으로 연동하기 위한 데이터 파이프라인을 구축합니다.',
-                techStack: ['ETL', 'Data Pipeline', 'API Integration'],
-                iframeSrc: "http://www.amiqu.com/"
-            },
-            {
-                id: 'nestfield', type: 'DATA', name: '네스트필드', role: 'Interoperability',
-                desc: '이종 시스템 간 데이터 상호운용성 확보', icon: 'fas fa-exchange-alt', color: 'cyan',
-                details: '다양한 제조 장비와 시스템 간의 데이터 교환을 위한 표준 인터페이스를 제공하여 상호운용성을 보장합니다.',
-                techStack: ['Middleware', 'Protocol Conversion', 'API Gateway'],
-                iframeSrc: "http://www.nestfield.co.kr/"
-            },
-            {
-                id: 'keti', type: 'DATA', name: 'KETI', role: 'AIoT Edge',
-                desc: '현장 설비 부착형 지능형 엣지 개발', icon: 'fas fa-microchip', color: 'cyan',
-                details: '데이터가 발생하는 현장에 AIoT 엣지 디바이스를 설치하여 비전, 음향 등 비정형 데이터를 1차적으로 처리하고 분석합니다.',
-                techStack: ['Edge Computing', 'AIoT', 'Embedded AI'],
-                iframeSrc: "https://www.keti.re.kr/"
-            },
-            {
-                id: 'kaist', type: 'AI', name: 'KAIST', role: 'Hyperscale AI',
-                desc: '제조 특화 LLM 모델 개발 및 질의응답', icon: 'fas fa-brain', color: 'purple',
-                details: '플랫폼의 핵심 두뇌 역할을 하는 제조 특화 초거대 언어모델(LLM)을 개발합니다. 이 모델은 공정 이상 원인 분석, 해결책 제안 등의 기능을 수행합니다.',
-                techStack: ['LLM', '생성형 AI', 'Fine-tuning'],
-                iframeSrc: "https://www.kaist.ac.kr/"
-            },
-            {
-                id: 'nextstudio', type: 'AI', name: '넥스트스튜디오', role: 'ESG AI',
-                desc: '탄소 배출량 예측 및 저감 관리 모델', icon: 'fas fa-leaf', color: 'purple',
-                details: '제조 공정에서 발생하는 탄소 배출량을 예측하고, 생산 계획에 따른 저감 방안을 시뮬레이션하는 ESG 특화 AI 모델을 개발합니다.',
-                techStack: ['예측 모델링', '시뮬레이션', 'ESG Analytics'],
-                iframeSrc: "http://www.next-studio.co.kr/"
-            },
-            {
-                id: 'megazone', type: 'INFRA', name: '메가존클라우드', role: 'Cloud Infra',
-                desc: '하이브리드 AI 클라우드 센터(EBC) 구축', icon: 'fas fa-cloud', color: 'slate',
-                details: 'AI 모델 학습 및 서비스 운영을 위한 하이브리드 클라우드 인프라(EBC)를 구축하고 안정적으로 운영합니다.',
-                techStack: ['Hybrid Cloud', 'Kubernetes', 'MLOps'],
-                iframeSrc: "https://www.megazone.com/"
-            },
-            {
-                id: 'limecsi', type: 'NETWORK', name: '라임씨에스아이', role: '5G Network',
-                desc: '공장 내 음영 구역 없는 5G 특화망 구축', icon: 'fas fa-wifi', color: 'emerald',
-                details: '공장 내 데이터 통신 음영 구역을 해소하고, 대용량 데이터를 초저지연으로 전송하기 위한 5G 특화망 인프라를 구축합니다.',
-                techStack: ['5G', 'Network Slicing', 'Edge Network'],
-                iframeSrc: "http://www.limecsi.com/"
-            },
-            {
-                id: 'gntp', type: 'ORG', name: '경남TP', role: 'Project Management',
-                desc: '사업 총괄 및 참여 기관 관리', icon: 'fas fa-clipboard', color: 'orange',
-                details: '프로젝트의 전반적인 운영 및 관리를 책임지며, 참여 기관 간의 협력을 조율하고 사업 목표 달성을 위한 전략을 수립합니다.',
-                techStack: ['프로젝트 관리', 'PMBOK', '성과 관리'],
-                iframeSrc: "https://www.gntp.or.kr/"
-            },
-            {
-                id: 'ktl', type: 'ORG', name: 'KTL', role: 'Verification',
-                desc: 'AI 모델 및 데이터 품질 신뢰성 검증', icon: 'fas fa-check-double', color: 'orange',
-                details: '개발된 AI 모델과 데이터의 품질, 신뢰성을 검증하는 역할을 수행합니다. 객관적인 평가 지표를 통해 솔루션의 완성도를 높입니다.',
-                techStack: ['시스템 엔지니어링', '품질 보증', 'Testing'],
-                iframeSrc: "https://www.ktl.re.kr/"
-            },
-            {
-                id: 'sortech', type: 'SERVICE', name: '소르테크', role: 'Vision AI',
-                desc: '육안 검사 대비 속도 2배 향상 불량 검출', icon: 'fas fa-camera-retro', color: 'pink',
-                details: 'AI 비전 기술을 활용하여 생산 라인의 제품 불량을 실시간으로 검출합니다. 기존 육안 검사 대비 속도와 정확도를 획기적으로 향상시킵니다.',
-                techStack: ['Computer Vision', 'Deep Learning', 'Object Detection'],
-                iframeSrc: "http://www.sortech.co.kr/"
-            },
-            {
-                id: 'dxsolutions', type: 'SERVICE', name: 'DX솔루션즈', role: 'Traceability',
-                desc: '불량 발생 원인 자동 역추적 시스템', icon: 'fas fa-search-location', color: 'pink',
-                details: '제품 불량 발생 시, 해당 제품의 생산 이력과 데이터를 역추적하여 어떤 공정에서 어떤 원인으로 문제가 발생했는지 자동으로 분석합니다.',
-                techStack: ['Data Tracking', 'AI Analytics', 'Root Cause Analysis'],
-                iframeSrc: "http://www.dxsolutions.co.kr/"
-            },
-            {
-                id: 'sdtech', type: 'SERVICE', name: '에스디테크', role: 'Sensing',
-                desc: '설비 진동/온도 실시간 데이터 수집', icon: 'fas fa-wave-square', color: 'pink',
-                details: '설비의 진동, 온도 등 IIoT 센서 데이터를 실시간으로 수집하고 분석하여 공정 품질을 안정적으로 유지하고 관리합니다.',
-                techStack: ['IIoT', 'Sensor Analytics', 'Predictive Maintenance'],
-                iframeSrc: "#"
-            },
-            {
-                id: 'metaisquare', type: 'SERVICE', name: '메타아이스퀘어', role: 'Monitoring',
-                desc: '제조 공정 이상 징후 실시간 관제', icon: 'fas fa-chart-line', color: 'pink',
-                details: '작업자의 음성 명령을 인식하고, 수집된 데이터를 종합하여 제조 공정의 이상 징후를 실시간으로 관제하는 대시보드를 제공합니다.',
-                techStack: ['음성인식', 'Data Visualization', 'Real-time Monitoring'],
-                iframeContent: '<div class="flex items-center justify-center h-full bg-slate-800 text-white"><h1 class="text-3xl font-bold">메타아이스퀘어: 통합 관제 대시보드</h1></div>'
-            }
-        ];
+        let currentCompany = '';
 
-        const colorMap = {
-            cyan: { text: 'text-cyan-300', border: 'border-cyan-400', shadow: 'hover:shadow-cyan-500/50' },
-            purple: { text: 'text-purple-300', border: 'border-purple-400', shadow: 'hover:shadow-purple-500/50' },
-            slate: { text: 'text-slate-300', border: 'border-slate-400', shadow: 'hover:shadow-slate-500/50' },
-            emerald: { text: 'text-emerald-300', border: 'border-emerald-400', shadow: 'hover:shadow-emerald-500/50' },
-            orange: { text: 'text-orange-300', border: 'border-orange-400', shadow: 'hover:shadow-orange-500/50' },
-            pink: { text: 'text-pink-300', border: 'border-pink-400', shadow: 'hover:shadow-pink-500/50' }
-        };
-
-        function filterCards(filterType) {
-            const grid = document.getElementById('card-grid');
-            const listBar = document.getElementById('company-list');
-            const countDisplay = document.getElementById('count-display');
-            
-            const filtered = filterType === 'ALL' ? companies : companies.filter(c => c.type === filterType);
-            
-            countDisplay.innerText = filtered.length;
-
-            document.querySelectorAll('.nav-item').forEach(btn => {
-                btn.classList.toggle('bg-white/10', btn.innerText === filterType || (filterType === 'ALL' && btn.innerText === 'ALL'));
-                btn.classList.toggle('text-white/60', !(btn.innerText === filterType || (filterType === 'ALL' && btn.innerText === 'ALL')));
-                btn.classList.toggle('text-cyan-300', btn.innerText === filterType || (filterType === 'ALL' && btn.innerText === 'ALL'));
+        function highlightCompany(company) {
+            document.querySelectorAll('.company-bar').forEach(bar => {
+                bar.style.opacity = '0.3';
             });
-
-            listBar.innerHTML = '';
-            filtered.forEach(item => {
-                const colors = colorMap[item.color];
-                const chip = document.createElement('div');
-                chip.className = `px-3 py-1 rounded-full text-xs bg-black/20 border border-white/10 text-white/80 flex items-center gap-2 cursor-default`;
-                chip.innerHTML = `<i class="${item.icon} ${colors.text}"></i> ${item.name}`;
-                listBar.appendChild(chip);
+            document.querySelectorAll(`[data-company="${company}"]`).forEach(bar => {
+                bar.style.opacity = '1';
+                bar.style.transform = 'scale(1.2)';
             });
-
-            grid.innerHTML = '';
-            filtered.forEach((item, index) => {
-                const colors = colorMap[item.color];
-                const companyIndex = companies.findIndex(c => c.id === item.id);
-                const card = `
-                    <div onclick="openModal(${companyIndex})" class="block h-full cursor-pointer">
-                        <div class="glass-card rounded-2xl overflow-hidden flex flex-col h-full animate-slide-up ${colors.shadow}" style="animation-delay: ${index * 50}ms;">
-                            <div class="p-6">
-                                <div class="flex justify-between items-start">
-                                    <div class="w-12 h-12 bg-black/20 rounded-lg flex items-center justify-center border border-white/10">
-                                        <i class="${item.icon} ${colors.text} text-2xl"></i>
-                                    </div>
-                                    <span class="text-xs font-bold px-3 py-1 rounded-full border border-white/10 bg-black/20 text-white/70">${item.type}</span>
-                                </div>
-                                <h3 class="text-xl font-bold text-white mt-5 mb-1">${item.name}</h3>
-                                <p class="text-sm font-semibold ${colors.text} uppercase tracking-wider mb-4">${item.role}</p>
-                            </div>
-                            <div class="px-6 pb-6 flex-grow flex flex-col">
-                                <p class="text-slate-200 text-sm leading-relaxed font-normal flex-grow border-t border-white/10 pt-4">
-                                    ${item.desc}
-                                </p>
-                                 <div class="mt-6 text-sm font-semibold ${colors.text} hover:text-white transition-colors self-end">
-                                    View Details <i class="fas fa-arrow-right ml-1"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                grid.insertAdjacentHTML('beforeend', card);
-            });
+            currentCompany = company;
         }
 
-        // Modal functions
-        const modal = document.getElementById('detail-modal');
-        const iframe = document.getElementById('company-iframe');
-
-        function openModal(index) {
-            const item = companies[index];
-            const colors = colorMap[item.color];
-
-            // Update modal header
-            document.getElementById('modal-title').innerText = item.name;
-            document.getElementById('modal-badge').innerText = item.role;
-            document.getElementById('modal-type').innerText = item.type;
+        function openDemo(company) {
+            const titles = {
+                'markbase': '마크베이스 - 실시간 데이터 스트리밍',
+                'kaist': 'KAIST - AI 모델 대시보드',
+                'keti': 'KETI - AAS 플랫폼 관리'
+            };
+            const urls = {
+                'markbase': 'https://www.aas-idta.org/',
+                'kaist': 'https://www.aas-idta.org/',
+                'keti': 'https://www.aas-idta.org/'
+            };
             
-            // Update modal content
-            document.getElementById('modal-desc').innerText = item.desc;
-            document.getElementById('modal-details').innerText = item.details;
-            
-            // Update tech stack
-            const techStackContainer = document.getElementById('modal-tech-stack');
-            techStackContainer.innerHTML = '';
-            item.techStack.forEach(tech => {
-                const techBadge = document.createElement('span');
-                techBadge.className = 'px-2.5 py-1 text-xs bg-white/10 text-white/70 rounded-md border border-white/20';
-                techBadge.innerText = tech;
-                techStackContainer.appendChild(techBadge);
-            });
-
-            // Set iframe content
-            if (item.iframeSrc) {
-                iframe.src = item.iframeSrc;
-                iframe.removeAttribute('srcdoc');
-            } else {
-                iframe.removeAttribute('src');
-                iframe.srcdoc = `
-                    <html>
-                    <head>
-                        <script src="https://cdn.tailwindcss.com"><\/script>
-                        <style>body { margin: 0; }</style>
-                    </head>
-                    <body>${item.iframeContent}</body>
-                    </html>
-                `;
-            }
-
-            // Show modal
-            modal.classList.remove('hidden');
+            document.getElementById('modalTitle').textContent = titles[company];
+            document.getElementById('demoIframe').src = urls[company];
+            document.getElementById('demoModal').classList.remove('hidden');
         }
 
-        function closeModal() {
-            modal.classList.add('hidden');
-            iframe.src = "";
-            iframe.removeAttribute('srcdoc');
+        function closeDemo() {
+            document.getElementById('demoModal').classList.add('hidden');
         }
 
-        // Close modal on background click
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
+        function fullscreenDemo() {
+            const iframe = document.getElementById('demoIframe');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
             }
-        });
+        }
 
-        // Close modal on Escape key
+        function newTabDemo() {
+            window.open(document.getElementById('demoIframe').src, '_blank');
+        }
+
+        // ESC 키로 모달 닫기
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                closeModal();
-            }
-        });
-
-        const style = document.createElement('style');
-        style.innerHTML = `@keyframes animate-slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } .animate-slide-up { animation: animate-slide-up 0.5s ease-out forwards; opacity: 0; }`;
-        document.head.appendChild(style);
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const filterFromUrl = urlParams.get('filter');
-            if (filterFromUrl && ['DATA', 'AI', 'INFRA', 'NETWORK', 'ORG', 'SERVICE'].includes(filterFromUrl.toUpperCase())) {
-                filterCards(filterFromUrl.toUpperCase());
-            } else {
-                filterCards('ALL');
+            if (e.key === 'Escape') {
+                closeDemo();
             }
         });
     </script>

@@ -1,488 +1,848 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>초거대제조AI - 통합 데이터 흐름 대시보드 (Top Nav)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Chakra+Petch:wght@500;600&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Pretendard', 'sans-serif'],
-                        tech: ['Chakra Petch', 'sans-serif'],
-                    },
-                    colors: {
-                        violet: { 50: '#f5f3ff', 100: '#ede9fe', 500: '#8b5cf6', 600: '#7c3aed', 900: '#4c1d95' },
-                        slate: { 850: '#1e293b' }
-                    },
-                    boxShadow: {
-                        'soft': '0 4px 20px -2px rgba(139, 92, 246, 0.05)',
-                        'glow': '0 0 15px rgba(124, 58, 237, 0.3)',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* 배경 설정 */
-        body { 
-            background: linear-gradient(135deg, #f3e8ff 0%, #e0e7ff 50%, #fce7f3 100%);
-            background-attachment: fixed;
-            color: #1e293b;
-            overflow: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>초거대제조AI — Analytics Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e1117;
+    --sidebar: #13161f;
+    --card: #181c27;
+    --card2: #1e2333;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --accent: #4f7cff;
+    --accent2: #7c5cfc;
+    --green: #22d3a5;
+    --orange: #f59e42;
+    --red: #f25f5c;
+    --pink: #e879a0;
+    --tag-data: #1a3a5c;
+    --tag-data-t: #60b4ff;
+    --tag-ai: #2a1a4a;
+    --tag-ai-t: #b48cff;
+    --tag-infra: #1a2e1a;
+    --tag-infra-t: #4ade80;
+    --tag-net: #2e1a1a;
+    --tag-net-t: #f87171;
+    --tag-org: #2e2a1a;
+    --tag-org-t: #fbbf24;
+    --tag-svc: #1a2a2e;
+    --tag-svc-t: #34d399;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); display:flex; height:100vh; overflow:hidden; }
 
-        /* 가로 스크롤 컨테이너 */
-        .horizontal-scroll-container {
-            display: flex;
-            overflow-x: auto;
-            overflow-y: hidden;
-            height: 100vh;
-            padding: 0 5vw;
-            align-items: center;
-            gap: 6rem;
-            scroll-behavior: smooth;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .horizontal-scroll-container::-webkit-scrollbar {
-            display: none;
-        }
+  /* SIDEBAR */
+  .sidebar {
+    width:200px; min-width:200px; background:var(--sidebar);
+    border-right:1px solid var(--border);
+    display:flex; flex-direction:column;
+    padding:0;
+  }
+  .sidebar-logo {
+    padding:20px 16px 16px;
+    border-bottom:1px solid var(--border);
+  }
+  .sidebar-logo .ai-badge {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:28px; height:28px; background:var(--accent); border-radius:6px;
+    font-size:11px; font-weight:700; color:#fff; margin-bottom:8px;
+  }
+  .sidebar-logo h2 { font-size:13px; font-weight:700; line-height:1.3; }
+  .sidebar-logo p { font-size:10px; color:var(--muted); margin-top:2px; }
+  .sidebar-nav { padding:12px 8px; flex:1; }
+  .nav-item {
+    display:flex; align-items:center; gap:8px;
+    padding:9px 10px; border-radius:7px;
+    font-size:12px; cursor:pointer;
+    color:var(--muted); transition:all .2s;
+    margin-bottom:2px;
+  }
+  .nav-item:hover { background:var(--card); color:var(--text); }
+  .nav-item.active { background:var(--accent); color:#fff; }
+  .nav-icon { width:14px; height:14px; opacity:.8; }
 
-        /* 스테이지 섹션 */
-        .stage-section {
-            min-width: 420px;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            position: relative;
-            padding-top: 6rem;
-            padding-bottom: 2rem;
-        }
+  /* MAIN */
+  .main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+  .topbar {
+    height:52px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 24px;
+  }
+  .topbar h1 { font-size:15px; font-weight:600; }
+  .filter-tabs { display:flex; gap:4px; }
+  .ftab {
+    padding:5px 12px; border-radius:20px; font-size:11px;
+    cursor:pointer; transition:all .2s;
+    background:transparent; color:var(--muted); border:1px solid var(--border);
+  }
+  .ftab:hover { color:var(--text); border-color:rgba(255,255,255,0.2); }
+  .ftab.active { background:var(--accent); color:#fff; border-color:var(--accent); }
 
-        /* 흐름 화살표 */
-        .stage-section:not(:last-child)::before {
-            content: '\f105';
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            position: absolute;
-            right: -3.5rem;
-            top: 55%;
-            transform: translateY(-50%);
-            font-size: 2rem;
-            color: #a78bfa;
-            opacity: 0.6;
-            z-index: 0;
-            text-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
-        }
+  /* CONTENT */
+  .content { flex:1; overflow-y:auto; padding:20px 24px; }
+  .content::-webkit-scrollbar { width:4px; }
+  .content::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
 
-        /* Card Style */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 24px;
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.03);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-        }
-        .glass-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 20px 40px -5px rgba(124, 58, 237, 0.15);
-            border-color: #fff;
-            z-index: 10;
-        }
+  /* PIPELINE SECTION */
+  .section-title { font-size:11px; font-weight:500; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; margin-bottom:14px; }
 
-        /* Top Navigation Dock Style */
-        .nav-dock-container {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            padding: 0.3rem;
-            border-radius: 16px;
-            display: flex;
-            gap: 0.25rem;
-        }
+  .pipeline {
+    display:flex; align-items:center; gap:0;
+    background:var(--card); border:1px solid var(--border);
+    border-radius:12px; padding:16px 20px;
+    margin-bottom:24px; overflow-x:auto;
+  }
+  .pipeline::-webkit-scrollbar { height:3px; }
+  .pipeline::-webkit-scrollbar-thumb { background:var(--border); }
+  .p-stage {
+    display:flex; flex-direction:column; align-items:center;
+    min-width:100px; cursor:pointer;
+    padding:8px 12px; border-radius:8px;
+    transition:all .2s;
+  }
+  .p-stage:hover { background:var(--card2); }
+  .p-stage.active-stage { background:rgba(79,124,255,0.15); }
+  .p-dot {
+    width:36px; height:36px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; margin-bottom:6px;
+    border:1.5px solid var(--border);
+  }
+  .p-stage-label { font-size:10px; font-weight:500; color:var(--muted); text-align:center; line-height:1.3; }
+  .p-arrow {
+    color:var(--border); font-size:18px; margin:0 -2px;
+    flex-shrink:0; padding-bottom:16px;
+  }
 
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-        }
+  /* CARDS GRID */
+  .cards-grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap:12px;
+  }
+  .org-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:12px; padding:16px;
+    cursor:pointer; transition:all .25s;
+    position:relative; overflow:hidden;
+  }
+  .org-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    opacity:0; transition:opacity .2s;
+  }
+  .org-card:hover { border-color:rgba(79,124,255,0.4); transform:translateY(-2px); }
+  .org-card:hover::before { opacity:1; }
+  .org-card.data::before { background:linear-gradient(90deg,#4f7cff,#7c5cfc); }
+  .org-card.ai::before { background:linear-gradient(90deg,#7c5cfc,#e879a0); }
+  .org-card.infra::before { background:linear-gradient(90deg,#22d3a5,#4f7cff); }
+  .org-card.network::before { background:linear-gradient(90deg,#f59e42,#f25f5c); }
+  .org-card.service::before { background:linear-gradient(90deg,#22d3a5,#f59e42); }
 
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.6);
-            color: #475569;
-        }
+  .card-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; }
+  .card-icon {
+    width:36px; height:36px; border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; flex-shrink:0;
+  }
+  .tag {
+    font-size:9px; font-weight:600; padding:3px 7px; border-radius:4px;
+    letter-spacing:.06em; text-transform:uppercase;
+  }
+  .tag.DATA { background:var(--tag-data); color:var(--tag-data-t); }
+  .tag.AI { background:var(--tag-ai); color:var(--tag-ai-t); }
+  .tag.INFRA { background:var(--tag-infra); color:var(--tag-infra-t); }
+  .tag.NETWORK { background:var(--tag-net); color:var(--tag-net-t); }
+  .tag.ORG { background:var(--tag-org); color:var(--tag-org-t); }
+  .tag.SERVICE { background:var(--tag-svc); color:var(--tag-svc-t); }
 
-        .nav-item.active {
-            background: #fff;
-            color: #7c3aed;
-            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.1);
-        }
-        
-        .nav-item i { font-size: 0.9rem; }
+  .card-name { font-size:13px; font-weight:600; margin-bottom:3px; }
+  .card-role { font-size:10px; color:var(--muted); font-family:'DM Mono',monospace; letter-spacing:.04em; margin-bottom:8px; }
+  .card-desc { font-size:11px; color:#9ca3af; line-height:1.5; margin-bottom:10px; }
+  .card-metric {
+    background:var(--card2); border-radius:6px;
+    padding:6px 10px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .metric-label { font-size:9px; color:var(--muted); }
+  .metric-val { font-size:12px; font-weight:600; font-family:'DM Mono',monospace; color:var(--green); }
 
-        /* Font & Utilities */
-        .font-kpi { font-family: 'Chakra Petch', sans-serif; letter-spacing: -0.5px; }
-        ::-webkit-scrollbar { display: none; }
+  /* MODAL */
+  .modal-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.75);
+    display:flex; align-items:center; justify-content:center;
+    z-index:100; opacity:0; pointer-events:none; transition:opacity .25s;
+    backdrop-filter:blur(6px);
+  }
+  .modal-overlay.open { opacity:1; pointer-events:all; }
+  .modal {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:16px; width:880px; max-width:95vw; max-height:88vh;
+    display:flex; flex-direction:column;
+    transform:scale(.96) translateY(10px); transition:all .25s;
+    overflow:hidden;
+  }
+  .modal-overlay.open .modal { transform:scale(1) translateY(0); }
 
-        /* Modal Animation */
-        .modal-enter { animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        @keyframes modalPop {
-            from { opacity: 0; transform: scale(0.95) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-    </style>
+  .modal-header {
+    padding:20px 24px 16px;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:flex-start; justify-content:space-between;
+  }
+  .modal-title-row { display:flex; align-items:center; gap:12px; }
+  .modal-icon { width:44px; height:44px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:20px; }
+  .modal-name { font-size:17px; font-weight:700; }
+  .modal-role { font-size:11px; color:var(--muted); font-family:'DM Mono',monospace; margin-top:2px; }
+  .close-btn {
+    width:28px; height:28px; border-radius:50%; background:var(--card2);
+    border:1px solid var(--border); color:var(--muted);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:14px; flex-shrink:0;
+    transition:all .2s;
+  }
+  .close-btn:hover { background:var(--card); color:var(--text); }
+
+  .modal-body { display:flex; flex:1; overflow:hidden; }
+  .modal-left {
+    width:280px; min-width:280px;
+    border-right:1px solid var(--border);
+    padding:20px; overflow-y:auto;
+  }
+  .modal-left::-webkit-scrollbar { width:3px; }
+  .modal-left::-webkit-scrollbar-thumb { background:var(--border); }
+
+  .info-section { margin-bottom:20px; }
+  .info-label { font-size:10px; font-weight:600; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; }
+  .info-text { font-size:12px; color:#9ca3af; line-height:1.6; }
+
+  .pipeline-pos {
+    display:flex; gap:4px; flex-wrap:wrap;
+  }
+  .pos-chip {
+    font-size:9px; padding:3px 8px; border-radius:12px;
+    background:rgba(79,124,255,0.15); color:var(--accent);
+    border:1px solid rgba(79,124,255,0.3);
+  }
+  .pos-chip.inactive { background:var(--card2); color:var(--muted); border-color:var(--border); }
+
+  .tech-tags { display:flex; flex-wrap:wrap; gap:5px; }
+  .tech-tag {
+    font-size:10px; padding:3px 8px; border-radius:5px;
+    background:var(--card2); color:var(--muted);
+    border:1px solid var(--border);
+  }
+
+  .kpi-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .kpi-card {
+    background:var(--card2); border-radius:8px; padding:10px 12px;
+    border:1px solid var(--border);
+  }
+  .kpi-label { font-size:9px; color:var(--muted); margin-bottom:4px; }
+  .kpi-val { font-size:16px; font-weight:700; font-family:'DM Mono',monospace; }
+
+  .modal-right { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+  .preview-tabs {
+    display:flex; gap:0; border-bottom:1px solid var(--border); padding:0 20px;
+  }
+  .preview-tab {
+    padding:12px 14px; font-size:11px; cursor:pointer;
+    color:var(--muted); border-bottom:2px solid transparent;
+    transition:all .2s; margin-bottom:-1px;
+  }
+  .preview-tab.active { color:var(--text); border-bottom-color:var(--accent); }
+  .preview-area { flex:1; overflow:hidden; padding:16px; }
+  .iframe-mock {
+    width:100%; height:100%; border-radius:10px;
+    background:var(--card2); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    flex-direction:column; gap:12px;
+  }
+  .iframe-placeholder-icon { font-size:36px; opacity:.3; }
+  .iframe-placeholder-text { font-size:12px; color:var(--muted); text-align:center; line-height:1.6; }
+  .iframe-url {
+    font-size:10px; font-family:'DM Mono',monospace;
+    color:var(--accent); background:rgba(79,124,255,0.1);
+    padding:4px 10px; border-radius:4px; border:1px solid rgba(79,124,255,0.2);
+  }
+
+  /* SCROLLBAR */
+  .content::-webkit-scrollbar { width:4px; }
+
+  /* ANIM */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .org-card { animation:fadeUp .3s ease both; }
+  .org-card:nth-child(1){animation-delay:.04s}
+  .org-card:nth-child(2){animation-delay:.08s}
+  .org-card:nth-child(3){animation-delay:.12s}
+  .org-card:nth-child(4){animation-delay:.16s}
+  .org-card:nth-child(5){animation-delay:.20s}
+  .org-card:nth-child(6){animation-delay:.24s}
+  .org-card:nth-child(7){animation-delay:.28s}
+  .org-card:nth-child(8){animation-delay:.32s}
+  .org-card:nth-child(9){animation-delay:.36s}
+  .org-card:nth-child(10){animation-delay:.40s}
+  .org-card:nth-child(11){animation-delay:.44s}
+  .org-card:nth-child(12){animation-delay:.48s}
+</style>
 </head>
 <body>
 
-    <header class="fixed top-0 left-0 w-full h-20 px-8 flex items-center justify-between z-40 bg-white/70 backdrop-blur-lg border-b border-white/50 shadow-sm">
-        
-        <div class="flex items-center">
-            <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold shadow-lg shadow-violet-200">
-                AI
-            </div>
-            
-            <div class="h-6 w-px bg-slate-300 mx-5"></div>
-            
-            <h1 class="text-xl font-extrabold text-slate-800 tracking-tight leading-none">초거대제조AI 플랫폼</h1>
-        </div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="ai-badge">AI</div>
+    <h2>초거대제조AI</h2>
+    <p>Analytics Dashboard</p>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item" onclick="setPage('intro')">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" fill="currentColor" opacity=".6"/><rect x="9" y="2" width="5" height="5" rx="1" fill="currentColor" opacity=".6"/><rect x="2" y="9" width="5" height="5" rx="1" fill="currentColor" opacity=".6"/><rect x="9" y="9" width="5" height="5" rx="1" fill="currentColor" opacity=".6"/></svg>
+      Introduction
+    </div>
+    <div class="nav-item" onclick="setPage('flow')">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 8h3M11 8h3M5 8a3 3 0 006 0M5 8a3 3 0 016 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Service Flow
+    </div>
+    <div class="nav-item active" onclick="setPage('participants')">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M1 13c0-2.761 2.239-4 5-4s5 1.239 5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M14 13c0-1.8-1-3-2.5-3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Participants
+    </div>
+  </nav>
+</div>
 
-        <nav class="nav-dock-container">
-            <div onclick="scrollToSection('stage-1')" class="nav-item active" id="nav-stage-1">
-                <i class="fas fa-database"></i> <span>Data</span>
-            </div>
-            <div onclick="scrollToSection('stage-2')" class="nav-item" id="nav-stage-2">
-                <i class="fas fa-network-wired"></i> <span>Transfer</span>
-            </div>
-            <div onclick="scrollToSection('stage-3')" class="nav-item" id="nav-stage-3">
-                <i class="fas fa-cubes"></i> <span>Platform</span>
-            </div>
-            <div onclick="scrollToSection('stage-4')" class="nav-item" id="nav-stage-4">
-                <i class="fas fa-brain"></i> <span>AI</span>
-            </div>
-            <div onclick="scrollToSection('stage-5')" class="nav-item" id="nav-stage-5">
-                <i class="fas fa-industry"></i> <span>App</span>
-            </div>
-            <div onclick="scrollToSection('stage-6')" class="nav-item" id="nav-stage-6">
-                <i class="fas fa-clipboard-check"></i> <span>Mgmt</span>
-            </div>
-        </nav>
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <h1 id="page-title">참여기관 현황</h1>
+    <div class="filter-tabs">
+      <div class="ftab active" onclick="filterCards('ALL',this)">ALL</div>
+      <div class="ftab" onclick="filterCards('DATA',this)">Data</div>
+      <div class="ftab" onclick="filterCards('AI',this)">AI</div>
+      <div class="ftab" onclick="filterCards('INFRA',this)">Infra</div>
+      <div class="ftab" onclick="filterCards('NETWORK',this)">Network</div>
+      <div class="ftab" onclick="filterCards('ORG',this)">Org</div>
+      <div class="ftab" onclick="filterCards('SERVICE',this)">Service</div>
+    </div>
+  </div>
 
-    </header>
-
-    <main class="horizontal-scroll-container" id="main-scroll">
-        
-        <div class="min-w-[2vw]"></div>
-
-        <section id="stage-1" class="stage-section">
-            <div class="flex items-center gap-3 mb-2 px-1">
-                <span class="w-8 h-8 rounded-lg bg-violet-100 text-violet-600 flex items-center justify-center font-bold text-sm shadow-sm">01</span>
-                <div>
-                    <h2 class="text-xl font-bold text-slate-800">Data Collection</h2>
-                    <p class="text-xs text-slate-500 font-medium">OT/IT 데이터 수집</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-5" id="container-1"></div>
-        </section>
-
-        <section id="stage-2" class="stage-section">
-            <div class="flex items-center gap-3 mb-2 px-1">
-                <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm shadow-sm">02</span>
-                <div>
-                    <h2 class="text-xl font-bold text-slate-800">Transfer (5G)</h2>
-                    <p class="text-xs text-slate-500 font-medium">초고속 네트워크</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-5" id="container-2"></div>
-        </section>
-
-        <section id="stage-3" class="stage-section">
-            <div class="flex items-center gap-3 mb-2 px-1">
-                <span class="w-8 h-8 rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center font-bold text-sm shadow-sm">03</span>
-                <div>
-                    <h2 class="text-xl font-bold text-slate-800">Platform & AAS</h2>
-                    <p class="text-xs text-slate-500 font-medium">인프라 및 표준화</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-5" id="container-3"></div>
-        </section>
-
-        <section id="stage-4" class="stage-section">
-            <div class="flex items-center gap-3 mb-2 px-1">
-                <span class="w-8 h-8 rounded-lg bg-fuchsia-100 text-fuchsia-600 flex items-center justify-center font-bold text-sm shadow-sm">04</span>
-                <div>
-                    <h2 class="text-xl font-bold text-slate-800">AI Analysis</h2>
-                    <p class="text-xs text-slate-500 font-medium">분석 및 모델링</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-5" id="container-4"></div>
-        </section>
-
-        <section id="stage-5" class="stage-section">
-            <div class="flex items-center gap-3 mb-2 px-1">
-                <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm shadow-sm">05</span>
-                <div>
-                    <h2 class="text-xl font-bold text-slate-800">Application</h2>
-                    <p class="text-xs text-slate-500 font-medium">응용 서비스</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-5" id="container-5"></div>
-        </section>
-
-        <section id="stage-6" class="stage-section">
-            <div class="flex items-center gap-3 mb-2 px-1">
-                <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm shadow-sm">06</span>
-                <div>
-                    <h2 class="text-xl font-bold text-slate-800">Management</h2>
-                    <p class="text-xs text-slate-500 font-medium">총괄 및 검증</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-5" id="container-6"></div>
-        </section>
-
-        <div class="min-w-[5vw]"></div>
-
-    </main>
-
-    <div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 backdrop-blur-md hidden transition-opacity duration-300">
-        <div class="w-[90%] h-[90%] max-w-[1400px] bg-white rounded-[32px] shadow-2xl flex flex-col overflow-hidden modal-enter border border-white/50">
-            
-            <div class="h-20 flex items-center justify-between px-8 border-b border-slate-100 bg-white/80 backdrop-blur-xl z-10">
-                <div class="flex items-center gap-5">
-                    <div class="w-10 h-10 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400">
-                        <i class="fas fa-cube"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-3">
-                            <h3 id="modal-title" class="text-2xl font-bold text-slate-800 tracking-tight">업체명</h3>
-                            <div id="modal-status-badge" class="px-2.5 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-bold flex items-center gap-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> 정상
-                            </div>
-                        </div>
-                        <p id="modal-badge" class="text-sm text-slate-400 font-medium">Role</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="closeModal()" class="w-10 h-10 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
-                        <i class="fas fa-times text-lg"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="flex-1 flex flex-col lg:flex-row overflow-hidden bg-[#fafafa]">
-                
-                <div class="w-full lg:w-96 bg-white border-b lg:border-b-0 lg:border-r border-slate-100 p-8 overflow-y-auto shrink-0">
-                    <div class="space-y-8">
-                        <div>
-                            <h4 class="text-xs font-bold text-violet-500 uppercase tracking-widest mb-3">OVERVIEW</h4>
-                            <p id="modal-desc" class="text-[15px] text-slate-600 leading-relaxed"></p>
-                        </div>
-                        
-                        <div class="p-5 bg-violet-50/50 rounded-2xl border border-violet-100/50">
-                            <h4 class="text-xs font-bold text-violet-500 uppercase tracking-widest mb-3">DETAIL INFO</h4>
-                            <div id="modal-details" class="text-sm text-slate-700 leading-relaxed font-medium"></div>
-                        </div>
-
-                        <div>
-                            <h4 class="text-xs font-bold text-violet-500 uppercase tracking-widest mb-3">Technology Stack</h4>
-                            <div id="modal-tech-stack" class="flex flex-wrap gap-2">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex-1 relative p-4 lg:p-6">
-                    <div class="w-full h-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden relative group">
-                         <div class="absolute inset-0 flex items-center justify-center text-slate-400 z-0 bg-slate-50">
-                            <div class="flex flex-col items-center gap-3">
-                                <div class="w-12 h-12 border-4 border-violet-200 border-t-violet-500 rounded-full animate-spin"></div>
-                                <p class="text-sm font-medium text-slate-500">Secure Connection...</p>
-                            </div>
-                        </div>
-                        <iframe id="company-iframe" src="" class="absolute inset-0 w-full h-full z-10 bg-white" frameborder="0"></iframe>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+  <div class="content">
+    <!-- PIPELINE -->
+    <div class="section-title">데이터 파이프라인</div>
+    <div class="pipeline">
+      <div class="p-stage active-stage" onclick="filterCards('ORG', document.querySelector('.ftab:nth-child(6)'))">
+        <div class="p-dot" style="background:rgba(251,191,36,0.15);border-color:rgba(251,191,36,0.4);">🏢</div>
+        <div class="p-stage-label">사업관리<br>경남TP·KTL</div>
+      </div>
+      <div class="p-arrow">›</div>
+      <div class="p-stage" onclick="filterCards('DATA', document.querySelector('.ftab:nth-child(2)'))">
+        <div class="p-dot" style="background:rgba(79,124,255,0.15);border-color:rgba(79,124,255,0.4);">📡</div>
+        <div class="p-stage-label">데이터 수집<br>마크베이스·아미크</div>
+      </div>
+      <div class="p-arrow">›</div>
+      <div class="p-stage" onclick="filterCards('NETWORK', document.querySelector('.ftab:nth-child(5)'))">
+        <div class="p-dot" style="background:rgba(242,95,92,0.15);border-color:rgba(242,95,92,0.4);">📶</div>
+        <div class="p-stage-label">5G 전송<br>라임씨에스아이</div>
+      </div>
+      <div class="p-arrow">›</div>
+      <div class="p-stage" onclick="filterCards('INFRA', document.querySelector('.ftab:nth-child(4)'))">
+        <div class="p-dot" style="background:rgba(34,211,165,0.15);border-color:rgba(34,211,165,0.4);">☁️</div>
+        <div class="p-stage-label">클라우드 인프라<br>메가존·경남대</div>
+      </div>
+      <div class="p-arrow">›</div>
+      <div class="p-stage" onclick="filterCards('AI', document.querySelector('.ftab:nth-child(3)'))">
+        <div class="p-dot" style="background:rgba(124,92,252,0.15);border-color:rgba(124,92,252,0.4);">🧠</div>
+        <div class="p-stage-label">AI 모델<br>KAIST·넥스트</div>
+      </div>
+      <div class="p-arrow">›</div>
+      <div class="p-stage" onclick="filterCards('SERVICE', document.querySelector('.ftab:nth-child(7)'))">
+        <div class="p-dot" style="background:rgba(34,211,165,0.12);border-color:rgba(34,211,165,0.35);">🏭</div>
+        <div class="p-stage-label">현장 서비스<br>소르테크·DX솔루션즈</div>
+      </div>
     </div>
 
-    <script>
-        // Data (100% 동일 유지)
-        const companies = [
-            { stage: 1, name: "마크베이스", role: "High-Speed DB", kpi: "1.21M rec/s", status: "normal", desc: "초고속 시계열 DBMS로 제조 현장 센서 데이터 실시간 수집 및 저장.", details: "설비의 PLC, 센서 등 OT(운영 기술) 환경에서 발생하는 대용량 시계열 데이터를 초당 100만 건 이상 처리할 수 있는 고성능 데이터베이스를 제공합니다.", techStack: ['시계열 DB', 'Real-time Processing', 'Big Data'], url: "https://www.machbase.com/" },
-            { stage: 1, name: "아미크", role: "Legacy Connect", kpi: "99.8% Success", status: "normal", desc: "기존 ERP 데이터 연동 파이프라인 구축", details: "기업의 기존 ERP, MES 등 IT(정보기술) 시스템과 초거대 AI 플랫폼을 안정적으로 연동하기 위한 데이터 파이프라인을 구축합니다.", techStack: ['ETL', 'Data Pipeline', 'API Integration'], url: "http://www.amiqu.com/" },
-            { stage: 1, name: "KETI", role: "AIoT Edge", kpi: "24 Devices", status: "normal", desc: "현장 설비 부착형 지능형 엣지 개발", details: "데이터가 발생하는 현장에 AIoT 엣지 디바이스를 설치하여 비전, 음향 등 비정형 데이터를 1차적으로 처리하고 분석합니다.", techStack: ['Edge Computing', 'AIoT', 'Embedded AI'], url: "https://www.keti.re.kr/" },
-            { stage: 2, name: "라임씨에스아이", role: "5G Network", kpi: "1.5ms Latency", status: "normal", desc: "공장 내 음영 구역 없는 5G 특화망 구축", details: "공장 내 데이터 통신 음영 구역을 해소하고, 대용량 데이터를 초저지연으로 전송하기 위한 5G 특화망 인프라를 구축합니다.", techStack: ['5G', 'Network Slicing', 'Edge Network'], url: "http://www.limecsi.com/" },
-            { stage: 3, name: "메가존클라우드", role: "Cloud Infra", kpi: "99.98% Uptime", status: "normal", desc: "하이브리드 AI 클라우드 센터(EBC) 구축", details: "AI 모델 학습 및 서비스 운영을 위한 하이브리드 클라우드 인프라(EBC)를 구축하고 안정적으로 운영합니다.", techStack: ['Hybrid Cloud', 'Kubernetes', 'MLOps'], url: "https://www.megazone.com/" },
-            { stage: 3, name: "경남대학교", role: "Standardization", kpi: "1,204 Models", status: "normal", desc: "AAS 기반 이기종 설비 데이터 표준 모델링", details: "제조 현장에서 수집되는 다양한 형태의 데이터를 자산관리쉘(AAS) 기반의 표준 모델로 변환하여 데이터의 일관성과 활용성을 높입니다.", techStack: ['AAS', '데이터 모델링', 'Knowledge Graph'], url: "https://aas-system.netlify.app/" },
-            { stage: 3, name: "네스트필드", role: "Interoperability", kpi: "85% API rate", status: "warning", desc: "이종 시스템 간 데이터 상호운용성 확보", details: "다양한 제조 장비와 시스템 간의 데이터 교환을 위한 표준 인터페이스를 제공하여 상호운용성을 보장합니다.", techStack: ['Middleware', 'Protocol Conversion', 'API Gateway'], url: "http://www.nestfield.co.kr/" },
-            { stage: 4, name: "KAIST", role: "Hyperscale AI", kpi: "92% Accuracy", status: "normal", desc: "제조 특화 LLM 모델 개발 및 질의응답", details: "플랫폼의 핵심 두뇌 역할을 하는 제조 특화 초거대 언어모델(LLM)을 개발합니다. 이 모델은 공정 이상 원인 분석, 해결책 제안 등의 기능을 수행합니다.", techStack: ['LLM', '생성형 AI', 'Fine-tuning'], url: "https://www.kaist.ac.kr/" },
-            { stage: 4, name: "넥스트스튜디오", role: "ESG AI", kpi: "-7.5% CO2", status: "normal", desc: "탄소 배출량 예측 및 저감 관리 모델", details: "제조 공정에서 발생하는 탄소 배출량을 예측하고, 생산 계획에 따른 저감 방안을 시뮬레이션하는 ESG 특화 AI 모델을 개발합니다.", techStack: ['예측 모델링', '시뮬레이션', 'ESG Analytics'], url: "http://www.next-studio.co.kr/" },
-            { stage: 5, name: "소르테크", role: "Vision AI", kpi: "15 Defects/h", status: "danger", desc: "육안 검사 대비 속도 2배 향상 불량 검출", details: "AI 비전 기술을 활용하여 생산 라인의 제품 불량을 실시간으로 검출합니다. 기존 육안 검사 대비 속도와 정확도를 획기적으로 향상시킵니다.", techStack: ['Computer Vision', 'Deep Learning', 'Object Detection'], url: "http://www.sortech.co.kr/" },
-            { stage: 5, name: "DX솔루션즈", role: "Traceability", kpi: "3.2 min/case", status: "normal", desc: "불량 발생 원인 자동 역추적 시스템", details: "제품 불량 발생 시, 해당 제품의 생산 이력과 데이터를 역추적하여 어떤 공정에서 어떤 원인으로 문제가 발생했는지 자동으로 분석합니다.", techStack: ['Data Tracking', 'AI Analytics', 'Root Cause Analysis'], url: "http://www.dxsolutions.co.kr/" },
-            { stage: 5, name: "에스디테크", role: "Sensing", kpi: "99.7%", status: "normal", desc: "설비 진동/온도 실시간 데이터 수집", details: "설비의 진동, 온도 등 IIoT 센서 데이터를 실시간으로 수집하고 분석하여 공정 품질을 안정적으로 유지하고 관리합니다.", techStack: ['IIoT', 'Sensor Analytics', 'Predictive Maintenance'], url: "#" },
-            { stage: 6, name: "경남TP", role: "Project Management", kpi: "85% Progress", status: "normal", desc: "사업 총괄 및 참여 기관 관리", details: "프로젝트의 전반적인 운영 및 관리를 책임지며, 참여 기관 간의 협력을 조율하고 사업 목표 달성을 위한 전략을 수립합니다.", techStack: ['프로젝트 관리', 'PMBOK', '성과 관리'], url: "https://www.gntp.or.kr/" },
-            { stage: 6, name: "KTL", role: "Verification", kpi: "Pass", status: "normal", desc: "AI 모델 및 데이터 품질 신뢰성 검증", details: "개발된 AI 모델과 데이터의 품질, 신뢰성을 검증하는 역할을 수행합니다. 객관적인 평가 지표를 통해 솔루션의 완성도를 높입니다.", techStack: ['시스템 엔지니어링', '품질 보증', 'Testing'], url: "https://www.ktl.re.kr/" }
-        ];
+    <!-- CARDS -->
+    <div class="section-title">참여기관 <span id="card-count" style="color:var(--accent)">15</span>개</div>
+    <div class="cards-grid" id="cards-grid">
 
-        // Styles & Config
-        const statusConfig = {
-            normal: { text: 'text-emerald-600', bg: 'bg-emerald-50', dot: 'bg-emerald-500', label: '정상' },
-            warning: { text: 'text-amber-600', bg: 'bg-amber-50', dot: 'bg-amber-500', label: '점검' },
-            danger: { text: 'text-rose-600', bg: 'bg-rose-50', dot: 'bg-rose-500', label: '장애' }
-        };
+      <!-- 경남대학교 -->
+      <div class="org-card data" data-type="DATA" onclick="openModal('gyeongnam')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(79,124,255,0.15);">🎓</div>
+          <span class="tag DATA">DATA</span>
+        </div>
+        <div class="card-name">경남대학교</div>
+        <div class="card-role">STANDARDIZATION</div>
+        <div class="card-desc">AAS 기반 이기종 설비 데이터 표준 모델링</div>
+        <div class="card-metric">
+          <span class="metric-label">AAS Models</span>
+          <span class="metric-val">1,204</span>
+        </div>
+      </div>
 
-        // Render Function
-        function renderDashboard() {
-            companies.forEach((item, index) => {
-                const container = document.getElementById(`container-${item.stage}`);
-                if (!container) return;
+      <!-- 마크베이스 -->
+      <div class="org-card data" data-type="DATA" onclick="openModal('machbase')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(79,124,255,0.15);">🗄️</div>
+          <span class="tag DATA">DATA</span>
+        </div>
+        <div class="card-name">마크베이스</div>
+        <div class="card-role">HIGH-SPEED DB</div>
+        <div class="card-desc">초당 100만 건 데이터 처리 성능 확보</div>
+        <div class="card-metric">
+          <span class="metric-label">Performance</span>
+          <span class="metric-val">1.21M rec/s</span>
+        </div>
+      </div>
 
-                const st = statusConfig[item.status];
+      <!-- 아미크 -->
+      <div class="org-card data" data-type="DATA" onclick="openModal('amiq')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(79,124,255,0.15);">🔗</div>
+          <span class="tag DATA">DATA</span>
+        </div>
+        <div class="card-name">아미크</div>
+        <div class="card-role">LEGACY CONNECT</div>
+        <div class="card-desc">기존 ERP 데이터 연동 파이프라인 구축</div>
+        <div class="card-metric">
+          <span class="metric-label">Pipeline Success</span>
+          <span class="metric-val">99.8%</span>
+        </div>
+      </div>
 
-                const card = document.createElement('div');
-                card.className = `glass-card p-6 cursor-pointer flex flex-col justify-between group relative overflow-hidden h-[200px] w-full`;
-                card.onclick = () => openModal(index);
-                
-                card.innerHTML = `
-                    <div class="relative z-10 flex flex-col h-full justify-between">
-                        <div>
-                            <div class="flex justify-between items-start mb-3">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-700 shadow-sm group-hover:scale-110 transition-transform duration-300">
-                                        <i class="fas fa-cube text-sm opacity-50"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="font-bold text-slate-800 text-lg tracking-tight group-hover:text-violet-600 transition-colors">${item.name}</h3>
-                                        <p class="text-xs text-slate-400 font-medium">${item.role}</p>
-                                    </div>
-                                </div>
-                                <div class="px-2.5 py-1 rounded-full ${st.bg} border border-transparent flex items-center gap-1.5">
-                                    <span class="w-1.5 h-1.5 rounded-full ${st.dot}"></span>
-                                    <span class="text-[10px] font-bold ${st.text}">${st.label}</span>
-                                </div>
-                            </div>
-                            <p class="text-sm text-slate-500 leading-snug line-clamp-2">${item.desc}</p>
-                        </div>
-                        
-                        <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
-                            <div>
-                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Performance</p>
-                                 <p class="font-kpi text-lg font-bold text-slate-700 group-hover:text-slate-900 transition-colors">${item.kpi}</p>
-                            </div>
-                            <div class="w-8 h-8 rounded-full bg-slate-50 text-slate-300 flex items-center justify-center group-hover:bg-violet-500 group-hover:text-white transition-all duration-300 shadow-sm">
-                                <i class="fas fa-arrow-right text-xs transform -rotate-45 group-hover:rotate-0 transition-transform duration-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-gradient-to-br from-violet-100/50 to-transparent rounded-full blur-2xl group-hover:opacity-100 opacity-0 transition-opacity duration-500 pointer-events-none"></div>
-                `;
-                container.appendChild(card);
-            });
-        }
+      <!-- 네스트필드 -->
+      <div class="org-card data" data-type="DATA" onclick="openModal('nestfield')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(79,124,255,0.15);">🔄</div>
+          <span class="tag DATA">DATA</span>
+        </div>
+        <div class="card-name">네스트필드</div>
+        <div class="card-role">INTEROPERABILITY</div>
+        <div class="card-desc">이종 시스템 간 데이터 상호운용성 확보</div>
+        <div class="card-metric">
+          <span class="metric-label">API Rate</span>
+          <span class="metric-val">85%</span>
+        </div>
+      </div>
 
-        // Horizontal Scroll Logic
-        const scrollContainer = document.getElementById('main-scroll');
-        
-        // Wheel Event for Horizontal Scroll
-        scrollContainer.addEventListener('wheel', (evt) => {
-            evt.preventDefault();
-            scrollContainer.scrollLeft += evt.deltaY;
-        });
+      <!-- KETI -->
+      <div class="org-card data" data-type="DATA" onclick="openModal('keti')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(79,124,255,0.15);">📟</div>
+          <span class="tag DATA">DATA</span>
+        </div>
+        <div class="card-name">KETI</div>
+        <div class="card-role">AIOT EDGE</div>
+        <div class="card-desc">현장 설비 부착형 지능형 엣지 컴퓨팅 개발</div>
+        <div class="card-metric">
+          <span class="metric-label">Devices</span>
+          <span class="metric-val">24 ea</span>
+        </div>
+      </div>
 
-        // Scroll Spy for Nav
-        scrollContainer.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('.stage-section');
-            const navLinks = document.querySelectorAll('.nav-item');
-            
-            let current = '';
-            const centerPos = scrollContainer.scrollLeft + (window.innerWidth / 2);
+      <!-- KAIST -->
+      <div class="org-card ai" data-type="AI" onclick="openModal('kaist')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(124,92,252,0.15);">🧠</div>
+          <span class="tag AI">AI</span>
+        </div>
+        <div class="card-name">KAIST</div>
+        <div class="card-role">HYPERSCALE AI</div>
+        <div class="card-desc">제조 특화 LLM 모델 개발 및 심화응용</div>
+        <div class="card-metric">
+          <span class="metric-label">Accuracy Improvement</span>
+          <span class="metric-val">+10%</span>
+        </div>
+      </div>
 
-            sections.forEach(section => {
-                const offsetLeft = section.offsetLeft;
-                const offsetWidth = section.offsetWidth;
-                
-                // 현재 화면 중앙에 있는 섹션 감지
-                if (centerPos >= offsetLeft && centerPos < offsetLeft + offsetWidth + 80) { 
-                    current = section.getAttribute('id');
-                }
-            });
+      <!-- 넥스트스튜디오 -->
+      <div class="org-card ai" data-type="AI" onclick="openModal('nextstudio')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(124,92,252,0.15);">🌿</div>
+          <span class="tag AI">AI</span>
+        </div>
+        <div class="card-name">넥스트스튜디오</div>
+        <div class="card-role">ESG AI</div>
+        <div class="card-desc">탄소 배출량 예측 및 지각 관리 모델 개발</div>
+        <div class="card-metric">
+          <span class="metric-label">ESG Model</span>
+          <span class="metric-val">sLM Agent</span>
+        </div>
+      </div>
 
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if(link.id === `nav-${current}`) {
-                    link.classList.add('active');
-                }
-            });
-        });
+      <!-- 메가존클라우드 -->
+      <div class="org-card infra" data-type="INFRA" onclick="openModal('megazone')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(34,211,165,0.12);">☁️</div>
+          <span class="tag INFRA">INFRA</span>
+        </div>
+        <div class="card-name">메가존클라우드</div>
+        <div class="card-role">CLOUD INFRA</div>
+        <div class="card-desc">하이브리드 AI 클라우드 센터(EBC) 구축</div>
+        <div class="card-metric">
+          <span class="metric-label">Uptime</span>
+          <span class="metric-val">99.98%</span>
+        </div>
+      </div>
 
-        // Click to Scroll
-        function scrollToSection(id) {
-            const element = document.getElementById(id);
-            if(element) {
-                // 중앙 정렬 스크롤
-                const scrollLeft = element.offsetLeft - (window.innerWidth / 2) + (element.offsetWidth / 2);
-                scrollContainer.scrollTo({
-                    left: scrollLeft,
-                    behavior: 'smooth'
-                });
-            }
-        }
+      <!-- 라임씨에스아이 -->
+      <div class="org-card network" data-type="NETWORK" onclick="openModal('limecsi')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(242,95,92,0.12);">📶</div>
+          <span class="tag NETWORK">NETWORK</span>
+        </div>
+        <div class="card-name">라임씨에스아이</div>
+        <div class="card-role">5G NETWORK</div>
+        <div class="card-desc">공장 내 음영 구역 없는 5G 특화망 구축</div>
+        <div class="card-metric">
+          <span class="metric-label">Latency</span>
+          <span class="metric-val">1.5ms</span>
+        </div>
+      </div>
 
-        // Modal Logic
-        const modal = document.getElementById('detail-modal');
-        const iframe = document.getElementById('company-iframe');
+      <!-- 경남TP -->
+      <div class="org-card" data-type="ORG" onclick="openModal('gntp')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(251,191,36,0.12);">🏢</div>
+          <span class="tag ORG">ORG</span>
+        </div>
+        <div class="card-name">경남TP</div>
+        <div class="card-role">PROJECT MANAGEMENT</div>
+        <div class="card-desc">사업 총괄 및 참여 기관 관리</div>
+        <div class="card-metric">
+          <span class="metric-label">Networking</span>
+          <span class="metric-val">5회+ / 년</span>
+        </div>
+      </div>
 
-        function openModal(index) {
-            const item = companies[index];
-            const st = statusConfig[item.status];
+      <!-- KTL -->
+      <div class="org-card" data-type="ORG" onclick="openModal('ktl')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(251,191,36,0.12);">✅</div>
+          <span class="tag ORG">ORG</span>
+        </div>
+        <div class="card-name">KTL</div>
+        <div class="card-role">VERIFICATION</div>
+        <div class="card-desc">AI 모델 및 데이터 품질 신뢰성 검증</div>
+        <div class="card-metric">
+          <span class="metric-label">Validation</span>
+          <span class="metric-val">적합성 검증</span>
+        </div>
+      </div>
 
-            document.getElementById('modal-title').innerText = item.name;
-            document.getElementById('modal-badge').innerText = item.role;
-            
-            const badgeContainer = document.getElementById('modal-status-badge');
-            badgeContainer.className = `px-3 py-1 rounded-full ${st.bg} ${st.text} text-xs font-bold flex items-center gap-1.5 border border-${st.text.split('-')[1]}-200`;
-            badgeContainer.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${st.dot}"></span> ${st.label}`;
-            
-            document.getElementById('modal-desc').innerText = item.desc;
-            document.getElementById('modal-details').innerText = item.details;
-            
-            const techStackContainer = document.getElementById('modal-tech-stack');
-            techStackContainer.innerHTML = '';
-            item.techStack.forEach(tech => {
-                const techBadge = document.createElement('span');
-                techBadge.className = 'px-3 py-1.5 text-xs font-medium bg-white text-slate-600 rounded-lg border border-slate-200 shadow-sm';
-                techBadge.innerText = tech;
-                techStackContainer.appendChild(techBadge);
-            });
+      <!-- 소르테크 -->
+      <div class="org-card service" data-type="SERVICE" onclick="openModal('sortech')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(34,211,165,0.10);">👁️</div>
+          <span class="tag SERVICE">SERVICE</span>
+        </div>
+        <div class="card-name">소르테크</div>
+        <div class="card-role">VISION AI</div>
+        <div class="card-desc">육안 검사 대비 속도 2배 향상 불량 검출</div>
+        <div class="card-metric">
+          <span class="metric-label">Speed vs Manual</span>
+          <span class="metric-val">×2.0</span>
+        </div>
+      </div>
 
-            iframe.src = item.url;
-            modal.classList.remove('hidden');
-        }
+      <!-- DX솔루션즈 -->
+      <div class="org-card service" data-type="SERVICE" onclick="openModal('dxsolutions')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(34,211,165,0.10);">🔍</div>
+          <span class="tag SERVICE">SERVICE</span>
+        </div>
+        <div class="card-name">DX솔루션즈</div>
+        <div class="card-role">DEFECT TRACKING</div>
+        <div class="card-desc">AI 기반 불량 역추적 및 지능형 관제 시스템</div>
+        <div class="card-metric">
+          <span class="metric-label">Tracking</span>
+          <span class="metric-val">실시간</span>
+        </div>
+      </div>
 
-        function closeModal() {
-            modal.classList.add('hidden');
-            setTimeout(() => { iframe.src = ""; }, 200);
-        }
+      <!-- 에스디테크 -->
+      <div class="org-card service" data-type="SERVICE" onclick="openModal('sdtech')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(34,211,165,0.10);">⚙️</div>
+          <span class="tag SERVICE">SERVICE</span>
+        </div>
+        <div class="card-name">에스디테크</div>
+        <div class="card-role">PROCESS QUALITY</div>
+        <div class="card-desc">IIoT 기반 공정 품질 데이터 수집 및 관리</div>
+        <div class="card-metric">
+          <span class="metric-label">IIoT Systems</span>
+          <span class="metric-val">2 sites</span>
+        </div>
+      </div>
 
-        renderDashboard();
-    </script>
+      <!-- 메타아이스퀘어 -->
+      <div class="org-card service" data-type="SERVICE" onclick="openModal('metaisquare')">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(34,211,165,0.10);">🎙️</div>
+          <span class="tag SERVICE">SERVICE</span>
+        </div>
+        <div class="card-name">메타아이스퀘어</div>
+        <div class="card-role">WORKER AI</div>
+        <div class="card-desc">공장 환경 한국어 음성인식 및 작업자 인터페이스</div>
+        <div class="card-metric">
+          <span class="metric-label">Interface</span>
+          <span class="metric-val">Voice + Vision</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title-row">
+        <div class="modal-icon" id="m-icon" style="background:rgba(79,124,255,0.15);">🎓</div>
+        <div>
+          <div class="modal-name" id="m-name">경남대학교</div>
+          <div class="modal-role" id="m-role">STANDARDIZATION</div>
+        </div>
+        <span class="tag" id="m-tag" style="margin-left:8px;">DATA</span>
+      </div>
+      <div class="close-btn" onclick="closeModal()">✕</div>
+    </div>
+    <div class="modal-body">
+      <!-- LEFT -->
+      <div class="modal-left">
+        <div class="info-section">
+          <div class="info-label">Description</div>
+          <div class="info-text" id="m-desc">—</div>
+        </div>
+        <div class="info-section">
+          <div class="info-label">파이프라인 위치</div>
+          <div class="pipeline-pos" id="m-pipeline"></div>
+        </div>
+        <div class="info-section">
+          <div class="info-label">주요 역할</div>
+          <div class="info-text" id="m-detail">—</div>
+        </div>
+        <div class="info-section">
+          <div class="info-label">Tech Stack</div>
+          <div class="tech-tags" id="m-tech"></div>
+        </div>
+        <div class="info-section">
+          <div class="info-label">성과 지표</div>
+          <div class="kpi-grid" id="m-kpi"></div>
+        </div>
+      </div>
+      <!-- RIGHT -->
+      <div class="modal-right">
+        <div class="preview-tabs">
+          <div class="preview-tab active">결과물 미리보기</div>
+          <div class="preview-tab">문서</div>
+        </div>
+        <div class="preview-area">
+          <div class="iframe-mock">
+            <div class="iframe-placeholder-icon">🖥️</div>
+            <div class="iframe-placeholder-text" id="m-preview-text">실제 서비스 URL 연결 시<br>여기에 결과물이 표시됩니다</div>
+            <div class="iframe-url" id="m-url">https://example.com</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const orgs = {
+  gyeongnam: {
+    icon:'🎓', name:'경남대학교', role:'STANDARDIZATION', tag:'DATA',
+    desc:'AAS 기반 이기종 설비 데이터 표준 모델링 및 경남대 산학협력단 주관으로 제조 AI 데이터 표준화 기반 구축.',
+    pipeline:['데이터 수집','플랫폼/AAS'],
+    detail:'• AAS(Asset Administration Shell) 기반 데이터 표준화\n• 기업 기밀 데이터 비식별화 기술 개발\n• 초거대제조AI를 위한 LLM 온톨로지 모델 구축\n• MLOps 전문 인력 양성 (연 20명)',
+    tech:['AAS','데이터 모델링','Knowledge Graph','MLOps','Python'],
+    kpi:[{l:'AAS Models',v:'1,204',c:'#4f7cff'},{l:'비식별화 종류',v:'7종',c:'#22d3a5'},{l:'교육생',v:'20명/년',c:'#f59e42'},{l:'논문',v:'2편',c:'#7c5cfc'}],
+    url:'https://aas.kyungnam.ac.kr'
+  },
+  machbase: {
+    icon:'🗄️', name:'마크베이스', role:'HIGH-SPEED DB', tag:'DATA',
+    desc:'초당 100만 건 이상 시계열 데이터 처리가 가능한 고성능 DBMS를 통한 제조 데이터 수집 및 저장.',
+    pipeline:['데이터 수집'],
+    detail:'• 설비 태그 데이터 초당 200만건 수집 (3차년도 목표)\n• 시계열 DBMS 기반 데이터 저장 및 관리\n• AI 공유서비스 API 설계 및 구현\n• 수요기업 대상 DB 서버 구축 및 실증',
+    tech:['시계열 DBMS','API','데이터 파이프라인','SQL'],
+    kpi:[{l:'수집 성능',v:'1.21M/s',c:'#4f7cff'},{l:'목표 성능',v:'2M/s',c:'#22d3a5'},{l:'DB 서버',v:'3대',c:'#f59e42'},{l:'데이터셋',v:'500만건',c:'#7c5cfc'}],
+    url:'https://machbase.com'
+  },
+  amiq: {
+    icon:'🔗', name:'아미크', role:'LEGACY CONNECT', tag:'DATA',
+    desc:'기존 ERP 시스템과의 데이터 연동 파이프라인을 구축하여 IT/OT 데이터 통합 환경 제공.',
+    pipeline:['데이터 수집'],
+    detail:'• ERP 데이터 파이프라인 구축\n• 학습 데이터 수집 자동화 아키텍처 설계\n• LLM 최적화 학습 데이터 전처리\n• 대용량 데이터 레이크 설계 및 구현',
+    tech:['ERP','ETL','데이터 레이크','Python','Apache Kafka'],
+    kpi:[{l:'Pipeline 성공률',v:'99.8%',c:'#22d3a5'},{l:'데이터셋',v:'500만건',c:'#4f7cff'},{l:'자동화율',v:'90%+',c:'#f59e42'},{l:'연동 모듈',v:'구축완료',c:'#7c5cfc'}],
+    url:'https://amiq.co.kr'
+  },
+  nestfield: {
+    icon:'🔄', name:'네스트필드', role:'INTEROPERABILITY', tag:'DATA',
+    desc:'AAS 기반 제조 AI 데이터 교환 프레임워크 및 EDC 커넥터 인터페이스 개발로 이종 시스템 간 상호운용성 확보.',
+    pipeline:['데이터 수집','플랫폼/AAS'],
+    detail:'• AAS 메타데이터 모델 개발 (2종)\n• EDC 기반 데이터 커넥터 인터페이스 기술\n• IDTA 활용사례 국제 등록\n• 제조데이터 글로벌 협력 관계 구축',
+    tech:['AAS','EDC','REST API','IEC-63278'],
+    kpi:[{l:'API Rate',v:'85%',c:'#4f7cff'},{l:'AAS 메타모델',v:'2종',c:'#22d3a5'},{l:'IDTA 등록',v:'1건',c:'#f59e42'},{l:'인터페이스',v:'개발완료',c:'#7c5cfc'}],
+    url:'https://nestfield.co.kr'
+  },
+  keti: {
+    icon:'📟', name:'KETI', role:'AIOT EDGE', tag:'DATA',
+    desc:'현장 설비 부착형 AIoT 센서 및 지능형 엣지 컴퓨팅 기술 개발로 실시간 데이터 수집 환경 구축.',
+    pipeline:['데이터 수집'],
+    detail:'• AIoT 센서 기반 디지털 신호 검출\n• 지능형 Edge Computing 기술 개발\n• 데이터 스트리밍 및 분산 처리\n• 수요기업 현장 실증 (2건)',
+    tech:['AIoT','Edge Computing','펌웨어','신호처리','FPGA'],
+    kpi:[{l:'AIoT 센서',v:'6ea',c:'#4f7cff'},{l:'실증 건수',v:'2건',c:'#22d3a5'},{l:'논문',v:'1편',c:'#f59e42'},{l:'처리속도',v:'실시간',c:'#7c5cfc'}],
+    url:'https://keti.re.kr'
+  },
+  kaist: {
+    icon:'🧠', name:'KAIST', role:'HYPERSCALE AI', tag:'AI',
+    desc:'제조 특화형 초거대 AI 모델 개발 및 MoE(Mixture of Experts) 기반 전주기 통합 모델 구축.',
+    pipeline:['AI 모델'],
+    detail:'• 제조 특화 LLM 모델 개발 및 성능 최적화\n• MoE 기반 전주기 통합형 초거대제조AI 모델\n• AI 모델 예측 정확도 10% 향상\n• 학습 속도 20% 향상',
+    tech:['LLM','MoE','PyTorch','LoRA','Fine-tuning'],
+    kpi:[{l:'정확도 향상',v:'+10%',c:'#7c5cfc'},{l:'학습속도 향상',v:'+20%',c:'#22d3a5'},{l:'특허',v:'2건',c:'#f59e42'},{l:'SW 등록',v:'2건',c:'#e879a0'}],
+    url:'https://kaist.ac.kr'
+  },
+  nextstudio: {
+    icon:'🌿', name:'넥스트스튜디오', role:'ESG AI', tag:'AI',
+    desc:'글로벌 제조 공급망 ESG 규제 대응을 위한 sLM Agent 개발 및 탄소 배출량 예측 모델 구축.',
+    pipeline:['AI 모델'],
+    detail:'• 제조 관련 ESG 규제 대응 sLM Agent\n• 경남 주요 수출국 공급망 ESG 분석\n• 환경 관리 및 자원 사용 최적화 AI\n• 글로벌 ESG 규제 데이터 학습',
+    tech:['sLM','ESG','NLP','Python','LangChain'],
+    kpi:[{l:'sLM Agent',v:'개발완료',c:'#7c5cfc'},{l:'ESG 규제 DB',v:'구축완료',c:'#22d3a5'},{l:'특허',v:'1건',c:'#f59e42'},{l:'SW 등록',v:'1건',c:'#e879a0'}],
+    url:'https://nextstud.io'
+  },
+  megazone: {
+    icon:'☁️', name:'메가존클라우드', role:'CLOUD INFRA', tag:'INFRA',
+    desc:'하이브리드 AI 클라우드 센터(EBC) 구축 및 MLOps 플랫폼 운영 환경 제공.',
+    pipeline:['클라우드 인프라'],
+    detail:'• 하이브리드 클라우드 기반 AI 통합 운영환경\n• MLOps 워크로드 관리 도구 구축\n• AI Hub Platform 개발 (모델 서빙, 파이프라인)\n• EBC(Executive Briefing Center) 구축',
+    tech:['AWS','Kubernetes','MLOps','Docker','Terraform'],
+    kpi:[{l:'Uptime',v:'99.98%',c:'#22d3a5'},{l:'AI 서비스',v:'1건',c:'#4f7cff'},{l:'EBC',v:'1개소',c:'#f59e42'},{l:'플랫폼',v:'운영중',c:'#7c5cfc'}],
+    url:'https://megazone.com'
+  },
+  limecsi: {
+    icon:'📶', name:'라임씨에스아이', role:'5G NETWORK', tag:'NETWORK',
+    desc:'공장 내 음영 구역 없는 5G 특화망 구축 및 초고속 통신 통합관제 시스템 운영.',
+    pipeline:['5G 전송'],
+    detail:'• 초고속 무선통신 구축 (2개소)\n• 실증기업 대상 5G 특화망 완전 커버리지\n• 통합관제시스템 구축 (1개소)\n• 대용량 데이터 유선 전송 환경 구축',
+    tech:['5G','WiFi7','네트워크 설계','관제시스템'],
+    kpi:[{l:'Latency',v:'1.5ms',c:'#f25f5c'},{l:'커버리지',v:'100%',c:'#22d3a5'},{l:'구축 사이트',v:'2개소',c:'#f59e42'},{l:'관제시스템',v:'1개소',c:'#7c5cfc'}],
+    url:'https://limecsi.com'
+  },
+  gntp: {
+    icon:'🏢', name:'경남테크노파크', role:'PROJECT MANAGEMENT', tag:'ORG',
+    desc:'PMBOK 기반 사업 총괄 관리 및 초거대 제조AI 생태계 활성화를 위한 산학연관민 네트워킹 운영.',
+    pipeline:['사업관리'],
+    detail:'• PMBOK 기반 사업총괄관리\n• 제조AI 생태계 얼라이언스 운영\n• 기술교류회·세미나·포럼 연 5회 이상\n• 이해관계자 커뮤니케이션 및 의사결정',
+    tech:['PMBOK','ISO 21500','시스템엔지니어링','SE'],
+    kpi:[{l:'네트워킹',v:'5회+/년',c:'#fbbf24'},{l:'참여기관',v:'15개',c:'#22d3a5'},{l:'총사업비',v:'229억',c:'#f59e42'},{l:'사업기간',v:'32개월',c:'#7c5cfc'}],
+    url:'https://gntp.or.kr'
+  },
+  ktl: {
+    icon:'✅', name:'KTL (한국산업기술시험원)', role:'VERIFICATION', tag:'ORG',
+    desc:'시스템엔지니어링 기반 기술개발 관리 체계화 및 AI 모델·데이터 품질의 신뢰성 적합성 검증.',
+    pipeline:['사업관리','AI 모델'],
+    detail:'• SE 기반 기술개발 관리 체계 구축\n• 적합성 검증 확인서 발급\n• AI 모델 요구사항 적합성 검증\n• 품질문서 개발 및 기술문서 양식 관리',
+    tech:['시스템엔지니어링','ISO 15288','품질관리','적합성검증'],
+    kpi:[{l:'적합성검증',v:'확인서 발급',c:'#fbbf24'},{l:'품질문서',v:'개정 3회+',c:'#22d3a5'},{l:'기술문서',v:'양식 2종',c:'#f59e42'},{l:'검증 단계',v:'전주기',c:'#7c5cfc'}],
+    url:'https://ktl.re.kr'
+  },
+  sortech: {
+    icon:'👁️', name:'소르테크', role:'VISION AI', tag:'SERVICE',
+    desc:'초거대 AI 기반 비전 검사 시스템으로 제조 현장 불량 검출 자동화 및 품질관리 서비스 실증.',
+    pipeline:['현장 서비스'],
+    detail:'• QMS(품질관리시스템) 구축 및 실증\n• 비전 검사 시스템 (Finger Follower, 실런트)\n• 광학문자인식/사무자동화 실증\n• AI 기반 통합관리 대시보드 실증',
+    tech:['Computer Vision','QMS','OCR','RPA','딥러닝'],
+    kpi:[{l:'검사속도',v:'×2.0',c:'#22d3a5'},{l:'QMS',v:'구축완료',c:'#4f7cff'},{l:'자동화율',v:'향상',c:'#f59e42'},{l:'실증',v:'완료',c:'#7c5cfc'}],
+    url:'https://sortech.co.kr'
+  },
+  dxsolutions: {
+    icon:'🔍', name:'DX솔루션즈', role:'DEFECT TRACKING', tag:'SERVICE',
+    desc:'AI 기반 수작업·자동화 공정 불량 역추적 서비스 및 초거대 AI 기반 지능형 관제시스템 구축.',
+    pipeline:['현장 서비스'],
+    detail:'• AI 기반 불량 역추적 서비스 개발\n• 비전 기반 손동작 영역 검출 알고리즘\n• 지능형 관제시스템 구축 및 실증\n• 수작업/자동화 공정 불량원인 파악',
+    tech:['Computer Vision','딥러닝','관제시스템','Python'],
+    kpi:[{l:'추적 방식',v:'실시간',c:'#22d3a5'},{l:'관제시스템',v:'구축완료',c:'#4f7cff'},{l:'알고리즘',v:'고도화',c:'#f59e42'},{l:'실증',v:'완료',c:'#7c5cfc'}],
+    url:'https://dxsolutions.co.kr'
+  },
+  sdtech: {
+    icon:'⚙️', name:'에스디테크', role:'PROCESS QUALITY', tag:'SERVICE',
+    desc:'IIoT 기반 공정 품질 데이터 수집 시스템 구축 및 전자문서 플랫폼 실증.',
+    pipeline:['현장 서비스'],
+    detail:'• IIoT 기반 공정품질 데이터 수집 시스템\n• Paperless 시스템을 활용한 LOT추적 관리\n• 전자문서 플랫폼 실증\n• 기존/신규 데이터 연계 정합성 확보',
+    tech:['IIoT','Paperless','전자문서','LOT 추적','센서'],
+    kpi:[{l:'IIoT 시스템',v:'2 sites',c:'#22d3a5'},{l:'전자문서',v:'플랫폼 실증',c:'#4f7cff'},{l:'LOT 추적',v:'실시간',c:'#f59e42'},{l:'데이터 정합',v:'확보',c:'#7c5cfc'}],
+    url:'https://sdtech.kr'
+  },
+  metaisquare: {
+    icon:'🎙️', name:'메타아이스퀘어', role:'WORKER AI', tag:'SERVICE',
+    desc:'공장 환경에서의 한국어 음성인식 및 비전 기반 작업자-AI 인터페이스 기술 개발.',
+    pipeline:['현장 서비스'],
+    detail:'• 공장 환경 한국어 음성인식 알고리즘\n• 비전 기반 손동작 영역 검출\n• 작업자-AI 인터페이스 기반 마련\n• 초거대 AI 적용을 위한 데이터 보안 체계',
+    tech:['음성인식','Computer Vision','NLP','딥러닝'],
+    kpi:[{l:'음성인식',v:'알고리즘 완성',c:'#22d3a5'},{l:'손동작 검출',v:'고도화',c:'#4f7cff'},{l:'보안체계',v:'구축완료',c:'#f59e42'},{l:'인터페이스',v:'Voice+Vision',c:'#7c5cfc'}],
+    url:'https://metaisquare.com'
+  },
+};
+
+function openModal(id) {
+  const o = orgs[id];
+  if(!o) return;
+  document.getElementById('m-icon').textContent = o.icon;
+  document.getElementById('m-name').textContent = o.name;
+  document.getElementById('m-role').textContent = o.role;
+  const t = document.getElementById('m-tag');
+  t.textContent = o.tag; t.className = 'tag '+o.tag;
+  document.getElementById('m-desc').textContent = o.desc;
+  document.getElementById('m-detail').style.whiteSpace = 'pre-line';
+  document.getElementById('m-detail').textContent = o.detail;
+
+  const pp = document.getElementById('m-pipeline');
+  const stages = ['사업관리','데이터 수집','5G 전송','클라우드 인프라','AI 모델','현장 서비스'];
+  pp.innerHTML = stages.map(s => `<span class="pos-chip ${o.pipeline.includes(s)?'':'inactive'}">${s}</span>`).join('');
+
+  const tt = document.getElementById('m-tech');
+  tt.innerHTML = o.tech.map(t=>`<span class="tech-tag">${t}</span>`).join('');
+
+  const kk = document.getElementById('m-kpi');
+  kk.innerHTML = o.kpi.map(k=>`<div class="kpi-card"><div class="kpi-label">${k.l}</div><div class="kpi-val" style="color:${k.c}">${k.v}</div></div>`).join('');
+
+  document.getElementById('m-preview-text').innerHTML = `<b>${o.name}</b> 실제 서비스 URL 연결 시<br>여기에 결과물이 표시됩니다`;
+  document.getElementById('m-url').textContent = o.url;
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModalOutside(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
+
+function filterCards(type, el) {
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const cards = document.querySelectorAll('.org-card');
+  let count = 0;
+  cards.forEach(c => {
+    const show = type==='ALL' || c.dataset.type===type;
+    c.style.display = show ? '' : 'none';
+    if(show) count++;
+  });
+  document.getElementById('card-count').textContent = count;
+}
+
+function setPage(p) {
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const titles = {intro:'사업 개요', flow:'서비스 흐름도', participants:'참여기관 현황'};
+  document.getElementById('page-title').textContent = titles[p];
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+</script>
 </body>
 </html>
