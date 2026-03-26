@@ -3,274 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>초거대 제조AI - Pipeline Dashboard</title>
+    <title>초거대제조AI 플랫폼</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .pipeline-stage { transition: all 0.3s ease; }
-        .pipeline-stage:hover { transform: scale(1.05); }
-        .company-heatmap { position: relative; }
-        .company-bar { position: absolute; background: linear-gradient(90deg, #3b82f6, #1d4ed8); opacity: 0.7; }
-        .card-hover { transition: all 0.2s ease; }
-        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        body { font-family: 'Pretendard', sans-serif; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background-color: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background-color: #f3f4f6; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white min-h-screen">
-    
-    <!-- Header -->
-    <header class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                        <span class="font-bold text-xl">AI</span>
-                    </div>
-                    <h1 class="text-2xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
-                        초거대 제조AI 플랫폼
-                    </h1>
-                </div>
-                <div class="flex items-center space-x-4 text-sm">
-                    <span>2026.03.17</span>
-                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span class="font-semibold text-green-400">실시간</span>
+<body class="h-screen flex overflow-hidden bg-gray-50 text-slate-800">
+
+    <aside class="w-72 flex flex-col bg-[#191F28] shadow-2xl z-10 transition-all duration-300">
+        <div class="p-6 border-b border-white/10 flex items-center justify-between" id="sidebar-header">
+            <div class="flex items-center gap-4" id="logo-and-title">
+                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-900 font-bold text-base shadow-lg">AI</div>
+                <div class="collapsible">
+                    <h1 class="text-xl font-bold text-white">초거대제조AI</h1>
+                    <p class="text-xs text-slate-400 tracking-tight">Analytics Dashboard</p>
                 </div>
             </div>
+            <button id="sidebar-toggle" class="text-slate-400 hover:text-white">
+                <i class="fas fa-chevron-left transition-transform duration-300"></i>
+            </button>
         </div>
-    </header>
+        <nav id="file-list" class="flex-1 overflow-y-auto p-4 space-y-2 collapsible"></nav>
+    </aside>
 
-    <div class="max-w-7xl mx-auto px-6 py-8">
-        <!-- Pipeline Overview -->
-        <div class="mb-12">
-            <h2 class="text-3xl font-bold mb-6 flex items-center">
-                <span class="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mr-3"></span>
-                서비스 파이프라인 현황
-            </h2>
-            
-            <!-- Pipeline Stages -->
-            <div class="relative bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
-                <div class="pipeline-container flex items-center justify-between relative h-24">
-                    <!-- Stage 1: 데이터수집 -->
-                    <div class="pipeline-stage flex flex-col items-center cursor-pointer group" onclick="highlightCompany('markbase')">
-                        <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center mb-2 shadow-xl group-hover:shadow-2xl">
-                            <span class="font-bold text-lg">데이터</span>
-                        </div>
-                        <span class="text-xs font-medium text-gray-300">1.21M rec/s</span>
-                    </div>
-
-                    <!-- Stage 2: 5G 전송 -->
-                    <div class="pipeline-stage flex flex-col items-center cursor-pointer group" onclick="highlightCompany('amicro')">
-                        <div class="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-2xl flex items-center justify-center mb-2 shadow-xl group-hover:shadow-2xl">
-                            <span class="font-bold text-lg">5G</span>
-                        </div>
-                        <span class="text-xs font-medium text-gray-300">1.5ms</span>
-                    </div>
-
-                    <!-- Stage 3: AAS 플랫폼 -->
-                    <div class="pipeline-stage flex flex-col items-center cursor-pointer group" onclick="highlightCompany('keti')">
-                        <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl flex items-center justify-center mb-2 shadow-xl group-hover:shadow-2xl">
-                            <span class="font-bold text-lg">AAS</span>
-                        </div>
-                        <span class="text-xs font-medium text-gray-300">1,074 Assets</span>
-                    </div>
-
-                    <!-- Stage 4: AI 분석 -->
-                    <div class="pipeline-stage flex flex-col items-center cursor-pointer group" onclick="highlightCompany('kaist')">
-                        <div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-orange-700 rounded-2xl flex items-center justify-center mb-2 shadow-xl group-hover:shadow-2xl">
-                            <span class="font-bold text-lg">AI</span>
-                        </div>
-                        <span class="text-xs font-medium text-gray-300">97.2%</span>
-                    </div>
-
-                    <!-- Stage 5: 앱 -->
-                    <div class="pipeline-stage flex flex-col items-center cursor-pointer group" onclick="highlightCompany('kyungnam')">
-                        <div class="w-20 h-20 bg-gradient-to-br from-pink-500 to-pink-700 rounded-2xl flex items-center justify-center mb-2 shadow-xl group-hover:shadow-2xl">
-                            <span class="font-bold text-lg">앱</span>
-                        </div>
-                        <span class="text-xs font-medium text-gray-300">2,231 Models</span>
-                    </div>
-
-                    <!-- Stage 6: 운영 -->
-                    <div class="pipeline-stage flex flex-col items-center cursor-pointer group" onclick="highlightCompany('megazone')">
-                        <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-2xl flex items-center justify-center mb-2 shadow-xl group-hover:shadow-2xl">
-                            <span class="font-bold text-lg">운영</span>
-                        </div>
-                        <span class="text-xs font-medium text-gray-300">99.8%</span>
-                    </div>
-                </div>
-
-                <!-- Company Heatmap -->
-                <div class="company-heatmap absolute inset-0 flex items-center h-full">
-                    <div class="company-bar w-[20%] h-3 bg-blue-500/70 left-[5%] animate-pulse" data-company="markbase"></div>
-                    <div class="company-bar w-[15%] h-4 bg-emerald-500/70 left-[25%] z-10" data-company="amicro"></div>
-                    <div class="company-bar w-[25%] h-3 bg-purple-500/70 left-[42%] z-20" data-company="keti"></div>
-                    <div class="company-bar w-[30%] h-5 bg-orange-500/70 left-[60%] z-30" data-company="kaist"></div>
-                    <div class="company-bar w-[18%] h-3 bg-pink-500/70 left-[78%] z-10" data-company="kyungnam"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Real-time Metrics -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div class="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
-                <div class="text-3xl font-bold text-blue-400">1,074</div>
-                <div class="text-gray-400">Total AAS Assets</div>
-            </div>
-            <div class="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
-                <div class="text-3xl font-bold text-emerald-400">2,231</div>
-                <div class="text-gray-400">Submodels</div>
-            </div>
-            <div class="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
-                <div class="text-3xl font-bold text-purple-400">99.8%</div>
-                <div class="text-gray-400">System Uptime</div>
-            </div>
-        </div>
-
-        <!-- Company Contribution Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- 마크베이스 -->
-            <div class="card-hover bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-blue-500/50 cursor-pointer" onclick="openDemo('markbase')">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-blue-500/80 rounded-xl flex items-center justify-center mr-4">
-                        <span class="font-bold text-sm">MB</span>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-lg">마크베이스</h3>
-                        <div class="flex flex-wrap gap-1 mt-1">
-                            <span class="px-2 py-1 bg-blue-500/30 text-xs rounded-full">DATA</span>
-                            <span class="px-2 py-1 bg-emerald-500/30 text-xs rounded-full">수집</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-2 mb-6">
-                    <div class="flex items-center text-sm"><span class="w-20 text-gray-400">처리량:</span> <span class="font-bold text-blue-400">1.21M rec/s</span></div>
-                    <div class="flex items-center text-sm"><span class="w-20 text-gray-400">성공률:</span> <span class="font-bold text-emerald-400">99.9%</span></div>
-                </div>
-                <div class="flex gap-2">
-                    <button class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-2 rounded-xl font-medium hover:from-blue-600 hover:to-blue-700">결과물</button>
-                    <button class="px-4 py-2 bg-white/10 rounded-xl text-sm hover:bg-white/20">성과</button>
-                    <button class="px-4 py-2 bg-white/10 rounded-xl text-sm hover:bg-white/20">문서</button>
-                </div>
-            </div>
-
-            <!-- KAIST -->
-            <div class="card-hover bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-orange-500/50 cursor-pointer" onclick="openDemo('kaist')">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-orange-500/80 rounded-xl flex items-center justify-center mr-4">
-                        <span class="font-bold text-sm">KAIST</span>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-lg">KAIST</h3>
-                        <div class="flex flex-wrap gap-1 mt-1">
-                            <span class="px-2 py-1 bg-orange-500/30 text-xs rounded-full">AI</span>
-                            <span class="px-2 py-1 bg-purple-500/30 text-xs rounded-full">분석</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-2 mb-6">
-                    <div class="flex items-center text-sm"><span class="w-20 text-gray-400">정확도:</span> <span class="font-bold text-orange-400">97.2%</span></div>
-                    <div class="flex items-center text-sm"><span class="w-20 text-gray-400">모델:</span> <span class="font-bold text-purple-400">85개</span></div>
-                </div>
-                <div class="flex gap-2">
-                    <button class="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-2 rounded-xl font-medium hover:from-orange-600 hover:to-orange-700">결과물</button>
-                    <button class="px-4 py-2 bg-white/10 rounded-xl text-sm hover:bg-white/20">성과</button>
-                    <button class="px-4 py-2 bg-white/10 rounded-xl text-sm hover:bg-white/20">문서</button>
-                </div>
-            </div>
-
-            <!-- KETI -->
-            <div class="card-hover bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-purple-500/50 cursor-pointer" onclick="openDemo('keti')">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-purple-500/80 rounded-xl flex items-center justify-center mr-4">
-                        <span class="font-bold text-sm">KETI</span>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-lg">한국전자기술연구원</h3>
-                        <div class="flex flex-wrap gap-1 mt-1">
-                            <span class="px-2 py-1 bg-purple-500/30 text-xs rounded-full">AAS</span>
-                            <span class="px-2 py-1 bg-indigo-500/30 text-xs rounded-full">플랫폼</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-2 mb-6">
-                    <div class="flex items-center text-sm"><span class="w-20 text-gray-400">Assets:</span> <span class="font-bold text-purple-400">1,074개</span></div>
-                    <div class="flex items-center text-sm"><span class="w-20 text-gray-400">Submodels:</span> <span class="font-bold text-indigo-400">2,231개</span></div>
-                </div>
-                <div class="flex gap-2">
-                    <button class="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 px-4 py-2 rounded-xl font-medium hover:from-purple-600 hover:to-purple-700">결과물</button>
-                    <button class="px-4 py-2 bg-white/10 rounded-xl text-sm hover:bg-white/20">성과</button>
-                    <button class="px-4 py-2 bg-white/10 rounded-xl text-sm hover:bg-white/20">문서</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Demo Modal -->
-    <div id="demoModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white/10 backdrop-blur-xl rounded-3xl w-full max-w-4xl max-h-[90vh] border border-white/20 overflow-hidden">
-            <div class="p-6 border-b border-white/10 flex items-center justify-between">
-                <h2 class="text-2xl font-bold" id="modalTitle">결과물 미리보기</h2>
-                <button onclick="closeDemo()" class="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center hover:bg-white/30">
-                    <span class="text-xl">&times;</span>
-                </button>
-            </div>
-            <iframe id="demoIframe" class="w-full h-[60vh] border-0 bg-gray-900" src="https://www.aas-idta.org/"></iframe>
-            <div class="p-6 bg-white/5 border-t border-white/10 flex gap-3">
-                <button onclick="fullscreenDemo()" class="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-3 rounded-2xl font-medium hover:from-emerald-600 hover:to-emerald-700">전체화면</button>
-                <button onclick="newTabDemo()" class="px-6 py-3 bg-white/20 rounded-2xl hover:bg-white/30">새창 열기</button>
-                <button onclick="closeDemo()" class="px-6 py-3 bg-white/20 rounded-2xl hover:bg-white/30">닫기</button>
-            </div>
-        </div>
-    </div>
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <iframe id="viewer" class="flex-1"></iframe>
+    </main>
 
     <script>
-        let currentCompany = '';
+        const fileList = document.getElementById('file-list');
+        const viewer = document.getElementById('viewer');
+        const files = [
+            { name: "Overview", path: "overview.html" },
+            { name: "Pipeline", path: "pipeline.html" },
+            { name: "Partners", path: "partners.html" },
+        ];
 
-        function highlightCompany(company) {
-            document.querySelectorAll('.company-bar').forEach(bar => {
-                bar.style.opacity = '0.3';
+        function loadFile(file) {
+            viewer.src = file.path;
+            updateActiveLink(file.path);
+        }
+
+        function updateActiveLink(path) {
+            const links = fileList.querySelectorAll('a');
+            links.forEach(link => {
+                // Reset styles
+                link.classList.remove('bg-white', 'text-[#191F28]', 'font-semibold');
+                link.classList.add('text-slate-300', 'hover:bg-white/10');
+
+                // Set active style
+                if (link.dataset.path === path) {
+                    link.classList.add('bg-white', 'text-[#191F28]', 'font-semibold');
+                    link.classList.remove('text-slate-300', 'hover:bg-white/10');
+                }
             });
-            document.querySelectorAll(`[data-company="${company}"]`).forEach(bar => {
-                bar.style.opacity = '1';
-                bar.style.transform = 'scale(1.2)';
-            });
-            currentCompany = company;
         }
 
-        function openDemo(company) {
-            const titles = {
-                'markbase': '마크베이스 - 실시간 데이터 스트리밍',
-                'kaist': 'KAIST - AI 모델 대시보드',
-                'keti': 'KETI - AAS 플랫폼 관리'
+        files.forEach(file => {
+            const a = document.createElement('a');
+            a.href = '#';
+            a.dataset.path = file.path;
+            a.className = 'flex items-center w-full px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300';
+            a.textContent = file.name;
+            a.onclick = (e) => {
+                e.preventDefault();
+                loadFile(file);
             };
-            const urls = {
-                'markbase': 'https://www.aas-idta.org/',
-                'kaist': 'https://www.aas-idta.org/',
-                'keti': 'https://www.aas-idta.org/'
-            };
-            
-            document.getElementById('modalTitle').textContent = titles[company];
-            document.getElementById('demoIframe').src = urls[company];
-            document.getElementById('demoModal').classList.remove('hidden');
+            fileList.appendChild(a);
+        });
+
+        if (files.length > 0) {
+            loadFile(files[0]);
         }
 
-        function closeDemo() {
-            document.getElementById('demoModal').classList.add('hidden');
-        }
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.querySelector('aside');
+        const collapsibles = document.querySelectorAll('.collapsible');
+        const toggleIcon = sidebarToggle.querySelector('i');
+        const logoAndTitle = document.getElementById('logo-and-title');
+        const sidebarHeader = document.getElementById('sidebar-header');
 
-        function fullscreenDemo() {
-            const iframe = document.getElementById('demoIframe');
-            if (iframe.requestFullscreen) {
-                iframe.requestFullscreen();
-            }
-        }
 
-        function newTabDemo() {
-            window.open(document.getElementById('demoIframe').src, '_blank');
-        }
+        sidebarToggle.addEventListener('click', () => {
+            const isCollapsing = sidebar.classList.contains('w-72');
 
-        // ESC 키로 모달 닫기
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeDemo();
+            if (isCollapsing) {
+                // Collapse
+                sidebar.classList.replace('w-72', 'w-20');
+                logoAndTitle.classList.add('hidden');
+                collapsibles.forEach(el => el.classList.add('hidden'));
+                sidebarHeader.classList.replace('justify-between', 'justify-center');
+                toggleIcon.classList.add('rotate-180');
+            } else {
+                // Expand
+                sidebar.classList.replace('w-20', 'w-72');
+                logoAndTitle.classList.remove('hidden');
+                // Defer showing collapsibles to smooth out animation
+                setTimeout(() => {
+                    collapsibles.forEach(el => el.classList.remove('hidden'));
+                }, 150);
+                sidebarHeader.classList.replace('justify-center', 'justify-between');
+                toggleIcon.classList.remove('rotate-180');
             }
         });
     </script>

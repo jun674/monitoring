@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Pretendard', sans-serif; 
+            background-color: #F5F6F8;
+            color: #191F28;
+            overflow: hidden;
+        }
+
+        /* ── KPI CARDS ── */
+        .kpi-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px 20px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .kpi-card:hover { border-color: #d1d5db; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--accent-color, #4f8ef7);
+        }
+        .kpi-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; color: #8b95a1; margin-bottom: 10px; }
+        .kpi-value { font-size: 32px; font-weight: 700; color: #191F28; line-height: 1; margin-bottom: 6px; }
+        .kpi-value span { font-size: 14px; color: #6b7280; margin-left: 2px; }
+        .kpi-sub { font-size: 11px; color: #8b95a1; }
+        .kpi-badge {
+            display: inline-flex; align-items: center; gap: 3px;
+            font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 4px; margin-top: 8px;
+        }
+        .badge-progress { background: rgba(79,142,247,0.1); color: #4f8ef7; border: 1px solid rgba(79,142,247,0.2); }
+        .badge-verify  { background: rgba(245,158,11,0.1); color: #d97706; border: 1px solid rgba(245,158,11,0.2); }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .section-title { font-size: 14px; font-weight: 700; color: #191F28; }
+        .section-sub { font-size: 11px; color: #8b95a1; font-weight: 500; }
+
+        /* ── TIMELINE ── */
+        .timeline-wrap {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px 24px;
+        }
+        .timeline-row {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 16px; align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .timeline-row:last-child { border-bottom: none; }
+        .timeline-year { font-size: 12px; font-weight: 600; color: #6b7280; line-height: 1.5; }
+        .timeline-phases { display: flex; gap: 8px; flex-wrap: wrap; }
+        .phase-tag {
+            font-size: 11px; padding: 4px 10px; border-radius: 6px;
+            border: 1px solid #e5e7eb; color: #9ca3af; font-weight: 500;
+        }
+        .phase-tag.done { border-color: rgba(34,197,94,0.3); color: #16a34a; background: rgba(34,197,94,0.06); }
+        .phase-tag.active { border-color: rgba(79,142,247,0.3); color: #4f8ef7; background: rgba(79,142,247,0.06); }
+
+        /* ── WBS TABLE ── */
+        .wbs-wrap {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .wbs-table { width: 100%; border-collapse: collapse; }
+        .wbs-table thead th {
+            background: #f8f9fb;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 11px; font-weight: 600;
+            letter-spacing: 0.04em; color: #8b95a1;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .wbs-table tbody tr { border-bottom: 1px solid #f3f4f6; transition: background 0.15s; }
+        .wbs-table tbody tr:hover { background: #f8f9fb; }
+        .wbs-table tbody tr:last-child { border-bottom: none; }
+        .wbs-table td { padding: 11px 14px; font-size: 12px; color: #374151; }
+        .td-domain { display: inline-flex; align-items: center; gap: 6px; }
+        .domain-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .td-org { font-size: 12px; color: #6b7280; }
+        .td-kpi { font-size: 12px; color: #6b7280; }
+        .td-kpi strong { color: #191F28; font-weight: 600; }
+        .status-pill {
+            display: inline-block; font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+        }
+        .sp-active { background: rgba(79,142,247,0.1); color: #4f8ef7; }
+        .sp-verify { background: rgba(245,158,11,0.1); color: #d97706; }
+        .sp-done   { background: rgba(34,197,94,0.1); color: #16a34a; }
+
+        /* ── SOFT CARD ── */
+        .soft-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            position: sticky; top: 0; z-index: 50;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0 28px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar-left { display: flex; align-items: center; gap: 10px; }
+        .ai-badge {
+            width: 28px; height: 28px; border-radius: 8px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff; font-size: 11px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .topbar-title { font-size: 15px; font-weight: 600; color: #191F28; }
+        .topbar-tabs {
+            display: flex; gap: 2px;
+            background: #f3f4f6;
+            border-radius: 24px;
+            padding: 3px;
+        }
+        .tab-btn {
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #8b95a1;
+            transition: all 0.15s;
+            font-family: 'Pretendard', sans-serif;
+        }
+        .tab-btn:hover { background: #f3f4f6; color: #333D4B; }
+        .tab-btn.active { background: #191F28; color: #fff; }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background-color: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background-color: #f3f4f6; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .anim-up { animation: fadeUp 0.5s ease forwards; }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+    <div class="topbar shrink-0">
+        <div class="topbar-left">
+            <div class="ai-badge">AI</div>
+            <span class="topbar-title">Overview</span>
+        </div>
+        <div class="topbar-tabs">
+            <button class="tab-btn active" onclick="scrollToSection('overview')">Overview</button>
+            <button class="tab-btn" onclick="scrollToSection('wbs')">WBS</button>
+        </div>
+    </div>
+
+    <main id="main-scroll" class="flex-1 overflow-y-auto">
+        <div class="p-8 lg:p-12">
+            <div class="max-w-6xl mx-auto space-y-10">
+
+                <!-- ═══ OVERVIEW : 사업명 + 4 KPI 카드 ═══ -->
+                <section id="overview" class="space-y-5 anim-up">
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">PROJECT</p>
+                        <h2 class="text-xl font-bold text-gray-900 leading-snug" id="project-name"></h2>
+                        <p class="text-sm text-gray-400 mt-1 font-medium" id="project-period"></p>
+                    </div>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="kpi-cards"></div>
+                </section>
+
+                <!-- ═══ TIMELINE : 사업 추진 연차 ═══ -->
+                <section id="timeline" class="space-y-3 anim-up">
+                    <div class="section-header">
+                        <span class="section-title">사업 추진 연차</span>
+                    </div>
+                    <div class="timeline-wrap" id="timeline-wrap"></div>
+                </section>
+
+                <!-- ═══ WBS : 주요 추진 현황 ═══ -->
+                <section id="wbs" class="space-y-3 anim-up">
+                    <div class="section-header">
+                        <span class="section-title">WBS 주요 추진 현황</span>
+                        <span class="section-sub">3차년도 기준</span>
+                    </div>
+                    <div class="wbs-wrap">
+                        <table class="wbs-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:120px">DAINOS 도메인</th>
+                                    <th>과제명</th>
+                                    <th style="width:140px">수행기관</th>
+                                    <th style="width:200px">3차년도 핵심 목표</th>
+                                    <th style="width:80px;text-align:center">상태</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wbs-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="data.js"></script>
+    <script>
+        const mainScroll = document.getElementById('main-scroll');
+
+        /* ── Domain Colors ── */
+        const domainStyle = {
+            Organizing: { color: '#d97706', label: 'Organizing' },
+            Data:       { color: '#0d9488', label: 'Data' },
+            AI:         { color: '#4f8ef7', label: 'AI' },
+            Infra:      { color: '#7c3aed', label: 'Infra' },
+            Network:    { color: '#ea580c', label: 'Network' },
+            Service:    { color: '#db2777', label: 'Service' }
+        };
+
+        /* ── KPI Card accent colors ── */
+        const cardAccents = ['#4f8ef7', '#0d9488', '#7c3aed', '#ea580c'];
+
+        /* ── WBS 주요 추진 현황 데이터 ── */
+        const wbsData = [
+            { domain:'Organizing', task:'PMBOK 기반 사업관리',       org:'경남TP',                  kpi:'네트워킹 <strong>5회</strong> 이상',                    status:'active' },
+            { domain:'Organizing', task:'SE 기반 기술개발 관리',     org:'KTL(산기시험원)',          kpi:'적합성검증 확인서 <strong>1건</strong>',                status:'verify' },
+            { domain:'Data',       task:'제조 데이터 수집·DB',       org:'마크베이스',               kpi:'초당 <strong>200만건</strong> 수집',                    status:'active' },
+            { domain:'Data',       task:'ERP 데이터 파이프라인',     org:'아미크',                   kpi:'학습 데이터셋 <strong>500만건</strong>',                status:'active' },
+            { domain:'Data',       task:'AAS 표준·보안',             org:'경남대학교',               kpi:'비식별화 환경 구축 <strong>1개소</strong>',             status:'active' },
+            { domain:'Data',       task:'AAS 데이터 교환체계',       org:'네스트필드',               kpi:'IDTA 사례등록 <strong>1건</strong>',                    status:'active' },
+            { domain:'AI',         task:'제조특화 LLM 개발',         org:'KAIST',                   kpi:'정확도 <strong>+10%</strong> · 속도 <strong>+20%</strong>', status:'active' },
+            { domain:'AI',         task:'ESG 대응 sLM Agent',       org:'넥스트스튜디오',           kpi:'sLM Agent <strong>1종</strong> 개발',                  status:'active' },
+            { domain:'Infra',      task:'하이브리드 클라우드·EBC',   org:'메가존클라우드',           kpi:'EBC 구축 <strong>1개소</strong>',                      status:'active' },
+            { domain:'Network',    task:'차세대 통신망',             org:'라임씨에스아이',           kpi:'통합관제센터 <strong>1개소</strong> · 500Mbps',         status:'active' },
+            { domain:'Service',    task:'품질관리 서비스 실증',      org:'소르테크 · 에스디테크',    kpi:'비전검사 실증 <strong>3건</strong>',                    status:'verify' },
+            { domain:'Service',    task:'지능형 관제시스템',         org:'DX솔루션즈 · 메타아이스퀘어', kpi:'불량률 감소 <strong>18%</strong> · UPH <strong>+8%</strong>', status:'verify' },
+            { domain:'Data',       task:'AIoT · Edge Computing',    org:'KETI',                    kpi:'센서 모듈 <strong>6종</strong> · 실증 2건',             status:'active' }
+        ];
+
+        /* ── Status pill map ── */
+        const statusMap = {
+            active: '<span class="status-pill sp-active">진행중</span>',
+            verify: '<span class="status-pill sp-verify">검증중</span>',
+            done:   '<span class="status-pill sp-done">완료</span>'
+        };
+
+        function renderPage() {
+            /* ── Project name + period ── */
+            document.getElementById('project-name').textContent = projectMeta.name;
+            document.getElementById('project-period').textContent = projectMeta.period.total + '  ·  32개월';
+
+            /* ── 4 KPI Cards ── */
+            const cards = [
+                { label: '총 사업비',      value: '229',  unit: '억원',  sub: '정부 150 · 지방 65 · 민간 14.4',     badge: null },
+                { label: '3차년도 사업비', value: '208',  unit: '억원',  sub: '전체 예산의 91% 집중',                badge: { text: '진행중', cls: 'badge-progress' } },
+                { label: '참여기관',       value: '15',   unit: '개',    sub: '주관 1 · 참여 14',                    badge: null },
+                { label: '실증 수요기업',  value: '2',    unit: '개소',  sub: 'KG모빌리티 · 신성델타테크',           badge: { text: '실증중', cls: 'badge-verify' } }
+            ];
+            const kpiGrid = document.getElementById('kpi-cards');
+            cards.forEach((c, i) => {
+                const el = document.createElement('div');
+                el.className = 'kpi-card';
+                el.style.setProperty('--accent-color', cardAccents[i]);
+                el.innerHTML = `
+                    <div class="kpi-label">${c.label}</div>
+                    <div class="kpi-value">${c.value}<span>${c.unit}</span></div>
+                    <div class="kpi-sub">${c.sub}</div>
+                    ${c.badge ? `<div class="kpi-badge ${c.badge.cls}">${c.badge.text}</div>` : ''}
+                `;
+                kpiGrid.appendChild(el);
+            });
+
+            /* ── Timeline (사업추진연차) ── */
+            const wrap = document.getElementById('timeline-wrap');
+            projectMeta.timeline.forEach(t => {
+                const isDone = t.progress >= 100;
+                const isCurrent = !isDone && t.progress > 0;
+                const yearExtra = isCurrent
+                    ? `<span style="font-size:10px;color:#4f8ef7">${t.period} ●</span>`
+                    : `<span style="font-size:10px;color:#9ca3af">${t.period}</span>`;
+
+                const row = document.createElement('div');
+                row.className = 'timeline-row';
+                row.innerHTML = `
+                    <div class="timeline-year">${t.year}차년도<br>${yearExtra}</div>
+                    <div>
+                        <div class="timeline-phases">
+                            ${t.phases.map((p, idx) => {
+                                let cls = 'phase-tag';
+                                if (isDone) {
+                                    cls += ' done';
+                                } else if (isCurrent) {
+                                    if (idx < t.phases.length - 1) cls += ' active';
+                                    // 마지막 항목(사업 종료)은 pending(기본 회색)
+                                }
+                                return `<span class="${cls}">${p}</span>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+                wrap.appendChild(row);
+            });
+
+            /* ── WBS Table ── */
+            const tbody = document.getElementById('wbs-body');
+            wbsData.forEach(w => {
+                const d = domainStyle[w.domain];
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="td-domain"><span class="domain-dot" style="background:${d.color}"></span><span style="color:${d.color};font-size:11px;font-weight:500">${d.label}</span></span></td>
+                    <td style="font-size:12px">${w.task}</td>
+                    <td class="td-org">${w.org}</td>
+                    <td class="td-kpi">${w.kpi}</td>
+                    <td>${statusMap[w.status]}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        /* ── Navigation ── */
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* ── Scroll spy ── */
+        const sectionIds = ['overview', 'wbs'];
+
+        mainScroll.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const tabBtns = document.querySelectorAll('.topbar-tabs .tab-btn');
+            let current = '';
+            sections.forEach(section => {
+                if (mainScroll.scrollTop >= section.offsetTop - 120) {
+                    current = section.getAttribute('id');
+                }
+            });
+            // map timeline section to Overview tab
+            const tabIdx = (current === 'wbs') ? 1 : 0;
+            tabBtns.forEach((btn, i) => {
+                btn.classList.toggle('active', i === tabIdx);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', renderPage);
+    </script>
+
+</body>
+</html>

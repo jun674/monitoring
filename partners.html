@@ -34,24 +34,46 @@
             transform: translateY(-8px);
         }
 
-        /* Nav Button */
-        .nav-btn {
+        /* ── TOPBAR ── */
+        .topbar {
+            position: sticky; top: 0; z-index: 50;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0 28px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar-left { display: flex; align-items: center; gap: 10px; }
+        .ai-badge {
+            width: 28px; height: 28px; border-radius: 8px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff; font-size: 11px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .topbar-title { font-size: 15px; font-weight: 600; color: #191F28; }
+        .topbar-tabs {
+            display: flex; gap: 2px;
+            background: #f3f4f6;
+            border-radius: 24px;
+            padding: 3px;
+        }
+        .tab-btn {
+            padding: 5px 14px;
             border-radius: 20px;
-            transition: all 0.2s ease;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #8b95a1;
+            transition: all 0.15s;
+            font-family: 'Pretendard', sans-serif;
         }
-        .nav-btn.active {
-            background-color: #191F28; /* Black */
-            color: #FFFFFF;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .nav-btn:not(.active) {
-            color: #8B95A1;
-        }
-        .nav-btn:not(.active):hover {
-            background-color: #E8EBED;
-            color: #333D4B;
-        }
+        .tab-btn:hover { background: #f3f4f6; color: #333D4B; }
+        .tab-btn.active { background: #191F28; color: #fff; }
 
         /* Badge Styles */
         .badge-soft {
@@ -61,6 +83,34 @@
             font-weight: 700;
             letter-spacing: 0.5px;
         }
+
+        /* KPI Mini Progress Bar */
+        .kpi-mini-bar {
+            height: 6px;
+            border-radius: 3px;
+            background: #F2F4F6;
+            overflow: hidden;
+            position: relative;
+        }
+        .kpi-mini-bar .fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .kpi-mini-bar .fill.achieved    { background: linear-gradient(90deg, #34D399, #10B981); }
+        .kpi-mini-bar .fill.in-progress { background: linear-gradient(90deg, #FCD34D, #F59E0B); }
+        .kpi-mini-bar .fill.not-started { background: #D1D5DB; }
+
+        /* Category Badge */
+        .badge-category {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.3px;
+        }
+        .badge-category.lead    { background: #FEF3C7; color: #92400E; }
+        .badge-category.partner { background: #EFF6FF; color: #1E40AF; }
 
         /* Animations */
         @keyframes floatUp {
@@ -78,24 +128,21 @@
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
 
-    <header class="bg-white/80 backdrop-blur-xl z-50 sticky top-0 border-b border-gray-100">
-        <div class="max-w-[1600px] mx-auto px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer group">
-                <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-bold shadow-lg">AI</div>
-                <h1 class="text-xl font-bold text-gray-900 tracking-tight">Partners</h1>
-            </div>
-            
-            <nav class="hidden md:flex bg-gray-100/50 p-1.5 rounded-full">
-                <button onclick="filterCards('ALL')" class="nav-btn px-4 py-2 text-xs active cursor-pointer">ALL</button>
-                <button onclick="filterCards('DATA')" class="nav-btn px-4 py-2 text-xs cursor-pointer">Data</button>
-                <button onclick="filterCards('AI')" class="nav-btn px-4 py-2 text-xs cursor-pointer">AI</button>
-                <button onclick="filterCards('INFRA')" class="nav-btn px-4 py-2 text-xs cursor-pointer">Infra</button>
-                <button onclick="filterCards('NETWORK')" class="nav-btn px-4 py-2 text-xs cursor-pointer">Network</button>
-                <button onclick="filterCards('ORG')" class="nav-btn px-4 py-2 text-xs cursor-pointer">Org</button>
-                <button onclick="filterCards('SERVICE')" class="nav-btn px-4 py-2 text-xs cursor-pointer">Service</button>
-            </nav>
+    <div class="topbar">
+        <div class="topbar-left">
+            <div class="ai-badge">AI</div>
+            <span class="topbar-title">Partners</span>
         </div>
-    </header>
+        <div class="topbar-tabs">
+            <button class="tab-btn active" onclick="filterCards('ALL')">ALL</button>
+            <button class="tab-btn" onclick="filterCards('DATA')">Data</button>
+            <button class="tab-btn" onclick="filterCards('AI')">AI</button>
+            <button class="tab-btn" onclick="filterCards('INFRA')">Infra</button>
+            <button class="tab-btn" onclick="filterCards('NETWORK')">Network</button>
+            <button class="tab-btn" onclick="filterCards('ORG')">Org</button>
+            <button class="tab-btn" onclick="filterCards('SERVICE')">Service</button>
+        </div>
+    </div>
 
     <main class="flex-1 overflow-y-auto p-8 lg:p-12 relative">
         <div class="max-w-[1600px] mx-auto pb-20 relative z-10">
@@ -137,8 +184,8 @@
             
             countDisplay.innerText = filtered.length;
 
-            // Nav Button State
-            document.querySelectorAll('.nav-btn').forEach(btn => {
+            // Tab Button State
+            document.querySelectorAll('.tab-btn').forEach(btn => {
                 const btnType = btn.innerText.toUpperCase();
                 if (btnType === filterType) {
                     btn.classList.add('active');
@@ -163,6 +210,17 @@
             filtered.forEach((item, index) => {
                 const style = typeStyles[item.type];
                 const companyIndex = companies.findIndex(c => c.id === item.id);
+
+                // 대표 KPI 계산 (첫 번째 숫자형 achievement)
+                const primaryKpi = item.results.kpis.find(k => typeof k.achievement === 'number');
+                const avgAchievement = item.results.kpis.filter(k => typeof k.achievement === 'number');
+                const avgVal = avgAchievement.length > 0
+                    ? Math.round(avgAchievement.reduce((s, k) => s + k.achievement, 0) / avgAchievement.length)
+                    : 0;
+                const kpiStatus = avgVal >= 100 ? 'achieved' : avgVal > 0 ? 'in-progress' : 'not-started';
+                const categoryBadge = item.category === '주관'
+                    ? '<span class="badge-category lead">주관</span>'
+                    : '<span class="badge-category partner">참여</span>';
                 
                 const card = document.createElement('div');
                 card.id = `card-${item.id}`;
@@ -170,22 +228,38 @@
                 card.style.animationDelay = `${index * 0.05}s`;
                 card.onclick = () => showCompanyPopup(companies[companyIndex]);
                 card.innerHTML = `
-                    <div class="soft-card h-full cursor-pointer flex flex-col p-8 group">
-                        <div class="flex justify-between items-start mb-6">
-                            <div class="w-12 h-12 rounded-2xl ${style.bg} flex items-center justify-center transition-transform group-hover:scale-110 duration-300">
-                                <i class="${item.icon} ${style.icon} text-xl"></i>
+                    <div class="soft-card h-full cursor-pointer flex flex-col p-7 group">
+                        <div class="flex justify-between items-start mb-5">
+                            <div class="w-11 h-11 rounded-2xl ${style.bg} flex items-center justify-center transition-transform group-hover:scale-110 duration-300">
+                                <i class="${item.icon} ${style.icon} text-lg"></i>
                             </div>
-                            <span class="badge-soft ${style.bg} ${style.text}">${item.type}</span>
+                            <div class="flex items-center gap-1.5">
+                                ${categoryBadge}
+                                <span class="badge-soft ${style.bg} ${style.text}">${item.type}</span>
+                            </div>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">${item.name}</h3>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">${item.role}</p>
-                        <p class="text-sm text-gray-500 leading-relaxed line-clamp-2 mb-6">
-                            ${item.desc}
-                        </p>
-                        <div class="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
-                            <span class="text-xs font-bold text-gray-400 group-hover:text-gray-900 transition-colors">Details</span>
-                            <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-black group-hover:text-white transition-all">
-                                <i class="fas fa-arrow-right text-xs transform -rotate-45 group-hover:rotate-0 transition-transform"></i>
+                        <h3 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">${item.name}</h3>
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">${item.role}</p>
+                        <p class="text-[13px] text-gray-500 leading-relaxed line-clamp-2 mb-4">${item.results.title}</p>
+
+                        <!-- KPI 달성률 미니바 -->
+                        <div class="mb-2">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-[11px] font-semibold text-gray-400">${primaryKpi ? primaryKpi.label : 'KPI'}</span>
+                                <span class="text-[11px] font-bold ${kpiStatus === 'achieved' ? 'text-green-600' : kpiStatus === 'in-progress' ? 'text-amber-600' : 'text-gray-400'}">${avgVal}%</span>
+                            </div>
+                            <div class="kpi-mini-bar">
+                                <div class="fill ${kpiStatus}" style="width: ${Math.min(avgVal, 100)}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto pt-5 border-t border-gray-50 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[11px] font-bold text-gray-400 group-hover:text-gray-900 transition-colors">상세보기</span>
+                                <span class="text-[10px] text-gray-300">${item.results.deliverables.length}건 산출물</span>
+                            </div>
+                            <div class="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-black group-hover:text-white transition-all">
+                                <i class="fas fa-arrow-right text-[10px] transform -rotate-45 group-hover:rotate-0 transition-transform"></i>
                             </div>
                         </div>
                     </div>

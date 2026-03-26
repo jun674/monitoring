@@ -28,40 +28,81 @@
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.07);
         }
         ::-webkit-scrollbar { display: none; }
-        .nav-btn {
+
+        /* KPI Mini Progress */
+        .kpi-pipe-bar {
+            height: 5px;
+            border-radius: 3px;
+            background: #F2F4F6;
+            overflow: hidden;
+        }
+        .kpi-pipe-bar .fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .kpi-pipe-bar .fill.achieved    { background: linear-gradient(90deg, #34D399, #10B981); }
+        .kpi-pipe-bar .fill.in-progress { background: linear-gradient(90deg, #FCD34D, #F59E0B); }
+        .kpi-pipe-bar .fill.not-started { background: #D1D5DB; }
+        /* ── TOPBAR ── */
+        .topbar {
+            position: sticky; top: 0; z-index: 50;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0 28px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar-left { display: flex; align-items: center; gap: 10px; }
+        .ai-badge {
+            width: 28px; height: 28px; border-radius: 8px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff; font-size: 11px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .topbar-title { font-size: 15px; font-weight: 600; color: #191F28; }
+        .topbar-tabs {
+            display: flex; gap: 2px;
+            background: #f3f4f6;
+            border-radius: 24px;
+            padding: 3px;
+        }
+        .tab-btn {
+            padding: 5px 14px;
             border-radius: 20px;
-            transition: all 0.2s ease;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #8b95a1;
+            transition: all 0.15s;
+            font-family: 'Pretendard', sans-serif;
         }
-        .nav-btn.active {
-            background-color: #191F28; /* Black */
-            color: #FFFFFF;
-        }
-        .nav-btn:not(.active) { color: #8B95A1; }
-        .nav-btn:not(.active):hover { background-color: #E8EBED; color: #333D4B; }
+        .tab-btn:hover { background: #f3f4f6; color: #333D4B; }
+        .tab-btn.active { background: #191F28; color: #fff; }
     </style>
 </head>
-<body class="pt-28"> 
-    <header class="bg-white/80 backdrop-blur-xl z-50 fixed top-0 left-0 right-0 border-b border-gray-100">
-        <div class="max-w-[1600px] mx-auto px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-bold shadow-lg">AI</div>
-                <h1 class="text-xl font-bold text-gray-900 tracking-tight">Pipeline</h1>
-            </div>
-            
-            <nav class="flex bg-gray-100/50 p-1.5 rounded-full">
-                <div onclick="scrollToSection('stage-1')" class="nav-btn px-4 py-2 text-xs cursor-pointer" id="nav-stage-1"><span>Data</span></div>
-                <div onclick="scrollToSection('stage-2')" class="nav-btn px-4 py-2 text-xs cursor-pointer" id="nav-stage-2"><span>Transfer</span></div>
-                <div onclick="scrollToSection('stage-3')" class="nav-btn px-4 py-2 text-xs cursor-pointer" id="nav-stage-3"><span>Platform</span></div>
-                <div onclick="scrollToSection('stage-4')" class="nav-btn px-4 py-2 text-xs cursor-pointer" id="nav-stage-4"><span>AI</span></div>
-                <div onclick="scrollToSection('stage-5')" class="nav-btn px-4 py-2 text-xs cursor-pointer" id="nav-stage-5"><span>App</span></div>
-                <div onclick="scrollToSection('stage-6')" class="nav-btn px-4 py-2 text-xs cursor-pointer" id="nav-stage-6"><span>Mgmt</span></div>
-            </nav>
+<body>
+    <div class="topbar">
+        <div class="topbar-left">
+            <div class="ai-badge">AI</div>
+            <span class="topbar-title">Pipeline</span>
         </div>
-    </header>
+        <div class="topbar-tabs">
+            <button class="tab-btn active" onclick="scrollToSection('stage-1')" id="nav-stage-1">Data</button>
+            <button class="tab-btn" onclick="scrollToSection('stage-2')" id="nav-stage-2">Transfer</button>
+            <button class="tab-btn" onclick="scrollToSection('stage-3')" id="nav-stage-3">Platform</button>
+            <button class="tab-btn" onclick="scrollToSection('stage-4')" id="nav-stage-4">AI</button>
+            <button class="tab-btn" onclick="scrollToSection('stage-5')" id="nav-stage-5">App</button>
+            <button class="tab-btn" onclick="scrollToSection('stage-6')" id="nav-stage-6">Mgmt</button>
+        </div>
+    </div>
 
-    <main class="flex overflow-x-auto overflow-y-hidden h-full items-center gap-24 px-20" id="main-scroll">
-        <div class="min-w-[2vw]"></div>
+    <main class="flex overflow-x-auto overflow-y-hidden h-full items-center gap-14 px-8" id="main-scroll">
         <section id="stage-1" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
             <div class="flex items-center gap-3 mb-2">
                 <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">01</span>
@@ -138,19 +179,31 @@
                 const container = document.getElementById(`container-${item.stage}`);
                 if (!container) return;
                 const st = statusConfig[item.status];
+
+                // KPI 계산
+                const numericKpis = item.results.kpis.filter(k => typeof k.achievement === 'number');
+                const avgAchievement = numericKpis.length > 0
+                    ? Math.round(numericKpis.reduce((s, k) => s + k.achievement, 0) / numericKpis.length)
+                    : 0;
+                const kpiStatus = avgAchievement >= 100 ? 'achieved' : avgAchievement > 0 ? 'in-progress' : 'not-started';
+                const primaryKpi = item.results.kpis[0];
+                const kpiDisplay = primaryKpi
+                    ? `${primaryKpi.value}${primaryKpi.unit ? ' ' + primaryKpi.unit : ''}`
+                    : '—';
+
                 const card = document.createElement('div');
-                card.className = `soft-card p-6 cursor-pointer flex flex-col justify-between group h-[200px] w-full`;
+                card.className = `soft-card p-6 cursor-pointer flex flex-col justify-between group h-[220px] w-full`;
                 card.onclick = () => showCompanyPopup(companies[index]);
                 card.innerHTML = `
                     <div>
-                        <div class="flex justify-between items-start mb-3">
+                        <div class="flex justify-between items-start mb-2">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 shadow-sm transition-transform duration-300">
                                     <i class="${item.icon}"></i>
                                 </div>
                                 <div>
-                                    <h3 class="font-bold text-gray-800 text-lg">${item.name}</h3>
-                                    <p class="text-xs text-gray-400 font-medium">${item.role}</p>
+                                    <h3 class="font-bold text-gray-800 text-[15px]">${item.name}</h3>
+                                    <p class="text-[11px] text-gray-400 font-medium">${item.role}</p>
                                 </div>
                             </div>
                             <div class="px-2.5 py-1 rounded-full ${st.bg} flex items-center gap-1.5">
@@ -158,15 +211,25 @@
                                 <span class="text-[10px] font-bold ${st.text}">${st.label}</span>
                             </div>
                         </div>
-                        <p class="text-sm text-gray-500 leading-snug line-clamp-2">${item.desc}</p>
-                    </div>
-                    <div class="pt-4 border-t border-gray-100 flex justify-between items-center">
+                        <p class="text-[13px] text-gray-500 leading-snug line-clamp-2 mb-3">${item.results.title}</p>
+                        <!-- KPI Mini Bar -->
                         <div>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Performance</p>
-                            <p class="font-tech text-lg font-bold text-gray-700">${item.kpi}</p>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[10px] font-semibold text-gray-400">${primaryKpi ? primaryKpi.label : 'KPI'}</span>
+                                <span class="text-[10px] font-bold ${kpiStatus === 'achieved' ? 'text-green-600' : kpiStatus === 'in-progress' ? 'text-amber-600' : 'text-gray-400'}">${avgAchievement}%</span>
+                            </div>
+                            <div class="kpi-pipe-bar">
+                                <div class="fill ${kpiStatus}" style="width: ${Math.min(avgAchievement, 100)}%"></div>
+                            </div>
                         </div>
-                        <div class="w-8 h-8 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center transition-all duration-300 group-hover:bg-gray-800 group-hover:text-white">
-                            <i class="fas fa-arrow-right text-xs"></i>
+                    </div>
+                    <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
+                        <div>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Target</p>
+                            <p class="font-tech text-sm font-bold text-gray-700">${kpiDisplay}</p>
+                        </div>
+                        <div class="w-7 h-7 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center transition-all duration-300 group-hover:bg-gray-800 group-hover:text-white">
+                            <i class="fas fa-arrow-right text-[10px]"></i>
                         </div>
                     </div>
                 `;
@@ -182,22 +245,23 @@
 
         scrollContainer.addEventListener('scroll', () => {
             const sections = document.querySelectorAll('.stage-section');
-            const navLinks = document.querySelectorAll('.nav-btn');
+            const tabBtns = document.querySelectorAll('.topbar-tabs .tab-btn');
             let current = '';
             const centerPos = scrollContainer.scrollLeft + (window.innerWidth / 2);
 
             sections.forEach(section => {
                 const offsetLeft = section.offsetLeft;
-                if (centerPos >= offsetLeft && centerPos < offsetLeft + section.offsetWidth + 96) { 
+                if (centerPos >= offsetLeft && centerPos < offsetLeft + section.offsetWidth + 96) {
                     current = section.getAttribute('id');
                 }
             });
 
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if(link.id === `nav-${current}`) {
-                    link.classList.add('active');
-                }
+            // stage → tab 1:1 mapping
+            const stageToIdx = { 'stage-1': 0, 'stage-2': 1, 'stage-3': 2, 'stage-4': 3, 'stage-5': 4, 'stage-6': 5 };
+            const tabIdx = stageToIdx[current] ?? 0;
+
+            tabBtns.forEach((btn, i) => {
+                btn.classList.toggle('active', i === tabIdx);
             });
         });
 
@@ -215,7 +279,7 @@
                 if (index < sections.length - 1) {
                     const nextStageId = `stage-${index + 2}`;
                     const arrow = document.createElement('div');
-                    arrow.className = 'absolute top-1/2 -right-14 transform -translate-y-1/2 text-gray-300 hover:text-gray-500 cursor-pointer transition-colors';
+                    arrow.className = 'absolute top-1/2 -right-[30px] transform -translate-y-1/2 text-gray-300 hover:text-gray-500 cursor-pointer transition-colors';
                     arrow.innerHTML = `<i class="fas fa-chevron-right text-2xl"></i>`;
                     arrow.onclick = () => scrollToSection(nextStageId);
                     section.appendChild(arrow);
@@ -226,9 +290,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderDashboard();
             addStageArrows();
-            // Set initial active nav item
+            // Set initial active tab
             setTimeout(() => {
-                document.querySelectorAll('.nav-btn')[0].classList.add('active');
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
                 scrollToSection('stage-1');
             }, 100);
         });

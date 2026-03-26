@@ -3,846 +3,1863 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>초거대제조AI — Analytics Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>초거대 제조AI — 사업 대시보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Pretendard:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0e1117;
-    --sidebar: #13161f;
-    --card: #181c27;
-    --card2: #1e2333;
-    --border: rgba(255,255,255,0.07);
-    --text: #e8eaf0;
-    --muted: #6b7280;
-    --accent: #4f7cff;
-    --accent2: #7c5cfc;
-    --green: #22d3a5;
-    --orange: #f59e42;
-    --red: #f25f5c;
-    --pink: #e879a0;
-    --tag-data: #1a3a5c;
-    --tag-data-t: #60b4ff;
-    --tag-ai: #2a1a4a;
-    --tag-ai-t: #b48cff;
-    --tag-infra: #1a2e1a;
-    --tag-infra-t: #4ade80;
-    --tag-net: #2e1a1a;
-    --tag-net-t: #f87171;
-    --tag-org: #2e2a1a;
-    --tag-org-t: #fbbf24;
-    --tag-svc: #1a2a2e;
-    --tag-svc-t: #34d399;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); display:flex; height:100vh; overflow:hidden; }
+:root {
+  --bg: #0d0f14;
+  --bg2: #13161e;
+  --bg3: #1a1e28;
+  --bg4: #222736;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e8eaf0;
+  --text2: #8b90a0;
+  --text3: #555a6a;
+  --accent: #4f8ef7;
+  --accent2: #2563eb;
+  --green: #22c55e;
+  --amber: #f59e0b;
+  --coral: #f97316;
+  --purple: #a78bfa;
+  --teal: #2dd4bf;
+  --pink: #f472b6;
+  --mono: 'DM Mono', monospace;
+  --sans: 'Pretendard', -apple-system, sans-serif;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --sidebar: 220px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
 
-  /* SIDEBAR */
-  .sidebar {
-    width:200px; min-width:200px; background:var(--sidebar);
-    border-right:1px solid var(--border);
-    display:flex; flex-direction:column;
-    padding:0;
-  }
-  .sidebar-logo {
-    padding:20px 16px 16px;
-    border-bottom:1px solid var(--border);
-  }
-  .sidebar-logo .ai-badge {
-    display:inline-flex; align-items:center; justify-content:center;
-    width:28px; height:28px; background:var(--accent); border-radius:6px;
-    font-size:11px; font-weight:700; color:#fff; margin-bottom:8px;
-  }
-  .sidebar-logo h2 { font-size:13px; font-weight:700; line-height:1.3; }
-  .sidebar-logo p { font-size:10px; color:var(--muted); margin-top:2px; }
-  .sidebar-nav { padding:12px 8px; flex:1; }
-  .nav-item {
-    display:flex; align-items:center; gap:8px;
-    padding:9px 10px; border-radius:7px;
-    font-size:12px; cursor:pointer;
-    color:var(--muted); transition:all .2s;
-    margin-bottom:2px;
-  }
-  .nav-item:hover { background:var(--card); color:var(--text); }
-  .nav-item.active { background:var(--accent); color:#fff; }
-  .nav-icon { width:14px; height:14px; opacity:.8; }
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar);
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+}
+.sidebar-logo {
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.logo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 9px 4px 6px;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+}
+.logo-badge svg { width: 14px; height: 14px; }
+.logo-title { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.2; }
+.logo-sub { font-size: 10px; color: var(--text3); font-family: var(--mono); margin-top: 2px; letter-spacing: 0.05em; }
 
-  /* MAIN */
-  .main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
-  .topbar {
-    height:52px; border-bottom:1px solid var(--border);
-    display:flex; align-items:center; justify-content:space-between;
-    padding:0 24px;
-  }
-  .topbar h1 { font-size:15px; font-weight:600; }
-  .filter-tabs { display:flex; gap:4px; }
-  .ftab {
-    padding:5px 12px; border-radius:20px; font-size:11px;
-    cursor:pointer; transition:all .2s;
-    background:transparent; color:var(--muted); border:1px solid var(--border);
-  }
-  .ftab:hover { color:var(--text); border-color:rgba(255,255,255,0.2); }
-  .ftab.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+.nav { padding: 12px 10px; flex: 1; }
+.nav-section { margin-bottom: 20px; }
+.nav-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  padding: 0 8px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active {
+  background: rgba(79,142,247,0.12);
+  color: var(--accent);
+  font-weight: 500;
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 6px; bottom: 6px;
+  width: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.nav-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto;
+  font-size: 9px;
+  font-family: var(--mono);
+  background: var(--bg4);
+  color: var(--text3);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
 
-  /* CONTENT */
-  .content { flex:1; overflow-y:auto; padding:20px 24px; }
-  .content::-webkit-scrollbar { width:4px; }
-  .content::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+.sidebar-footer {
+  padding: 14px 18px;
+  border-top: 1px solid var(--border);
+}
+.sidebar-year {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+.sidebar-org { font-size: 11px; color: var(--text2); margin-top: 2px; }
 
-  /* PIPELINE SECTION */
-  .section-title { font-size:11px; font-weight:500; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; margin-bottom:14px; }
+/* ── MAIN ── */
+.main {
+  margin-left: var(--sidebar);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-y: auto;
+}
 
-  .pipeline {
-    display:flex; align-items:center; gap:0;
-    background:var(--card); border:1px solid var(--border);
-    border-radius:12px; padding:16px 20px;
-    margin-bottom:24px; overflow-x:auto;
-  }
-  .pipeline::-webkit-scrollbar { height:3px; }
-  .pipeline::-webkit-scrollbar-thumb { background:var(--border); }
-  .p-stage {
-    display:flex; flex-direction:column; align-items:center;
-    min-width:100px; cursor:pointer;
-    padding:8px 12px; border-radius:8px;
-    transition:all .2s;
-  }
-  .p-stage:hover { background:var(--card2); }
-  .p-stage.active-stage { background:rgba(79,124,255,0.15); }
-  .p-dot {
-    width:36px; height:36px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:14px; margin-bottom:6px;
-    border:1.5px solid var(--border);
-  }
-  .p-stage-label { font-size:10px; font-weight:500; color:var(--muted); text-align:center; line-height:1.3; }
-  .p-arrow {
-    color:var(--border); font-size:18px; margin:0 -2px;
-    flex-shrink:0; padding-bottom:16px;
-  }
+/* ── TOPBAR ── */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(13,15,20,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.topbar-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.topbar-tabs { display: flex; gap: 2px; }
+.tab-btn {
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text2);
+  transition: all 0.15s;
+  font-family: var(--sans);
+}
+.tab-btn:hover { background: var(--bg3); color: var(--text); }
+.tab-btn.active { background: var(--accent); color: #fff; }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.year-pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--amber);
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.25);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-  /* CARDS GRID */
-  .cards-grid {
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap:12px;
-  }
-  .org-card {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:12px; padding:16px;
-    cursor:pointer; transition:all .25s;
-    position:relative; overflow:hidden;
-  }
-  .org-card::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:2px;
-    opacity:0; transition:opacity .2s;
-  }
-  .org-card:hover { border-color:rgba(79,124,255,0.4); transform:translateY(-2px); }
-  .org-card:hover::before { opacity:1; }
-  .org-card.data::before { background:linear-gradient(90deg,#4f7cff,#7c5cfc); }
-  .org-card.ai::before { background:linear-gradient(90deg,#7c5cfc,#e879a0); }
-  .org-card.infra::before { background:linear-gradient(90deg,#22d3a5,#4f7cff); }
-  .org-card.network::before { background:linear-gradient(90deg,#f59e42,#f25f5c); }
-  .org-card.service::before { background:linear-gradient(90deg,#22d3a5,#f59e42); }
+/* ── PAGE CONTENT ── */
+.page { display: none; padding: 28px; animation: fadeIn 0.2s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
 
-  .card-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; }
-  .card-icon {
-    width:36px; height:36px; border-radius:9px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:16px; flex-shrink:0;
-  }
-  .tag {
-    font-size:9px; font-weight:600; padding:3px 7px; border-radius:4px;
-    letter-spacing:.06em; text-transform:uppercase;
-  }
-  .tag.DATA { background:var(--tag-data); color:var(--tag-data-t); }
-  .tag.AI { background:var(--tag-ai); color:var(--tag-ai-t); }
-  .tag.INFRA { background:var(--tag-infra); color:var(--tag-infra-t); }
-  .tag.NETWORK { background:var(--tag-net); color:var(--tag-net-t); }
-  .tag.ORG { background:var(--tag-org); color:var(--tag-org-t); }
-  .tag.SERVICE { background:var(--tag-svc); color:var(--tag-svc-t); }
+/* ── OVERVIEW PAGE ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.kpi-card:hover { border-color: var(--border2); }
+.kpi-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent-color, var(--accent));
+}
+.kpi-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; color: var(--text3); text-transform: uppercase; margin-bottom: 10px; }
+.kpi-value { font-family: var(--mono); font-size: 28px; font-weight: 500; color: var(--text); line-height: 1; margin-bottom: 6px; }
+.kpi-value span { font-size: 14px; color: var(--text2); margin-left: 2px; }
+.kpi-sub { font-size: 11px; color: var(--text2); }
+.kpi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-family: var(--mono);
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+.badge-pending { background: rgba(245,158,11,0.12); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+.badge-progress { background: rgba(79,142,247,0.12); color: var(--accent); border: 1px solid rgba(79,142,247,0.2); }
+.badge-done { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
 
-  .card-name { font-size:13px; font-weight:600; margin-bottom:3px; }
-  .card-role { font-size:10px; color:var(--muted); font-family:'DM Mono',monospace; letter-spacing:.04em; margin-bottom:8px; }
-  .card-desc { font-size:11px; color:#9ca3af; line-height:1.5; margin-bottom:10px; }
-  .card-metric {
-    background:var(--card2); border-radius:6px;
-    padding:6px 10px; display:flex; align-items:center; justify-content:space-between;
-  }
-  .metric-label { font-size:9px; color:var(--muted); }
-  .metric-val { font-size:12px; font-weight:600; font-family:'DM Mono',monospace; color:var(--green); }
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.section-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.section-sub { font-size: 11px; color: var(--text3); font-family: var(--mono); }
 
-  /* MODAL */
-  .modal-overlay {
-    position:fixed; inset:0; background:rgba(0,0,0,0.75);
-    display:flex; align-items:center; justify-content:center;
-    z-index:100; opacity:0; pointer-events:none; transition:opacity .25s;
-    backdrop-filter:blur(6px);
-  }
-  .modal-overlay.open { opacity:1; pointer-events:all; }
-  .modal {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:16px; width:880px; max-width:95vw; max-height:88vh;
-    display:flex; flex-direction:column;
-    transform:scale(.96) translateY(10px); transition:all .25s;
-    overflow:hidden;
-  }
-  .modal-overlay.open .modal { transform:scale(1) translateY(0); }
+/* ── TIMELINE ── */
+.timeline-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+.timeline-row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.timeline-row:last-child { border-bottom: none; }
+.timeline-year { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+.timeline-bar-wrap { position: relative; height: 28px; }
+.timeline-bar-bg {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  left: 0; right: 0; height: 4px;
+  background: var(--bg4);
+  border-radius: 2px;
+}
+.timeline-bar {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  left: 0; height: 4px;
+  border-radius: 2px;
+  transition: width 0.8s ease;
+}
+.timeline-label {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  font-size: 10px;
+  font-family: var(--mono);
+  white-space: nowrap;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+.timeline-phases { display: flex; gap: 8px; flex-wrap: wrap; }
+.phase-tag {
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  color: var(--text2);
+}
+.phase-tag.done { border-color: rgba(34,197,94,0.3); color: var(--green); background: rgba(34,197,94,0.06); }
+.phase-tag.active { border-color: rgba(79,142,247,0.3); color: var(--accent); background: rgba(79,142,247,0.06); }
 
-  .modal-header {
-    padding:20px 24px 16px;
-    border-bottom:1px solid var(--border);
-    display:flex; align-items:flex-start; justify-content:space-between;
-  }
-  .modal-title-row { display:flex; align-items:center; gap:12px; }
-  .modal-icon { width:44px; height:44px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:20px; }
-  .modal-name { font-size:17px; font-weight:700; }
-  .modal-role { font-size:11px; color:var(--muted); font-family:'DM Mono',monospace; margin-top:2px; }
-  .close-btn {
-    width:28px; height:28px; border-radius:50%; background:var(--card2);
-    border:1px solid var(--border); color:var(--muted);
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; font-size:14px; flex-shrink:0;
-    transition:all .2s;
-  }
-  .close-btn:hover { background:var(--card); color:var(--text); }
+/* ── WBS TABLE ── */
+.wbs-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.wbs-table { width: 100%; border-collapse: collapse; }
+.wbs-table thead th {
+  background: var(--bg3);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--text3);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.wbs-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+.wbs-table tbody tr:hover { background: var(--bg3); }
+.wbs-table tbody tr:last-child { border-bottom: none; }
+.wbs-table td { padding: 11px 14px; font-size: 12px; }
+.td-domain { display: inline-flex; align-items: center; gap: 5px; }
+.domain-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.td-org { font-family: var(--mono); font-size: 11px; color: var(--text2); }
+.td-status { }
+.status-pill {
+  display: inline-block;
+  font-size: 10px;
+  font-family: var(--mono);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.sp-active { background: rgba(79,142,247,0.12); color: var(--accent); }
+.sp-verify { background: rgba(245,158,11,0.12); color: var(--amber); }
+.sp-done { background: rgba(34,197,94,0.12); color: var(--green); }
+.td-kpi { font-family: var(--mono); font-size: 11px; color: var(--text2); }
+.td-kpi strong { color: var(--text); font-weight: 500; }
 
-  .modal-body { display:flex; flex:1; overflow:hidden; }
-  .modal-left {
-    width:280px; min-width:280px;
-    border-right:1px solid var(--border);
-    padding:20px; overflow-y:auto;
-  }
-  .modal-left::-webkit-scrollbar { width:3px; }
-  .modal-left::-webkit-scrollbar-thumb { background:var(--border); }
+/* ── TWO COLUMN ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 24px; }
 
-  .info-section { margin-bottom:20px; }
-  .info-label { font-size:10px; font-weight:600; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; }
-  .info-text { font-size:12px; color:#9ca3af; line-height:1.6; }
+/* ── BUDGET SECTION ── */
+.budget-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.budget-total {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.budget-total span { font-size: 12px; color: var(--text2); }
+.budget-bar-wrap { margin: 16px 0 12px; }
+.budget-bar {
+  height: 8px;
+  border-radius: 4px;
+  display: flex;
+  overflow: hidden;
+  gap: 2px;
+}
+.budget-seg { height: 100%; border-radius: 2px; transition: width 0.8s ease; }
+.budget-legend { display: flex; flex-direction: column; gap: 8px; }
+.budget-legend-row { display: flex; align-items: center; justify-content: space-between; }
+.budget-legend-left { display: flex; align-items: center; gap: 8px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.legend-label { font-size: 12px; color: var(--text2); }
+.legend-val { font-family: var(--mono); font-size: 11px; color: var(--text); }
+.legend-pct { font-family: var(--mono); font-size: 10px; color: var(--text3); }
 
-  .pipeline-pos {
-    display:flex; gap:4px; flex-wrap:wrap;
-  }
-  .pos-chip {
-    font-size:9px; padding:3px 8px; border-radius:12px;
-    background:rgba(79,124,255,0.15); color:var(--accent);
-    border:1px solid rgba(79,124,255,0.3);
-  }
-  .pos-chip.inactive { background:var(--card2); color:var(--muted); border-color:var(--border); }
+/* ── PARTICIPANTS PAGE ── */
+.filter-bar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.filter-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 13px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text2);
+  transition: all 0.15s;
+  font-family: var(--sans);
+}
+.filter-btn:hover { border-color: var(--border2); color: var(--text); }
+.filter-btn.active { border-color: transparent; color: #fff; }
+.filter-count { font-size: 9px; font-family: var(--mono); opacity: 0.7; }
 
-  .tech-tags { display:flex; flex-wrap:wrap; gap:5px; }
-  .tech-tag {
-    font-size:10px; padding:3px 8px; border-radius:5px;
-    background:var(--card2); color:var(--muted);
-    border:1px solid var(--border);
-  }
+.participant-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.p-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.p-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.p-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.p-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.p-domain-tag {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.p-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.p-role-en { font-size: 9px; font-family: var(--mono); letter-spacing: 0.08em; color: var(--text3); text-transform: uppercase; margin-bottom: 8px; }
+.p-desc { font-size: 11px; color: var(--text2); line-height: 1.6; margin-bottom: 14px; }
+.p-kpi-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.p-kpi-item {
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+.p-kpi-label { font-size: 9px; color: var(--text3); margin-bottom: 3px; letter-spacing: 0.03em; }
+.p-kpi-val {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+}
+.p-kpi-val.placeholder {
+  color: var(--text3);
+  font-size: 11px;
+}
+.placeholder-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-family: var(--mono);
+  color: var(--text3);
+  background: var(--bg4);
+  border: 1px dashed var(--text3);
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-top: 4px;
+}
 
-  .kpi-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .kpi-card {
-    background:var(--card2); border-radius:8px; padding:10px 12px;
-    border:1px solid var(--border);
-  }
-  .kpi-label { font-size:9px; color:var(--muted); margin-bottom:4px; }
-  .kpi-val { font-size:16px; font-weight:700; font-family:'DM Mono',monospace; }
+/* ── SERVICE FLOW PAGE ── */
+.flow-pipeline {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  margin-bottom: 28px;
+  position: relative;
+}
+.flow-pipeline::before {
+  content: '';
+  position: absolute;
+  top: 32px; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border2), var(--accent), var(--border2), transparent);
+}
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.flow-num {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 12px;
+  transition: all 0.2s;
+}
+.flow-step.current .flow-num {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(79,142,247,0.1);
+  background: rgba(79,142,247,0.08);
+}
+.flow-num-n { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+.flow-num-icon { font-size: 18px; }
+.flow-step-label { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.flow-step-sub { font-size: 10px; color: var(--text3); font-family: var(--mono); }
 
-  .modal-right { flex:1; display:flex; flex-direction:column; overflow:hidden; }
-  .preview-tabs {
-    display:flex; gap:0; border-bottom:1px solid var(--border); padding:0 20px;
-  }
-  .preview-tab {
-    padding:12px 14px; font-size:11px; cursor:pointer;
-    color:var(--muted); border-bottom:2px solid transparent;
-    transition:all .2s; margin-bottom:-1px;
-  }
-  .preview-tab.active { color:var(--text); border-bottom-color:var(--accent); }
-  .preview-area { flex:1; overflow:hidden; padding:16px; }
-  .iframe-mock {
-    width:100%; height:100%; border-radius:10px;
-    background:var(--card2); border:1px solid var(--border);
-    display:flex; align-items:center; justify-content:center;
-    flex-direction:column; gap:12px;
-  }
-  .iframe-placeholder-icon { font-size:36px; opacity:.3; }
-  .iframe-placeholder-text { font-size:12px; color:var(--muted); text-align:center; line-height:1.6; }
-  .iframe-url {
-    font-size:10px; font-family:'DM Mono',monospace;
-    color:var(--accent); background:rgba(79,124,255,0.1);
-    padding:4px 10px; border-radius:4px; border:1px solid rgba(79,124,255,0.2);
-  }
+.flow-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.flow-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.flow-card-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.flow-card-step {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+  background: var(--bg3);
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+.flow-card-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.flow-card-body { padding: 14px 16px; }
+.flow-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+}
+.flow-item:last-child { border-bottom: none; }
+.flow-item-icon {
+  width: 30px; height: 30px;
+  border-radius: 6px;
+  background: var(--bg3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.flow-item-info { flex: 1; min-width: 0; }
+.flow-item-name { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.flow-item-desc { font-size: 10px; color: var(--text2); line-height: 1.5; }
+.flow-item-perf {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  text-align: right;
+  flex-shrink: 0;
+}
+.flow-item-perf strong { display: block; font-size: 12px; color: var(--accent); font-weight: 500; }
+.flow-item-perf.placeholder-perf strong { color: var(--text3); font-size: 11px; }
 
-  /* SCROLLBAR */
-  .content::-webkit-scrollbar { width:4px; }
+/* ── KPI DASHBOARD PAGE ── */
+.kpi-domain-section { margin-bottom: 28px; }
+.kpi-domain-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.domain-pill {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+.kpi-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.kpi-detail-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.kdi-org { font-size: 10px; font-family: var(--mono); color: var(--text3); margin-bottom: 6px; }
+.kdi-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+.kdi-metrics { display: flex; flex-direction: column; gap: 8px; }
+.kdi-metric { }
+.kdi-metric-label { font-size: 10px; color: var(--text3); margin-bottom: 3px; }
+.kdi-metric-row { display: flex; align-items: center; gap: 8px; }
+.kdi-metric-val {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  min-width: 80px;
+}
+.kdi-metric-val.tbd { color: var(--text3); font-size: 11px; }
+.kdi-progress-wrap { flex: 1; height: 4px; background: var(--bg4); border-radius: 2px; }
+.kdi-progress { height: 4px; border-radius: 2px; transition: width 0.8s ease; }
+.tbd-block {
+  background: var(--bg3);
+  border: 1px dashed var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-top: 6px;
+}
+.tbd-block p { font-size: 10px; color: var(--text3); font-family: var(--mono); }
 
-  /* ANIM */
-  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-  .org-card { animation:fadeUp .3s ease both; }
-  .org-card:nth-child(1){animation-delay:.04s}
-  .org-card:nth-child(2){animation-delay:.08s}
-  .org-card:nth-child(3){animation-delay:.12s}
-  .org-card:nth-child(4){animation-delay:.16s}
-  .org-card:nth-child(5){animation-delay:.20s}
-  .org-card:nth-child(6){animation-delay:.24s}
-  .org-card:nth-child(7){animation-delay:.28s}
-  .org-card:nth-child(8){animation-delay:.32s}
-  .org-card:nth-child(9){animation-delay:.36s}
-  .org-card:nth-child(10){animation-delay:.40s}
-  .org-card:nth-child(11){animation-delay:.44s}
-  .org-card:nth-child(12){animation-delay:.48s}
+/* ── MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  width: 560px;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: slideUp 0.2s ease;
+}
+@keyframes slideUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.modal-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  position: sticky; top: 0;
+  background: var(--bg2);
+}
+.modal-title-wrap { flex: 1; }
+.modal-tag {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.08em;
+  padding: 2px 8px; border-radius: 4px; text-transform: uppercase;
+  margin-bottom: 6px; display: inline-block;
+}
+.modal-name { font-size: 18px; font-weight: 600; color: var(--text); }
+.modal-sub { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-top: 2px; }
+.modal-close {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  background: var(--bg3);
+  border: none;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.modal-close:hover { background: var(--bg4); }
+.modal-body { padding: 20px 24px; }
+.modal-section { margin-bottom: 20px; }
+.modal-section-title {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  color: var(--text3); text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-desc { font-size: 13px; color: var(--text2); line-height: 1.7; }
+.modal-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.modal-metric {
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+.mm-label { font-size: 10px; color: var(--text3); margin-bottom: 4px; }
+.mm-val { font-family: var(--mono); font-size: 16px; font-weight: 500; }
+.mm-val.tbd { font-size: 12px; color: var(--text3); }
+.mm-note { font-size: 10px; color: var(--text3); margin-top: 2px; }
+.tech-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tech-tag {
+  font-size: 10px; font-family: var(--mono);
+  padding: 3px 9px; border-radius: 4px;
+  background: var(--bg3); color: var(--text2);
+  border: 1px solid var(--border);
+}
+.placeholder-note {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(245,158,11,0.06);
+  border: 1px dashed rgba(245,158,11,0.25);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-top: 12px;
+}
+.placeholder-note p { font-size: 11px; color: var(--amber); font-family: var(--mono); }
+
+/* domain colors */
+.dc-data { --dc: var(--teal); }
+.dc-ai { --dc: var(--accent); }
+.dc-infra { --dc: var(--purple); }
+.dc-network { --dc: var(--coral); }
+.dc-org { --dc: var(--amber); }
+.dc-service { --dc: var(--pink); }
+
+.p-domain-tag.dc-data { background: rgba(45,212,191,0.12); color: var(--teal); }
+.p-domain-tag.dc-ai { background: rgba(79,142,247,0.12); color: var(--accent); }
+.p-domain-tag.dc-infra { background: rgba(167,139,250,0.12); color: var(--purple); }
+.p-domain-tag.dc-network { background: rgba(249,115,22,0.12); color: var(--coral); }
+.p-domain-tag.dc-org { background: rgba(245,158,11,0.12); color: var(--amber); }
+.p-domain-tag.dc-service { background: rgba(244,114,182,0.12); color: var(--pink); }
+
+.domain-pill.dc-data { background: rgba(45,212,191,0.12); color: var(--teal); border: 1px solid rgba(45,212,191,0.2); }
+.domain-pill.dc-ai { background: rgba(79,142,247,0.12); color: var(--accent); border: 1px solid rgba(79,142,247,0.2); }
+.domain-pill.dc-infra { background: rgba(167,139,250,0.12); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+.domain-pill.dc-network { background: rgba(249,115,22,0.12); color: var(--coral); border: 1px solid rgba(249,115,22,0.2); }
+.domain-pill.dc-org { background: rgba(245,158,11,0.12); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+.domain-pill.dc-service { background: rgba(244,114,182,0.12); color: var(--pink); border: 1px solid rgba(244,114,182,0.2); }
+
+.filter-btn.active.dc-data { background: var(--teal); }
+.filter-btn.active.dc-ai { background: var(--accent); }
+.filter-btn.active.dc-infra { background: var(--purple); }
+.filter-btn.active.dc-network { background: var(--coral); }
+.filter-btn.active.dc-org { background: var(--amber); }
+.filter-btn.active.dc-service { background: var(--pink); }
+.filter-btn.active.dc-all { background: var(--bg4); color: var(--text); border-color: var(--border2); }
+
+.p-card[data-domain="data"] { border-top: 2px solid var(--teal); }
+.p-card[data-domain="ai"] { border-top: 2px solid var(--accent); }
+.p-card[data-domain="infra"] { border-top: 2px solid var(--purple); }
+.p-card[data-domain="network"] { border-top: 2px solid var(--coral); }
+.p-card[data-domain="org"] { border-top: 2px solid var(--amber); }
+.p-card[data-domain="service"] { border-top: 2px solid var(--pink); }
+
+.p-icon.dc-data { background: rgba(45,212,191,0.1); }
+.p-icon.dc-ai { background: rgba(79,142,247,0.1); }
+.p-icon.dc-infra { background: rgba(167,139,250,0.1); }
+.p-icon.dc-network { background: rgba(249,115,22,0.1); }
+.p-icon.dc-org { background: rgba(245,158,11,0.1); }
+.p-icon.dc-service { background: rgba(244,114,182,0.1); }
+
+.hidden { display: none !important; }
 </style>
 </head>
 <body>
 
 <!-- SIDEBAR -->
-<div class="sidebar">
+<aside class="sidebar">
   <div class="sidebar-logo">
-    <div class="ai-badge">AI</div>
-    <h2>초거대제조AI</h2>
-    <p>Analytics Dashboard</p>
+    <div class="logo-badge">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      AI
+    </div>
+    <div class="logo-title">초거대 제조AI</div>
+    <div class="logo-sub">DAINOS Dashboard v3</div>
   </div>
-  <nav class="sidebar-nav">
-    <div class="nav-item" onclick="setPage('intro')">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" fill="currentColor" opacity=".6"/><rect x="9" y="2" width="5" height="5" rx="1" fill="currentColor" opacity=".6"/><rect x="2" y="9" width="5" height="5" rx="1" fill="currentColor" opacity=".6"/><rect x="9" y="9" width="5" height="5" rx="1" fill="currentColor" opacity=".6"/></svg>
-      Introduction
+  <nav class="nav">
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <div class="nav-item active" onclick="navigate('overview', this)">
+        <span class="nav-icon">◈</span> 사업 개요
+      </div>
+      <div class="nav-item" onclick="navigate('kpi', this)">
+        <span class="nav-icon">◎</span> 성과 지표
+        <span class="nav-badge">3Y</span>
+      </div>
     </div>
-    <div class="nav-item" onclick="setPage('flow')">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 8h3M11 8h3M5 8a3 3 0 006 0M5 8a3 3 0 016 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Service Flow
-    </div>
-    <div class="nav-item active" onclick="setPage('participants')">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M1 13c0-2.761 2.239-4 5-4s5 1.239 5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M14 13c0-1.8-1-3-2.5-3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-      Participants
+    <div class="nav-section">
+      <div class="nav-label">Execution</div>
+      <div class="nav-item" onclick="navigate('flow', this)">
+        <span class="nav-icon">⇢</span> Service Flow
+      </div>
+      <div class="nav-item" onclick="navigate('participants', this)">
+        <span class="nav-icon">⊞</span> 참여기관
+        <span class="nav-badge">15</span>
+      </div>
     </div>
   </nav>
-</div>
+  <div class="sidebar-footer">
+    <div class="sidebar-year">2024.05 — 2026.12</div>
+    <div class="sidebar-org">경남대학교 산학협력단</div>
+  </div>
+</aside>
 
 <!-- MAIN -->
-<div class="main">
-  <div class="topbar">
-    <h1 id="page-title">참여기관 현황</h1>
-    <div class="filter-tabs">
-      <div class="ftab active" onclick="filterCards('ALL',this)">ALL</div>
-      <div class="ftab" onclick="filterCards('DATA',this)">Data</div>
-      <div class="ftab" onclick="filterCards('AI',this)">AI</div>
-      <div class="ftab" onclick="filterCards('INFRA',this)">Infra</div>
-      <div class="ftab" onclick="filterCards('NETWORK',this)">Network</div>
-      <div class="ftab" onclick="filterCards('ORG',this)">Org</div>
-      <div class="ftab" onclick="filterCards('SERVICE',this)">Service</div>
+<main class="main">
+
+  <!-- ── OVERVIEW PAGE ── -->
+  <div id="page-overview" class="page active">
+    <div class="topbar">
+      <span class="topbar-title">사업 개요</span>
+      <div class="topbar-right">
+        <span class="year-pill">3차년도 · 2026</span>
+        <div class="status-dot"></div>
+      </div>
+    </div>
+    <div style="padding:28px">
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card" style="--accent-color:var(--accent)">
+          <div class="kpi-label">총 사업비</div>
+          <div class="kpi-value">229<span>억원</span></div>
+          <div class="kpi-sub">정부 150 · 지방 65 · 민간 14.4</div>
+        </div>
+        <div class="kpi-card" style="--accent-color:var(--teal)">
+          <div class="kpi-label">3차년도 사업비</div>
+          <div class="kpi-value">208<span>억원</span></div>
+          <div class="kpi-sub">전체 예산의 91% 집중</div>
+          <div class="kpi-badge badge-progress">진행중</div>
+        </div>
+        <div class="kpi-card" style="--accent-color:var(--purple)">
+          <div class="kpi-label">참여기관</div>
+          <div class="kpi-value">15<span>개</span></div>
+          <div class="kpi-sub">주관 1 · 참여 14</div>
+        </div>
+        <div class="kpi-card" style="--accent-color:var(--coral)">
+          <div class="kpi-label">실증 수요기업</div>
+          <div class="kpi-value">2<span>개소</span></div>
+          <div class="kpi-sub">KG모빌리티 · 신성델타테크</div>
+          <div class="kpi-badge badge-progress">실증중</div>
+        </div>
+      </div>
+
+      <!-- 사업 기간 타임라인 -->
+      <div class="section-header">
+        <span class="section-title">사업 추진 연차</span>
+        <span class="section-sub">2024.05 → 2026.12 · 32개월</span>
+      </div>
+      <div class="timeline-wrap" style="margin-bottom:24px">
+        <div class="timeline-row">
+          <div class="timeline-year">1차년도<br><span style="font-size:10px;color:var(--text3)">2024</span></div>
+          <div>
+            <div class="timeline-phases">
+              <span class="phase-tag done">설계 완료</span>
+              <span class="phase-tag done">요구사항 분석</span>
+              <span class="phase-tag done">아키텍처 설계</span>
+              <span class="phase-tag done">프로토타입</span>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-row">
+          <div class="timeline-year">2차년도<br><span style="font-size:10px;color:var(--text3)">2025</span></div>
+          <div>
+            <div class="timeline-phases">
+              <span class="phase-tag done">핵심기술 개발</span>
+              <span class="phase-tag done">인프라 구축</span>
+              <span class="phase-tag done">통신망 구축</span>
+              <span class="phase-tag done">AI 모델 개발</span>
+              <span class="phase-tag done">서비스 개발</span>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-row">
+          <div class="timeline-year">3차년도<br><span style="font-size:10px;color:var(--accent)">2026 ●</span></div>
+          <div>
+            <div class="timeline-phases">
+              <span class="phase-tag active">EBC 구축</span>
+              <span class="phase-tag active">AI 모델 고도화</span>
+              <span class="phase-tag active">실증·검증</span>
+              <span class="phase-tag active">성과 측정</span>
+              <span class="phase-tag" style="color:var(--text3)">사업 종료</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WBS 주요 추진 현황 -->
+      <div class="section-header">
+        <span class="section-title">WBS 주요 추진 현황</span>
+        <span class="section-sub">3차년도 기준</span>
+      </div>
+      <div class="wbs-wrap">
+        <table class="wbs-table">
+          <thead>
+            <tr>
+              <th>DAINOS 도메인</th>
+              <th>과제명</th>
+              <th>수행기관</th>
+              <th>3차년도 핵심 목표</th>
+              <th>상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--amber)"></span><span style="color:var(--amber);font-size:11px">Organizing</span></span></td>
+              <td style="font-size:12px">PMBOK 기반 사업관리</td>
+              <td class="td-org">경남TP</td>
+              <td class="td-kpi">네트워킹 <strong>5회</strong> 이상</td>
+              <td><span class="status-pill sp-active">진행중</span></td>
+            </tr>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--amber)"></span><span style="color:var(--amber);font-size:11px">Organizing</span></span></td>
+              <td style="font-size:12px">SE 기반 기술개발 관리</td>
+              <td class="td-org">KTL(산기시험원)</td>
+              <td class="td-kpi">적합성검증 확인서 <strong>1건</strong></td>
+              <td><span class="status-pill sp-verify">검증중</span></td>
+            </tr>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--teal)"></span><span style="color:var(--teal);font-size:11px">Data</span></span></td>
+              <td style="font-size:12px">제조 데이터 수집·DB</td>
+              <td class="td-org">마크베이스</td>
+              <td class="td-kpi">초당 <strong>200만건</strong> 수집</td>
+              <td><span class="status-pill sp-active">진행중</span></td>
+            </tr>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--teal)"></span><span style="color:var(--teal);font-size:11px">Data</span></span></td>
+              <td style="font-size:12px">ERP 데이터 파이프라인</td>
+              <td class="td-org">아미크</td>
+              <td class="td-kpi">학습 데이터셋 <strong>500만건</strong></td>
+              <td><span class="status-pill sp-active">진행중</span></td>
+            </tr>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--teal)"></span><span style="color:var(--teal);font-size:11px">Data</span></span></td>
+              <td style="font-size:12px">AAS 표준·보안</td>
+              <td class="td-org">경남대학교</td>
+              <td class="td-kpi">비식별화 환경 구축 <strong>1개소</strong></td>
+              <td><span class="status-pill sp-active">진행중</span></td>
+            </tr>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--teal)"></span><span style="color:var(--teal);font-size:11px">Data</span></span></td>
+              <td style="font-size:12px">AAS 데이터 교환체계</td>
+              <td class="td-org">네스트필드</td>
+              <td class="td-kpi">IDTA 사례등록 <strong>1건</strong></td>
+              <td><span class="status-pill sp-active">진행중</span></td>
+            </tr>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--accent)"></span><span style="color:var(--accent);font-size:11px">AI</span></span></td>
+              <td style="font-size:12px">제조특화 LLM 개발</td>
+              <td class="td-org">KAIST</td>
+              <td class="td-kpi">정확도 <strong>+10%</strong> · 속도 <strong>+20%</strong></td>
+              <td><span class="status-pill sp-active">진행중</span></td>
+            </tr>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--accent)"></span><span style="color:var(--accent);font-size:11px">AI</span></span></td>
+              <td style="font-size:12px">ESG 대응 sLM Agent</td>
+              <td class="td-org">넥스트스튜디오</td>
+              <td class="td-kpi">sLM Agent <strong>1종</strong> 개발</td>
+              <td><span class="status-pill sp-active">진행중</span></td>
+            </tr>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--purple)"></span><span style="color:var(--purple);font-size:11px">Infra</span></span></td>
+              <td style="font-size:12px">하이브리드 클라우드·EBC</td>
+              <td class="td-org">메가존클라우드</td>
+              <td class="td-kpi">EBC 구축 <strong>1개소</strong></td>
+              <td><span class="status-pill sp-active">진행중</span></td>
+            </tr>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--coral)"></span><span style="color:var(--coral);font-size:11px">Network</span></span></td>
+              <td style="font-size:12px">차세대 통신망</td>
+              <td class="td-org">라임씨에스아이</td>
+              <td class="td-kpi">통합관제센터 <strong>1개소</strong> · 500Mbps</td>
+              <td><span class="status-pill sp-active">진행중</span></td>
+            </tr>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--pink)"></span><span style="color:var(--pink);font-size:11px">Service</span></span></td>
+              <td style="font-size:12px">품질관리 서비스 실증</td>
+              <td class="td-org">소르테크 · 에스디테크</td>
+              <td class="td-kpi">비전검사 실증 <strong>3건</strong></td>
+              <td><span class="status-pill sp-verify">실증중</span></td>
+            </tr>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--pink)"></span><span style="color:var(--pink);font-size:11px">Service</span></span></td>
+              <td style="font-size:12px">지능형 관제시스템</td>
+              <td class="td-org">DX솔루션즈 · 메타아이스퀘어</td>
+              <td class="td-kpi">불량률 감소 <strong>18%</strong> · UPH <strong>+8%</strong></td>
+              <td><span class="status-pill sp-verify">실증중</span></td>
+            </tr>
+            <tr>
+              <td><span class="td-domain"><span class="domain-dot" style="background:var(--teal)"></span><span style="color:var(--teal);font-size:11px">Data</span></span></td>
+              <td style="font-size:12px">AIoT · Edge Computing</td>
+              <td class="td-org">KETI</td>
+              <td class="td-kpi">센서 모듈 <strong>6종</strong> · 실증 2건</td>
+              <td><span class="status-pill sp-active">진행중</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Budget -->
+      <div class="section-header">
+        <span class="section-title">사업비 구성</span>
+        <span class="section-sub">단위 : 천원</span>
+      </div>
+      <div class="two-col">
+        <div class="budget-card">
+          <div class="kpi-label">총 사업비 (3개년)</div>
+          <div class="budget-total">22,941,900<span>천원</span></div>
+          <div class="budget-bar-wrap">
+            <div class="budget-bar">
+              <div class="budget-seg" style="width:65.4%;background:var(--accent)"></div>
+              <div class="budget-seg" style="width:28.3%;background:var(--teal)"></div>
+              <div class="budget-seg" style="width:6.3%;background:var(--coral)"></div>
+            </div>
+          </div>
+          <div class="budget-legend">
+            <div class="budget-legend-row">
+              <div class="budget-legend-left"><div class="legend-dot" style="background:var(--accent)"></div><span class="legend-label">정부출연금</span></div>
+              <div style="display:flex;gap:8px;align-items:center"><span class="legend-val">15,000,000</span><span class="legend-pct">65.4%</span></div>
+            </div>
+            <div class="budget-legend-row">
+              <div class="budget-legend-left"><div class="legend-dot" style="background:var(--teal)"></div><span class="legend-label">지방비</span></div>
+              <div style="display:flex;gap:8px;align-items:center"><span class="legend-val">6,500,000</span><span class="legend-pct">28.3%</span></div>
+            </div>
+            <div class="budget-legend-row">
+              <div class="budget-legend-left"><div class="legend-dot" style="background:var(--coral)"></div><span class="legend-label">민간부담금</span></div>
+              <div style="display:flex;gap:8px;align-items:center"><span class="legend-val">1,441,900</span><span class="legend-pct">6.3%</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="budget-card">
+          <div class="kpi-label">3차년도 사업비 (2026)</div>
+          <div class="budget-total">13,520,000<span>천원 (정부출연금)</span></div>
+          <div style="margin:14px 0 10px">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:6px">전체 정부출연금 중 3차년도 비중</div>
+            <div style="height:6px;background:var(--bg4);border-radius:3px">
+              <div style="width:90.1%;height:6px;background:linear-gradient(90deg,var(--accent),var(--purple));border-radius:3px"></div>
+            </div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--accent);margin-top:4px">90.1%</div>
+          </div>
+          <div style="background:rgba(245,158,11,0.06);border:1px dashed rgba(245,158,11,0.25);border-radius:8px;padding:10px 12px">
+            <p style="font-size:11px;color:var(--amber);font-family:var(--mono)">⚠ 3차년도에 예산 집중 — 집행 리스크 모니터링 필요</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="content">
-    <!-- PIPELINE -->
-    <div class="section-title">데이터 파이프라인</div>
-    <div class="pipeline">
-      <div class="p-stage active-stage" onclick="filterCards('ORG', document.querySelector('.ftab:nth-child(6)'))">
-        <div class="p-dot" style="background:rgba(251,191,36,0.15);border-color:rgba(251,191,36,0.4);">🏢</div>
-        <div class="p-stage-label">사업관리<br>경남TP·KTL</div>
+  <!-- ── KPI PAGE ── -->
+  <div id="page-kpi" class="page">
+    <div class="topbar">
+      <span class="topbar-title">3차년도 성과 지표</span>
+      <div class="topbar-tabs">
+        <button class="tab-btn active">전체</button>
+        <button class="tab-btn">기술지표</button>
+        <button class="tab-btn">현장KPI</button>
       </div>
-      <div class="p-arrow">›</div>
-      <div class="p-stage" onclick="filterCards('DATA', document.querySelector('.ftab:nth-child(2)'))">
-        <div class="p-dot" style="background:rgba(79,124,255,0.15);border-color:rgba(79,124,255,0.4);">📡</div>
-        <div class="p-stage-label">데이터 수집<br>마크베이스·아미크</div>
-      </div>
-      <div class="p-arrow">›</div>
-      <div class="p-stage" onclick="filterCards('NETWORK', document.querySelector('.ftab:nth-child(5)'))">
-        <div class="p-dot" style="background:rgba(242,95,92,0.15);border-color:rgba(242,95,92,0.4);">📶</div>
-        <div class="p-stage-label">5G 전송<br>라임씨에스아이</div>
-      </div>
-      <div class="p-arrow">›</div>
-      <div class="p-stage" onclick="filterCards('INFRA', document.querySelector('.ftab:nth-child(4)'))">
-        <div class="p-dot" style="background:rgba(34,211,165,0.15);border-color:rgba(34,211,165,0.4);">☁️</div>
-        <div class="p-stage-label">클라우드 인프라<br>메가존·경남대</div>
-      </div>
-      <div class="p-arrow">›</div>
-      <div class="p-stage" onclick="filterCards('AI', document.querySelector('.ftab:nth-child(3)'))">
-        <div class="p-dot" style="background:rgba(124,92,252,0.15);border-color:rgba(124,92,252,0.4);">🧠</div>
-        <div class="p-stage-label">AI 모델<br>KAIST·넥스트</div>
-      </div>
-      <div class="p-arrow">›</div>
-      <div class="p-stage" onclick="filterCards('SERVICE', document.querySelector('.ftab:nth-child(7)'))">
-        <div class="p-dot" style="background:rgba(34,211,165,0.12);border-color:rgba(34,211,165,0.35);">🏭</div>
-        <div class="p-stage-label">현장 서비스<br>소르테크·DX솔루션즈</div>
+      <div class="topbar-right">
+        <span class="year-pill">3차년도 목표치</span>
+        <div class="placeholder-tag">실증 데이터 연동 예정</div>
       </div>
     </div>
-
-    <!-- CARDS -->
-    <div class="section-title">참여기관 <span id="card-count" style="color:var(--accent)">15</span>개</div>
-    <div class="cards-grid" id="cards-grid">
-
-      <!-- 경남대학교 -->
-      <div class="org-card data" data-type="DATA" onclick="openModal('gyeongnam')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(79,124,255,0.15);">🎓</div>
-          <span class="tag DATA">DATA</span>
+    <div style="padding:28px">
+      <!-- SERVICE KPI 먼저 (핵심) -->
+      <div class="kpi-domain-section">
+        <div class="kpi-domain-title">
+          <span class="domain-pill dc-service">Service</span>
+          <span style="font-size:12px;color:var(--text2)">현장 실증 KPI — 신성델타테크 Drum-Tube 라인</span>
         </div>
-        <div class="card-name">경남대학교</div>
-        <div class="card-role">STANDARDIZATION</div>
-        <div class="card-desc">AAS 기반 이기종 설비 데이터 표준 모델링</div>
-        <div class="card-metric">
-          <span class="metric-label">AAS Models</span>
-          <span class="metric-val">1,204</span>
-        </div>
-      </div>
-
-      <!-- 마크베이스 -->
-      <div class="org-card data" data-type="DATA" onclick="openModal('machbase')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(79,124,255,0.15);">🗄️</div>
-          <span class="tag DATA">DATA</span>
-        </div>
-        <div class="card-name">마크베이스</div>
-        <div class="card-role">HIGH-SPEED DB</div>
-        <div class="card-desc">초당 100만 건 데이터 처리 성능 확보</div>
-        <div class="card-metric">
-          <span class="metric-label">Performance</span>
-          <span class="metric-val">1.21M rec/s</span>
-        </div>
-      </div>
-
-      <!-- 아미크 -->
-      <div class="org-card data" data-type="DATA" onclick="openModal('amiq')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(79,124,255,0.15);">🔗</div>
-          <span class="tag DATA">DATA</span>
-        </div>
-        <div class="card-name">아미크</div>
-        <div class="card-role">LEGACY CONNECT</div>
-        <div class="card-desc">기존 ERP 데이터 연동 파이프라인 구축</div>
-        <div class="card-metric">
-          <span class="metric-label">Pipeline Success</span>
-          <span class="metric-val">99.8%</span>
-        </div>
-      </div>
-
-      <!-- 네스트필드 -->
-      <div class="org-card data" data-type="DATA" onclick="openModal('nestfield')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(79,124,255,0.15);">🔄</div>
-          <span class="tag DATA">DATA</span>
-        </div>
-        <div class="card-name">네스트필드</div>
-        <div class="card-role">INTEROPERABILITY</div>
-        <div class="card-desc">이종 시스템 간 데이터 상호운용성 확보</div>
-        <div class="card-metric">
-          <span class="metric-label">API Rate</span>
-          <span class="metric-val">85%</span>
+        <div class="kpi-cards-row">
+          <div class="kpi-detail-card">
+            <div class="kdi-org">DX솔루션즈</div>
+            <div class="kdi-name">라인 비가동 시간 감소</div>
+            <div class="kdi-metrics">
+              <div class="kdi-metric">
+                <div class="kdi-metric-label">2차년도 중간 목표</div>
+                <div class="kdi-metric-row">
+                  <div class="kdi-metric-val">7%</div>
+                  <div class="kdi-progress-wrap"><div class="kdi-progress" style="width:0%;background:var(--pink)"></div></div>
+                </div>
+              </div>
+              <div class="kdi-metric">
+                <div class="kdi-metric-label">3차년도 최종 목표</div>
+                <div class="kdi-metric-row">
+                  <div class="kdi-metric-val">15%</div>
+                  <div class="kdi-progress-wrap"><div class="kdi-progress" style="width:0%;background:var(--pink)"></div></div>
+                </div>
+              </div>
+              <div class="tbd-block"><p>실증 데이터 수집 예정 (2026 9~11월)</p></div>
+            </div>
+          </div>
+          <div class="kpi-detail-card">
+            <div class="kdi-org">DX솔루션즈</div>
+            <div class="kdi-name">시간당 생산량(UPH) 증가</div>
+            <div class="kdi-metrics">
+              <div class="kdi-metric">
+                <div class="kdi-metric-label">2차년도 중간 목표</div>
+                <div class="kdi-metric-row"><div class="kdi-metric-val">4%</div><div class="kdi-progress-wrap"><div class="kdi-progress" style="width:0%;background:var(--pink)"></div></div></div>
+              </div>
+              <div class="kdi-metric">
+                <div class="kdi-metric-label">3차년도 최종 목표</div>
+                <div class="kdi-metric-row"><div class="kdi-metric-val">8%</div><div class="kdi-progress-wrap"><div class="kdi-progress" style="width:0%;background:var(--pink)"></div></div></div>
+              </div>
+              <div class="tbd-block"><p>기존기간 대비 실증기간 UPH 측정 예정</p></div>
+            </div>
+          </div>
+          <div class="kpi-detail-card">
+            <div class="kdi-org">DX솔루션즈</div>
+            <div class="kdi-name">공정 불량률 감소</div>
+            <div class="kdi-metrics">
+              <div class="kdi-metric">
+                <div class="kdi-metric-label">2차년도 중간 목표</div>
+                <div class="kdi-metric-row"><div class="kdi-metric-val">9%</div><div class="kdi-progress-wrap"><div class="kdi-progress" style="width:0%;background:var(--pink)"></div></div></div>
+              </div>
+              <div class="kdi-metric">
+                <div class="kdi-metric-label">3차년도 최종 목표</div>
+                <div class="kdi-metric-row"><div class="kdi-metric-val tbd" style="color:var(--pink);font-size:16px">18%</div><div class="kdi-progress-wrap"><div class="kdi-progress" style="width:0%;background:var(--pink)"></div></div></div>
+              </div>
+              <div class="tbd-block"><p>OQC 불량 감소율 산출 예정</p></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- KETI -->
-      <div class="org-card data" data-type="DATA" onclick="openModal('keti')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(79,124,255,0.15);">📟</div>
-          <span class="tag DATA">DATA</span>
+      <!-- AI KPI -->
+      <div class="kpi-domain-section">
+        <div class="kpi-domain-title">
+          <span class="domain-pill dc-ai">AI</span>
+          <span style="font-size:12px;color:var(--text2)">AI 모델 성능 지표</span>
         </div>
-        <div class="card-name">KETI</div>
-        <div class="card-role">AIOT EDGE</div>
-        <div class="card-desc">현장 설비 부착형 지능형 엣지 컴퓨팅 개발</div>
-        <div class="card-metric">
-          <span class="metric-label">Devices</span>
-          <span class="metric-val">24 ea</span>
-        </div>
-      </div>
-
-      <!-- KAIST -->
-      <div class="org-card ai" data-type="AI" onclick="openModal('kaist')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(124,92,252,0.15);">🧠</div>
-          <span class="tag AI">AI</span>
-        </div>
-        <div class="card-name">KAIST</div>
-        <div class="card-role">HYPERSCALE AI</div>
-        <div class="card-desc">제조 특화 LLM 모델 개발 및 심화응용</div>
-        <div class="card-metric">
-          <span class="metric-label">Accuracy Improvement</span>
-          <span class="metric-val">+10%</span>
-        </div>
-      </div>
-
-      <!-- 넥스트스튜디오 -->
-      <div class="org-card ai" data-type="AI" onclick="openModal('nextstudio')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(124,92,252,0.15);">🌿</div>
-          <span class="tag AI">AI</span>
-        </div>
-        <div class="card-name">넥스트스튜디오</div>
-        <div class="card-role">ESG AI</div>
-        <div class="card-desc">탄소 배출량 예측 및 지각 관리 모델 개발</div>
-        <div class="card-metric">
-          <span class="metric-label">ESG Model</span>
-          <span class="metric-val">sLM Agent</span>
-        </div>
-      </div>
-
-      <!-- 메가존클라우드 -->
-      <div class="org-card infra" data-type="INFRA" onclick="openModal('megazone')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(34,211,165,0.12);">☁️</div>
-          <span class="tag INFRA">INFRA</span>
-        </div>
-        <div class="card-name">메가존클라우드</div>
-        <div class="card-role">CLOUD INFRA</div>
-        <div class="card-desc">하이브리드 AI 클라우드 센터(EBC) 구축</div>
-        <div class="card-metric">
-          <span class="metric-label">Uptime</span>
-          <span class="metric-val">99.98%</span>
+        <div class="kpi-cards-row">
+          <div class="kpi-detail-card">
+            <div class="kdi-org">KAIST</div>
+            <div class="kdi-name">AI 모델 예측 정확도 향상</div>
+            <div class="kdi-metrics">
+              <div class="kdi-metric">
+                <div class="kdi-metric-label">2차년도 목표</div>
+                <div class="kdi-metric-row"><div class="kdi-metric-val">+5%</div><div class="kdi-progress-wrap"><div class="kdi-progress" style="width:0%;background:var(--accent)"></div></div></div>
+              </div>
+              <div class="kdi-metric">
+                <div class="kdi-metric-label">3차년도 목표</div>
+                <div class="kdi-metric-row"><div class="kdi-metric-val tbd" style="color:var(--accent);font-size:16px">+10%</div><div class="kdi-progress-wrap"><div class="kdi-progress" style="width:0%;background:var(--accent)"></div></div></div>
+              </div>
+              <div class="tbd-block"><p>베이스라인 대비 측정 예정</p></div>
+            </div>
+          </div>
+          <div class="kpi-detail-card">
+            <div class="kdi-org">KAIST</div>
+            <div class="kdi-name">AI 모델 학습 속도 향상</div>
+            <div class="kdi-metrics">
+              <div class="kdi-metric">
+                <div class="kdi-metric-label">2차년도 목표</div>
+                <div class="kdi-metric-row"><div class="kdi-metric-val">+10%</div><div class="kdi-progress-wrap"><div class="kdi-progress" style="width:0%;background:var(--accent)"></div></div></div>
+              </div>
+              <div class="kdi-metric">
+                <div class="kdi-metric-label">3차년도 목표</div>
+                <div class="kdi-metric-row"><div class="kdi-metric-val tbd" style="color:var(--accent);font-size:16px">+20%</div><div class="kdi-progress-wrap"><div class="kdi-progress" style="width:0%;background:var(--accent)"></div></div></div>
+              </div>
+              <div class="tbd-block"><p>학습 반복 시간 측정 예정</p></div>
+            </div>
+          </div>
+          <div class="kpi-detail-card">
+            <div class="kdi-org">메타아이스퀘어</div>
+            <div class="kdi-name">음성인식 정확도 (CER)</div>
+            <div class="kdi-metrics">
+              <div class="kdi-metric">
+                <div class="kdi-metric-label">2차년도 목표</div>
+                <div class="kdi-metric-row"><div class="kdi-metric-val">≤ 40%</div><div class="kdi-progress-wrap"><div class="kdi-progress" style="width:0%;background:var(--accent)"></div></div></div>
+              </div>
+              <div class="kdi-metric">
+                <div class="kdi-metric-label">3차년도 목표 (KOLAS 공인)</div>
+                <div class="kdi-metric-row"><div class="kdi-metric-val tbd" style="color:var(--accent);font-size:16px">≤ 38%</div><div class="kdi-progress-wrap"><div class="kdi-progress" style="width:0%;background:var(--accent)"></div></div></div>
+              </div>
+              <div class="tbd-block"><p>SNR 5dB 환경 공인시험 예정</p></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- 라임씨에스아이 -->
-      <div class="org-card network" data-type="NETWORK" onclick="openModal('limecsi')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(242,95,92,0.12);">📶</div>
-          <span class="tag NETWORK">NETWORK</span>
+      <!-- DATA / NETWORK KPI -->
+      <div class="kpi-cards-row" style="margin-bottom:24px">
+        <div class="kpi-detail-card">
+          <div class="kdi-org" style="color:var(--teal)">Data — 마크베이스</div>
+          <div class="kdi-name">데이터 수집 성능</div>
+          <div class="kdi-metrics">
+            <div class="kdi-metric">
+              <div class="kdi-metric-label">3차년도 목표</div>
+              <div class="kdi-metric-row"><div class="kdi-metric-val tbd" style="color:var(--teal);font-size:15px">200만 건/초</div></div>
+            </div>
+            <div class="kdi-metric">
+              <div class="kdi-metric-label">태그 수</div>
+              <div class="kdi-metric-row"><div class="kdi-metric-val tbd" style="color:var(--teal);font-size:15px">2,000+</div></div>
+            </div>
+            <div class="tbd-block"><p>수요기업 실증 후 측정</p></div>
+          </div>
         </div>
-        <div class="card-name">라임씨에스아이</div>
-        <div class="card-role">5G NETWORK</div>
-        <div class="card-desc">공장 내 음영 구역 없는 5G 특화망 구축</div>
-        <div class="card-metric">
-          <span class="metric-label">Latency</span>
-          <span class="metric-val">1.5ms</span>
+        <div class="kpi-detail-card">
+          <div class="kdi-org" style="color:var(--coral)">Network — 라임씨에스아이</div>
+          <div class="kdi-name">무선통신 Throughput</div>
+          <div class="kdi-metrics">
+            <div class="kdi-metric">
+              <div class="kdi-metric-label">2차년도 목표</div>
+              <div class="kdi-metric-row"><div class="kdi-metric-val">250 Mbps</div></div>
+            </div>
+            <div class="kdi-metric">
+              <div class="kdi-metric-label">3차년도 목표</div>
+              <div class="kdi-metric-row"><div class="kdi-metric-val tbd" style="color:var(--coral);font-size:15px">500 Mbps</div></div>
+            </div>
+            <div class="tbd-block"><p>신뢰성 시험 성적서 발급 예정</p></div>
+          </div>
         </div>
-      </div>
-
-      <!-- 경남TP -->
-      <div class="org-card" data-type="ORG" onclick="openModal('gntp')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(251,191,36,0.12);">🏢</div>
-          <span class="tag ORG">ORG</span>
-        </div>
-        <div class="card-name">경남TP</div>
-        <div class="card-role">PROJECT MANAGEMENT</div>
-        <div class="card-desc">사업 총괄 및 참여 기관 관리</div>
-        <div class="card-metric">
-          <span class="metric-label">Networking</span>
-          <span class="metric-val">5회+ / 년</span>
-        </div>
-      </div>
-
-      <!-- KTL -->
-      <div class="org-card" data-type="ORG" onclick="openModal('ktl')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(251,191,36,0.12);">✅</div>
-          <span class="tag ORG">ORG</span>
-        </div>
-        <div class="card-name">KTL</div>
-        <div class="card-role">VERIFICATION</div>
-        <div class="card-desc">AI 모델 및 데이터 품질 신뢰성 검증</div>
-        <div class="card-metric">
-          <span class="metric-label">Validation</span>
-          <span class="metric-val">적합성 검증</span>
-        </div>
-      </div>
-
-      <!-- 소르테크 -->
-      <div class="org-card service" data-type="SERVICE" onclick="openModal('sortech')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(34,211,165,0.10);">👁️</div>
-          <span class="tag SERVICE">SERVICE</span>
-        </div>
-        <div class="card-name">소르테크</div>
-        <div class="card-role">VISION AI</div>
-        <div class="card-desc">육안 검사 대비 속도 2배 향상 불량 검출</div>
-        <div class="card-metric">
-          <span class="metric-label">Speed vs Manual</span>
-          <span class="metric-val">×2.0</span>
+        <div class="kpi-detail-card">
+          <div class="kdi-org" style="color:var(--teal)">Data — KETI</div>
+          <div class="kdi-name">AIoT 센서 모듈</div>
+          <div class="kdi-metrics">
+            <div class="kdi-metric">
+              <div class="kdi-metric-label">2차년도 목표</div>
+              <div class="kdi-metric-row"><div class="kdi-metric-val">3종</div></div>
+            </div>
+            <div class="kdi-metric">
+              <div class="kdi-metric-label">3차년도 목표</div>
+              <div class="kdi-metric-row"><div class="kdi-metric-val tbd" style="color:var(--teal);font-size:15px">6종 · 실증 2건</div></div>
+            </div>
+            <div class="tbd-block"><p>공인시험 성적서 예정</p></div>
+          </div>
         </div>
       </div>
-
-      <!-- DX솔루션즈 -->
-      <div class="org-card service" data-type="SERVICE" onclick="openModal('dxsolutions')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(34,211,165,0.10);">🔍</div>
-          <span class="tag SERVICE">SERVICE</span>
-        </div>
-        <div class="card-name">DX솔루션즈</div>
-        <div class="card-role">DEFECT TRACKING</div>
-        <div class="card-desc">AI 기반 불량 역추적 및 지능형 관제 시스템</div>
-        <div class="card-metric">
-          <span class="metric-label">Tracking</span>
-          <span class="metric-val">실시간</span>
-        </div>
-      </div>
-
-      <!-- 에스디테크 -->
-      <div class="org-card service" data-type="SERVICE" onclick="openModal('sdtech')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(34,211,165,0.10);">⚙️</div>
-          <span class="tag SERVICE">SERVICE</span>
-        </div>
-        <div class="card-name">에스디테크</div>
-        <div class="card-role">PROCESS QUALITY</div>
-        <div class="card-desc">IIoT 기반 공정 품질 데이터 수집 및 관리</div>
-        <div class="card-metric">
-          <span class="metric-label">IIoT Systems</span>
-          <span class="metric-val">2 sites</span>
-        </div>
-      </div>
-
-      <!-- 메타아이스퀘어 -->
-      <div class="org-card service" data-type="SERVICE" onclick="openModal('metaisquare')">
-        <div class="card-header">
-          <div class="card-icon" style="background:rgba(34,211,165,0.10);">🎙️</div>
-          <span class="tag SERVICE">SERVICE</span>
-        </div>
-        <div class="card-name">메타아이스퀘어</div>
-        <div class="card-role">WORKER AI</div>
-        <div class="card-desc">공장 환경 한국어 음성인식 및 작업자 인터페이스</div>
-        <div class="card-metric">
-          <span class="metric-label">Interface</span>
-          <span class="metric-val">Voice + Vision</span>
-        </div>
-      </div>
-
     </div>
   </div>
-</div>
+
+  <!-- ── FLOW PAGE ── -->
+  <div id="page-flow" class="page">
+    <div class="topbar">
+      <span class="topbar-title">Service Flow</span>
+      <div class="topbar-tabs">
+        <button class="tab-btn active">전체 파이프라인</button>
+        <button class="tab-btn">Data Layer</button>
+        <button class="tab-btn">AI Layer</button>
+        <button class="tab-btn">Service Layer</button>
+      </div>
+    </div>
+    <div style="padding:28px">
+      <!-- Pipeline Steps -->
+      <div class="flow-pipeline">
+        <div class="flow-step">
+          <div class="flow-num">
+            <span class="flow-num-n">01</span>
+            <span class="flow-num-icon">📡</span>
+          </div>
+          <div class="flow-step-label">Data Collection</div>
+          <div class="flow-step-sub">OT/IT 수집</div>
+        </div>
+        <div class="flow-step current">
+          <div class="flow-num">
+            <span class="flow-num-n">02</span>
+            <span class="flow-num-icon">⚡</span>
+          </div>
+          <div class="flow-step-label">Transfer</div>
+          <div class="flow-step-sub">5G 네트워크</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">
+            <span class="flow-num-n">03</span>
+            <span class="flow-num-icon">🏗</span>
+          </div>
+          <div class="flow-step-label">Platform & AAS</div>
+          <div class="flow-step-sub">인프라 · 표준화</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">
+            <span class="flow-num-n">04</span>
+            <span class="flow-num-icon">🤖</span>
+          </div>
+          <div class="flow-step-label">AI Engine</div>
+          <div class="flow-step-sub">LLM · sLM</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">
+            <span class="flow-num-n">05</span>
+            <span class="flow-num-icon">🏭</span>
+          </div>
+          <div class="flow-step-label">Application</div>
+          <div class="flow-step-sub">현장 서비스</div>
+        </div>
+      </div>
+
+      <!-- Flow Detail Cards -->
+      <div class="flow-detail-grid">
+        <div class="flow-card">
+          <div class="flow-card-header">
+            <span class="flow-card-step">01 · 02</span>
+            <span class="flow-card-title">수집 & 전송</span>
+          </div>
+          <div class="flow-card-body">
+            <div class="flow-item">
+              <div class="flow-item-icon">📊</div>
+              <div class="flow-item-info">
+                <div class="flow-item-name">마크베이스</div>
+                <div class="flow-item-desc">시계열 DB · OT 비정형 데이터 초당 200만 건 수집</div>
+              </div>
+              <div class="flow-item-perf placeholder-perf">
+                <span>목표</span>
+                <strong>200만/s</strong>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-item-icon">🔗</div>
+              <div class="flow-item-info">
+                <div class="flow-item-name">아미크</div>
+                <div class="flow-item-desc">ERP Legacy 연동 · IT 정형 데이터 파이프라인</div>
+              </div>
+              <div class="flow-item-perf placeholder-perf">
+                <span>목표</span>
+                <strong>500만건</strong>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-item-icon">📡</div>
+              <div class="flow-item-info">
+                <div class="flow-item-name">KETI</div>
+                <div class="flow-item-desc">AIoT 센서 모듈 · Edge Computing 펌웨어</div>
+              </div>
+              <div class="flow-item-perf placeholder-perf">
+                <span>목표</span>
+                <strong>6 모듈</strong>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-item-icon">📶</div>
+              <div class="flow-item-info">
+                <div class="flow-item-name">라임씨에스아이</div>
+                <div class="flow-item-desc">5G 특화망 · 통합관제센터 구축</div>
+              </div>
+              <div class="flow-item-perf placeholder-perf">
+                <span>목표</span>
+                <strong>500Mbps</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-card">
+          <div class="flow-card-header">
+            <span class="flow-card-step">03</span>
+            <span class="flow-card-title">Platform & AAS</span>
+          </div>
+          <div class="flow-card-body">
+            <div class="flow-item">
+              <div class="flow-item-icon">☁️</div>
+              <div class="flow-item-info">
+                <div class="flow-item-name">메가존클라우드</div>
+                <div class="flow-item-desc">하이브리드 AI 클라우드 · MLOps · EBC 구축</div>
+              </div>
+              <div class="flow-item-perf placeholder-perf">
+                <span>목표</span>
+                <strong>EBC 1개소</strong>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-item-icon">🏛</div>
+              <div class="flow-item-info">
+                <div class="flow-item-name">경남대학교</div>
+                <div class="flow-item-desc">AAS Infer-Repository · 데이터 비식별화 · 표준화</div>
+              </div>
+              <div class="flow-item-perf placeholder-perf">
+                <span>목표</span>
+                <strong>비식별 4종+</strong>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-item-icon">🔄</div>
+              <div class="flow-item-info">
+                <div class="flow-item-name">네스트필드</div>
+                <div class="flow-item-desc">EDC 기반 데이터 교환 · IDTA 사례등록</div>
+              </div>
+              <div class="flow-item-perf placeholder-perf">
+                <span>목표</span>
+                <strong>IDTA 1건</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-card">
+          <div class="flow-card-header">
+            <span class="flow-card-step">04 · 05</span>
+            <span class="flow-card-title">AI Engine & 서비스</span>
+          </div>
+          <div class="flow-card-body">
+            <div class="flow-item">
+              <div class="flow-item-icon">🧠</div>
+              <div class="flow-item-info">
+                <div class="flow-item-name">KAIST</div>
+                <div class="flow-item-desc">제조특화 전주기 통합형 LLM · 정확도 +10%</div>
+              </div>
+              <div class="flow-item-perf placeholder-perf">
+                <span>목표</span>
+                <strong>+10% Acc</strong>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-item-icon">🌿</div>
+              <div class="flow-item-info">
+                <div class="flow-item-name">넥스트스튜디오</div>
+                <div class="flow-item-desc">ESG 규제 대응 sLM Agent 개발</div>
+              </div>
+              <div class="flow-item-perf placeholder-perf">
+                <span>목표</span>
+                <strong>sLM 1종</strong>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-item-icon">🔍</div>
+              <div class="flow-item-info">
+                <div class="flow-item-name">소르테크 · 에스디테크</div>
+                <div class="flow-item-desc">KG모빌리티 비전검사 · QMS 실증</div>
+              </div>
+              <div class="flow-item-perf placeholder-perf">
+                <span>목표</span>
+                <strong>실증 3건</strong>
+              </div>
+            </div>
+            <div class="flow-item">
+              <div class="flow-item-icon">📉</div>
+              <div class="flow-item-info">
+                <div class="flow-item-name">DX솔루션즈 · 메타아이스퀘어</div>
+                <div class="flow-item-desc">신성델타테크 불량 역추적 · 관제시스템</div>
+              </div>
+              <div class="flow-item-perf placeholder-perf">
+                <span>목표</span>
+                <strong>불량 -18%</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PARTICIPANTS PAGE ── -->
+  <div id="page-participants" class="page">
+    <div class="topbar">
+      <span class="topbar-title">참여기관</span>
+      <div class="topbar-right">
+        <span class="year-pill">TOTAL 15</span>
+      </div>
+    </div>
+    <div style="padding:28px">
+      <div class="filter-bar">
+        <button class="filter-btn active dc-all" onclick="filterCards('all',this)">ALL <span class="filter-count">15</span></button>
+        <button class="filter-btn dc-org" onclick="filterCards('org',this)">Org <span class="filter-count">2</span></button>
+        <button class="filter-btn dc-data" onclick="filterCards('data',this)">Data <span class="filter-count">5</span></button>
+        <button class="filter-btn dc-ai" onclick="filterCards('ai',this)">AI <span class="filter-count">2</span></button>
+        <button class="filter-btn dc-infra" onclick="filterCards('infra',this)">Infra <span class="filter-count">1</span></button>
+        <button class="filter-btn dc-network" onclick="filterCards('network',this)">Network <span class="filter-count">1</span></button>
+        <button class="filter-btn dc-service" onclick="filterCards('service',this)">Service <span class="filter-count">4</span></button>
+      </div>
+
+      <div class="participant-grid" id="p-grid">
+
+        <!-- ORG -->
+        <div class="p-card" data-domain="org" onclick="openModal('gntp')">
+          <div class="p-card-top">
+            <div class="p-icon dc-org">🏢</div>
+            <span class="p-domain-tag dc-org">Org</span>
+          </div>
+          <div class="p-name">경남테크노파크</div>
+          <div class="p-role-en">Project Management</div>
+          <div class="p-desc">PMBOK 기반 사업총괄관리 및 제조AI 생태계 활성화 운영</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">네트워킹 목표</div>
+              <div class="p-kpi-val" style="color:var(--amber)">5회 이상</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">역할</div>
+              <div class="p-kpi-val" style="color:var(--amber);font-size:11px">주관기관</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-card" data-domain="org" onclick="openModal('ktl')">
+          <div class="p-card-top">
+            <div class="p-icon dc-org">🔬</div>
+            <span class="p-domain-tag dc-org">Org</span>
+          </div>
+          <div class="p-name">한국산업기술시험원</div>
+          <div class="p-role-en">Verification · KTL</div>
+          <div class="p-desc">SE 기반 기술개발 관리 체계화 및 적합성 검증</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">3차 목표</div>
+              <div class="p-kpi-val" style="color:var(--amber)">확인서 1건</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">검증 방식</div>
+              <div class="p-kpi-val" style="color:var(--amber);font-size:11px">CCL 적합성</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DATA -->
+        <div class="p-card" data-domain="data" onclick="openModal('gnu')">
+          <div class="p-card-top">
+            <div class="p-icon dc-data">🏛</div>
+            <span class="p-domain-tag dc-data">Data</span>
+          </div>
+          <div class="p-name">경남대학교 산학협력단</div>
+          <div class="p-role-en">AAS Standardization</div>
+          <div class="p-desc">AAS Infer-Repository · 데이터 비식별화 · EBC 공동구축 · 인력양성</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">SW 등록</div>
+              <div class="p-kpi-val" style="color:var(--teal)">1건</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">비식별화</div>
+              <div class="p-kpi-val" style="color:var(--teal)">4종 추가</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-card" data-domain="data" onclick="openModal('machbase')">
+          <div class="p-card-top">
+            <div class="p-icon dc-data">📊</div>
+            <span class="p-domain-tag dc-data">Data</span>
+          </div>
+          <div class="p-name">마크베이스</div>
+          <div class="p-role-en">High-Speed DB</div>
+          <div class="p-desc">시계열 DBMS 기반 OT 비정형 설비 데이터 초고속 수집·저장</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">수집 목표</div>
+              <div class="p-kpi-val" style="color:var(--teal)">200만/s</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">태그 수</div>
+              <div class="p-kpi-val" style="color:var(--teal)">2,000+</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-card" data-domain="data" onclick="openModal('amiq')">
+          <div class="p-card-top">
+            <div class="p-icon dc-data">🔗</div>
+            <span class="p-domain-tag dc-data">Data</span>
+          </div>
+          <div class="p-name">아미크</div>
+          <div class="p-role-en">Legacy Connect</div>
+          <div class="p-desc">ERP 정형 데이터 클라우드 전송 자동화 및 LLM 학습 데이터셋 구축</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">데이터셋</div>
+              <div class="p-kpi-val" style="color:var(--teal)">500만건</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">방식</div>
+              <div class="p-kpi-val" style="color:var(--teal);font-size:11px">자동화 ETL</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-card" data-domain="data" onclick="openModal('nextfield')">
+          <div class="p-card-top">
+            <div class="p-icon dc-data">🔄</div>
+            <span class="p-domain-tag dc-data">Data</span>
+          </div>
+          <div class="p-name">네스트필드</div>
+          <div class="p-role-en">Interoperability</div>
+          <div class="p-desc">AAS 기반 제조AI 데이터 교환 프레임워크 · EDC 커넥터 · IDTA 등록</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">IDTA 등록</div>
+              <div class="p-kpi-val" style="color:var(--teal)">1건</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">메타 모델</div>
+              <div class="p-kpi-val" style="color:var(--teal)">2종</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-card" data-domain="data" onclick="openModal('keti')">
+          <div class="p-card-top">
+            <div class="p-icon dc-data">📡</div>
+            <span class="p-domain-tag dc-data">Data</span>
+          </div>
+          <div class="p-name">한국전자기술연구원</div>
+          <div class="p-role-en">AIoT Edge · KETI</div>
+          <div class="p-desc">지능형 AIoT 센서 모듈 개발 및 Edge Computing 펌웨어 실증</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">센서 모듈</div>
+              <div class="p-kpi-val" style="color:var(--teal)">6종</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">필드 실증</div>
+              <div class="p-kpi-val" style="color:var(--teal)">2건</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI -->
+        <div class="p-card" data-domain="ai" onclick="openModal('kaist')">
+          <div class="p-card-top">
+            <div class="p-icon dc-ai">🧠</div>
+            <span class="p-domain-tag dc-ai">AI</span>
+          </div>
+          <div class="p-name">한국과학기술원</div>
+          <div class="p-role-en">Hyperscale AI · KAIST</div>
+          <div class="p-desc">제조 특화 전주기 통합 LLM 개발 및 AI 모델 정확성·신뢰성 향상</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">정확도 목표</div>
+              <div class="p-kpi-val" style="color:var(--accent)">+10%</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">학습속도</div>
+              <div class="p-kpi-val" style="color:var(--accent)">+20%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-card" data-domain="ai" onclick="openModal('nextstudio')">
+          <div class="p-card-top">
+            <div class="p-icon dc-ai">🌿</div>
+            <span class="p-domain-tag dc-ai">AI</span>
+          </div>
+          <div class="p-name">넥스트스튜디오</div>
+          <div class="p-role-en">ESG AI</div>
+          <div class="p-desc">글로벌 제조 공급망 ESG 규제 대응 sLM Agent 개발 및 파인튜닝</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">sLM Agent</div>
+              <div class="p-kpi-val" style="color:var(--accent)">1종</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">특허 출원</div>
+              <div class="p-kpi-val" style="color:var(--accent)">1건</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INFRA -->
+        <div class="p-card" data-domain="infra" onclick="openModal('megazone')">
+          <div class="p-card-top">
+            <div class="p-icon dc-infra">☁️</div>
+            <span class="p-domain-tag dc-infra">Infra</span>
+          </div>
+          <div class="p-name">메가존클라우드</div>
+          <div class="p-role-en">Cloud Infra</div>
+          <div class="p-desc">하이브리드 AI 클라우드 운영환경 고도화 · MLOps · EBC 구축</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">EBC</div>
+              <div class="p-kpi-val" style="color:var(--purple)">1개소</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">서비스</div>
+              <div class="p-kpi-val" style="color:var(--purple);font-size:11px">온프레미스</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NETWORK -->
+        <div class="p-card" data-domain="network" onclick="openModal('lime')">
+          <div class="p-card-top">
+            <div class="p-icon dc-network">📶</div>
+            <span class="p-domain-tag dc-network">Network</span>
+          </div>
+          <div class="p-name">라임씨에스아이</div>
+          <div class="p-role-en">5G Network</div>
+          <div class="p-desc">차세대 무선통신망 구축 · 통합관제센터 · 수요처-데이터센터 유선망</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">Throughput</div>
+              <div class="p-kpi-val" style="color:var(--coral)">500Mbps</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">관제센터</div>
+              <div class="p-kpi-val" style="color:var(--coral)">1개소</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SERVICE -->
+        <div class="p-card" data-domain="service" onclick="openModal('sortech')">
+          <div class="p-card-top">
+            <div class="p-icon dc-service">🔍</div>
+            <span class="p-domain-tag dc-service">Service</span>
+          </div>
+          <div class="p-name">소르테크 창원지사</div>
+          <div class="p-role-en">Vision AI · KG모빌리티</div>
+          <div class="p-desc">Finger Follower · 실런트 비전검사 · 블록 맵핑 · QMS 실증</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">비전검사 실증</div>
+              <div class="p-kpi-val" style="color:var(--pink)">3건</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">수요처</div>
+              <div class="p-kpi-val" style="color:var(--pink);font-size:11px">KG모빌리티</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-card" data-domain="service" onclick="openModal('sdtech')">
+          <div class="p-card-top">
+            <div class="p-icon dc-service">⚙️</div>
+            <span class="p-domain-tag dc-service">Service</span>
+          </div>
+          <div class="p-name">에스디테크</div>
+          <div class="p-role-en">IIoT Data · KG모빌리티</div>
+          <div class="p-desc">CNC IIoT 데이터 수집 · 전자문서 플랫폼 실증</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">데이터 정합성</div>
+              <div class="p-kpi-val" style="color:var(--pink)">1건</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">플랫폼 실증</div>
+              <div class="p-kpi-val" style="color:var(--pink)">1건</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-card" data-domain="service" onclick="openModal('dxsol')">
+          <div class="p-card-top">
+            <div class="p-icon dc-service">📉</div>
+            <span class="p-domain-tag dc-service">Service</span>
+          </div>
+          <div class="p-name">DX솔루션즈</div>
+          <div class="p-role-en">Traceability · 신성델타테크</div>
+          <div class="p-desc">AI 불량 역추적 서비스 · 지능형 관제시스템 구축 실증</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">불량률 감소</div>
+              <div class="p-kpi-val" style="color:var(--pink)">18%</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">UPH 증가</div>
+              <div class="p-kpi-val" style="color:var(--pink)">+8%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-card" data-domain="service" onclick="openModal('metaisq')">
+          <div class="p-card-top">
+            <div class="p-icon dc-service">🎙</div>
+            <span class="p-domain-tag dc-service">Service</span>
+          </div>
+          <div class="p-name">메타아이스퀘어</div>
+          <div class="p-role-en">Voice AI · 신성델타테크</div>
+          <div class="p-desc">공장 환경 한국어 음성인식 · 비전 기반 손동작 검출 알고리즘</div>
+          <div class="p-kpi-row">
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">CER 목표</div>
+              <div class="p-kpi-val" style="color:var(--pink)">≤38%</div>
+            </div>
+            <div class="p-kpi-item">
+              <div class="p-kpi-label">손동작 검출</div>
+              <div class="p-kpi-val" style="color:var(--pink)">≥92%</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</main>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal" id="modal">
     <div class="modal-header">
-      <div class="modal-title-row">
-        <div class="modal-icon" id="m-icon" style="background:rgba(79,124,255,0.15);">🎓</div>
-        <div>
-          <div class="modal-name" id="m-name">경남대학교</div>
-          <div class="modal-role" id="m-role">STANDARDIZATION</div>
-        </div>
-        <span class="tag" id="m-tag" style="margin-left:8px;">DATA</span>
+      <div class="modal-title-wrap">
+        <div class="modal-tag" id="m-tag"></div>
+        <div class="modal-name" id="m-name"></div>
+        <div class="modal-sub" id="m-sub"></div>
       </div>
-      <div class="close-btn" onclick="closeModal()">✕</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
-      <!-- LEFT -->
-      <div class="modal-left">
-        <div class="info-section">
-          <div class="info-label">Description</div>
-          <div class="info-text" id="m-desc">—</div>
-        </div>
-        <div class="info-section">
-          <div class="info-label">파이프라인 위치</div>
-          <div class="pipeline-pos" id="m-pipeline"></div>
-        </div>
-        <div class="info-section">
-          <div class="info-label">주요 역할</div>
-          <div class="info-text" id="m-detail">—</div>
-        </div>
-        <div class="info-section">
-          <div class="info-label">Tech Stack</div>
-          <div class="tech-tags" id="m-tech"></div>
-        </div>
-        <div class="info-section">
-          <div class="info-label">성과 지표</div>
-          <div class="kpi-grid" id="m-kpi"></div>
+      <div class="modal-section">
+        <div class="modal-section-title">역할 및 설명</div>
+        <p class="modal-desc" id="m-desc"></p>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">3차년도 성과 목표</div>
+        <div class="modal-metrics" id="m-metrics"></div>
+        <div class="placeholder-note" id="m-placeholder">
+          <p>⚑ 실증 데이터 연동 예정 — 측정 후 수치 업데이트</p>
         </div>
       </div>
-      <!-- RIGHT -->
-      <div class="modal-right">
-        <div class="preview-tabs">
-          <div class="preview-tab active">결과물 미리보기</div>
-          <div class="preview-tab">문서</div>
-        </div>
-        <div class="preview-area">
-          <div class="iframe-mock">
-            <div class="iframe-placeholder-icon">🖥️</div>
-            <div class="iframe-placeholder-text" id="m-preview-text">실제 서비스 URL 연결 시<br>여기에 결과물이 표시됩니다</div>
-            <div class="iframe-url" id="m-url">https://example.com</div>
-          </div>
-        </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Tech Stack</div>
+        <div class="tech-tags" id="m-tech"></div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const orgs = {
-  gyeongnam: {
-    icon:'🎓', name:'경남대학교', role:'STANDARDIZATION', tag:'DATA',
-    desc:'AAS 기반 이기종 설비 데이터 표준 모델링 및 경남대 산학협력단 주관으로 제조 AI 데이터 표준화 기반 구축.',
-    pipeline:['데이터 수집','플랫폼/AAS'],
-    detail:'• AAS(Asset Administration Shell) 기반 데이터 표준화\n• 기업 기밀 데이터 비식별화 기술 개발\n• 초거대제조AI를 위한 LLM 온톨로지 모델 구축\n• MLOps 전문 인력 양성 (연 20명)',
-    tech:['AAS','데이터 모델링','Knowledge Graph','MLOps','Python'],
-    kpi:[{l:'AAS Models',v:'1,204',c:'#4f7cff'},{l:'비식별화 종류',v:'7종',c:'#22d3a5'},{l:'교육생',v:'20명/년',c:'#f59e42'},{l:'논문',v:'2편',c:'#7c5cfc'}],
-    url:'https://aas.kyungnam.ac.kr'
-  },
-  machbase: {
-    icon:'🗄️', name:'마크베이스', role:'HIGH-SPEED DB', tag:'DATA',
-    desc:'초당 100만 건 이상 시계열 데이터 처리가 가능한 고성능 DBMS를 통한 제조 데이터 수집 및 저장.',
-    pipeline:['데이터 수집'],
-    detail:'• 설비 태그 데이터 초당 200만건 수집 (3차년도 목표)\n• 시계열 DBMS 기반 데이터 저장 및 관리\n• AI 공유서비스 API 설계 및 구현\n• 수요기업 대상 DB 서버 구축 및 실증',
-    tech:['시계열 DBMS','API','데이터 파이프라인','SQL'],
-    kpi:[{l:'수집 성능',v:'1.21M/s',c:'#4f7cff'},{l:'목표 성능',v:'2M/s',c:'#22d3a5'},{l:'DB 서버',v:'3대',c:'#f59e42'},{l:'데이터셋',v:'500만건',c:'#7c5cfc'}],
-    url:'https://machbase.com'
-  },
-  amiq: {
-    icon:'🔗', name:'아미크', role:'LEGACY CONNECT', tag:'DATA',
-    desc:'기존 ERP 시스템과의 데이터 연동 파이프라인을 구축하여 IT/OT 데이터 통합 환경 제공.',
-    pipeline:['데이터 수집'],
-    detail:'• ERP 데이터 파이프라인 구축\n• 학습 데이터 수집 자동화 아키텍처 설계\n• LLM 최적화 학습 데이터 전처리\n• 대용량 데이터 레이크 설계 및 구현',
-    tech:['ERP','ETL','데이터 레이크','Python','Apache Kafka'],
-    kpi:[{l:'Pipeline 성공률',v:'99.8%',c:'#22d3a5'},{l:'데이터셋',v:'500만건',c:'#4f7cff'},{l:'자동화율',v:'90%+',c:'#f59e42'},{l:'연동 모듈',v:'구축완료',c:'#7c5cfc'}],
-    url:'https://amiq.co.kr'
-  },
-  nestfield: {
-    icon:'🔄', name:'네스트필드', role:'INTEROPERABILITY', tag:'DATA',
-    desc:'AAS 기반 제조 AI 데이터 교환 프레임워크 및 EDC 커넥터 인터페이스 개발로 이종 시스템 간 상호운용성 확보.',
-    pipeline:['데이터 수집','플랫폼/AAS'],
-    detail:'• AAS 메타데이터 모델 개발 (2종)\n• EDC 기반 데이터 커넥터 인터페이스 기술\n• IDTA 활용사례 국제 등록\n• 제조데이터 글로벌 협력 관계 구축',
-    tech:['AAS','EDC','REST API','IEC-63278'],
-    kpi:[{l:'API Rate',v:'85%',c:'#4f7cff'},{l:'AAS 메타모델',v:'2종',c:'#22d3a5'},{l:'IDTA 등록',v:'1건',c:'#f59e42'},{l:'인터페이스',v:'개발완료',c:'#7c5cfc'}],
-    url:'https://nestfield.co.kr'
-  },
-  keti: {
-    icon:'📟', name:'KETI', role:'AIOT EDGE', tag:'DATA',
-    desc:'현장 설비 부착형 AIoT 센서 및 지능형 엣지 컴퓨팅 기술 개발로 실시간 데이터 수집 환경 구축.',
-    pipeline:['데이터 수집'],
-    detail:'• AIoT 센서 기반 디지털 신호 검출\n• 지능형 Edge Computing 기술 개발\n• 데이터 스트리밍 및 분산 처리\n• 수요기업 현장 실증 (2건)',
-    tech:['AIoT','Edge Computing','펌웨어','신호처리','FPGA'],
-    kpi:[{l:'AIoT 센서',v:'6ea',c:'#4f7cff'},{l:'실증 건수',v:'2건',c:'#22d3a5'},{l:'논문',v:'1편',c:'#f59e42'},{l:'처리속도',v:'실시간',c:'#7c5cfc'}],
-    url:'https://keti.re.kr'
-  },
-  kaist: {
-    icon:'🧠', name:'KAIST', role:'HYPERSCALE AI', tag:'AI',
-    desc:'제조 특화형 초거대 AI 모델 개발 및 MoE(Mixture of Experts) 기반 전주기 통합 모델 구축.',
-    pipeline:['AI 모델'],
-    detail:'• 제조 특화 LLM 모델 개발 및 성능 최적화\n• MoE 기반 전주기 통합형 초거대제조AI 모델\n• AI 모델 예측 정확도 10% 향상\n• 학습 속도 20% 향상',
-    tech:['LLM','MoE','PyTorch','LoRA','Fine-tuning'],
-    kpi:[{l:'정확도 향상',v:'+10%',c:'#7c5cfc'},{l:'학습속도 향상',v:'+20%',c:'#22d3a5'},{l:'특허',v:'2건',c:'#f59e42'},{l:'SW 등록',v:'2건',c:'#e879a0'}],
-    url:'https://kaist.ac.kr'
-  },
-  nextstudio: {
-    icon:'🌿', name:'넥스트스튜디오', role:'ESG AI', tag:'AI',
-    desc:'글로벌 제조 공급망 ESG 규제 대응을 위한 sLM Agent 개발 및 탄소 배출량 예측 모델 구축.',
-    pipeline:['AI 모델'],
-    detail:'• 제조 관련 ESG 규제 대응 sLM Agent\n• 경남 주요 수출국 공급망 ESG 분석\n• 환경 관리 및 자원 사용 최적화 AI\n• 글로벌 ESG 규제 데이터 학습',
-    tech:['sLM','ESG','NLP','Python','LangChain'],
-    kpi:[{l:'sLM Agent',v:'개발완료',c:'#7c5cfc'},{l:'ESG 규제 DB',v:'구축완료',c:'#22d3a5'},{l:'특허',v:'1건',c:'#f59e42'},{l:'SW 등록',v:'1건',c:'#e879a0'}],
-    url:'https://nextstud.io'
-  },
-  megazone: {
-    icon:'☁️', name:'메가존클라우드', role:'CLOUD INFRA', tag:'INFRA',
-    desc:'하이브리드 AI 클라우드 센터(EBC) 구축 및 MLOps 플랫폼 운영 환경 제공.',
-    pipeline:['클라우드 인프라'],
-    detail:'• 하이브리드 클라우드 기반 AI 통합 운영환경\n• MLOps 워크로드 관리 도구 구축\n• AI Hub Platform 개발 (모델 서빙, 파이프라인)\n• EBC(Executive Briefing Center) 구축',
-    tech:['AWS','Kubernetes','MLOps','Docker','Terraform'],
-    kpi:[{l:'Uptime',v:'99.98%',c:'#22d3a5'},{l:'AI 서비스',v:'1건',c:'#4f7cff'},{l:'EBC',v:'1개소',c:'#f59e42'},{l:'플랫폼',v:'운영중',c:'#7c5cfc'}],
-    url:'https://megazone.com'
-  },
-  limecsi: {
-    icon:'📶', name:'라임씨에스아이', role:'5G NETWORK', tag:'NETWORK',
-    desc:'공장 내 음영 구역 없는 5G 특화망 구축 및 초고속 통신 통합관제 시스템 운영.',
-    pipeline:['5G 전송'],
-    detail:'• 초고속 무선통신 구축 (2개소)\n• 실증기업 대상 5G 특화망 완전 커버리지\n• 통합관제시스템 구축 (1개소)\n• 대용량 데이터 유선 전송 환경 구축',
-    tech:['5G','WiFi7','네트워크 설계','관제시스템'],
-    kpi:[{l:'Latency',v:'1.5ms',c:'#f25f5c'},{l:'커버리지',v:'100%',c:'#22d3a5'},{l:'구축 사이트',v:'2개소',c:'#f59e42'},{l:'관제시스템',v:'1개소',c:'#7c5cfc'}],
-    url:'https://limecsi.com'
-  },
-  gntp: {
-    icon:'🏢', name:'경남테크노파크', role:'PROJECT MANAGEMENT', tag:'ORG',
-    desc:'PMBOK 기반 사업 총괄 관리 및 초거대 제조AI 생태계 활성화를 위한 산학연관민 네트워킹 운영.',
-    pipeline:['사업관리'],
-    detail:'• PMBOK 기반 사업총괄관리\n• 제조AI 생태계 얼라이언스 운영\n• 기술교류회·세미나·포럼 연 5회 이상\n• 이해관계자 커뮤니케이션 및 의사결정',
-    tech:['PMBOK','ISO 21500','시스템엔지니어링','SE'],
-    kpi:[{l:'네트워킹',v:'5회+/년',c:'#fbbf24'},{l:'참여기관',v:'15개',c:'#22d3a5'},{l:'총사업비',v:'229억',c:'#f59e42'},{l:'사업기간',v:'32개월',c:'#7c5cfc'}],
-    url:'https://gntp.or.kr'
-  },
-  ktl: {
-    icon:'✅', name:'KTL (한국산업기술시험원)', role:'VERIFICATION', tag:'ORG',
-    desc:'시스템엔지니어링 기반 기술개발 관리 체계화 및 AI 모델·데이터 품질의 신뢰성 적합성 검증.',
-    pipeline:['사업관리','AI 모델'],
-    detail:'• SE 기반 기술개발 관리 체계 구축\n• 적합성 검증 확인서 발급\n• AI 모델 요구사항 적합성 검증\n• 품질문서 개발 및 기술문서 양식 관리',
-    tech:['시스템엔지니어링','ISO 15288','품질관리','적합성검증'],
-    kpi:[{l:'적합성검증',v:'확인서 발급',c:'#fbbf24'},{l:'품질문서',v:'개정 3회+',c:'#22d3a5'},{l:'기술문서',v:'양식 2종',c:'#f59e42'},{l:'검증 단계',v:'전주기',c:'#7c5cfc'}],
-    url:'https://ktl.re.kr'
-  },
-  sortech: {
-    icon:'👁️', name:'소르테크', role:'VISION AI', tag:'SERVICE',
-    desc:'초거대 AI 기반 비전 검사 시스템으로 제조 현장 불량 검출 자동화 및 품질관리 서비스 실증.',
-    pipeline:['현장 서비스'],
-    detail:'• QMS(품질관리시스템) 구축 및 실증\n• 비전 검사 시스템 (Finger Follower, 실런트)\n• 광학문자인식/사무자동화 실증\n• AI 기반 통합관리 대시보드 실증',
-    tech:['Computer Vision','QMS','OCR','RPA','딥러닝'],
-    kpi:[{l:'검사속도',v:'×2.0',c:'#22d3a5'},{l:'QMS',v:'구축완료',c:'#4f7cff'},{l:'자동화율',v:'향상',c:'#f59e42'},{l:'실증',v:'완료',c:'#7c5cfc'}],
-    url:'https://sortech.co.kr'
-  },
-  dxsolutions: {
-    icon:'🔍', name:'DX솔루션즈', role:'DEFECT TRACKING', tag:'SERVICE',
-    desc:'AI 기반 수작업·자동화 공정 불량 역추적 서비스 및 초거대 AI 기반 지능형 관제시스템 구축.',
-    pipeline:['현장 서비스'],
-    detail:'• AI 기반 불량 역추적 서비스 개발\n• 비전 기반 손동작 영역 검출 알고리즘\n• 지능형 관제시스템 구축 및 실증\n• 수작업/자동화 공정 불량원인 파악',
-    tech:['Computer Vision','딥러닝','관제시스템','Python'],
-    kpi:[{l:'추적 방식',v:'실시간',c:'#22d3a5'},{l:'관제시스템',v:'구축완료',c:'#4f7cff'},{l:'알고리즘',v:'고도화',c:'#f59e42'},{l:'실증',v:'완료',c:'#7c5cfc'}],
-    url:'https://dxsolutions.co.kr'
-  },
-  sdtech: {
-    icon:'⚙️', name:'에스디테크', role:'PROCESS QUALITY', tag:'SERVICE',
-    desc:'IIoT 기반 공정 품질 데이터 수집 시스템 구축 및 전자문서 플랫폼 실증.',
-    pipeline:['현장 서비스'],
-    detail:'• IIoT 기반 공정품질 데이터 수집 시스템\n• Paperless 시스템을 활용한 LOT추적 관리\n• 전자문서 플랫폼 실증\n• 기존/신규 데이터 연계 정합성 확보',
-    tech:['IIoT','Paperless','전자문서','LOT 추적','센서'],
-    kpi:[{l:'IIoT 시스템',v:'2 sites',c:'#22d3a5'},{l:'전자문서',v:'플랫폼 실증',c:'#4f7cff'},{l:'LOT 추적',v:'실시간',c:'#f59e42'},{l:'데이터 정합',v:'확보',c:'#7c5cfc'}],
-    url:'https://sdtech.kr'
-  },
-  metaisquare: {
-    icon:'🎙️', name:'메타아이스퀘어', role:'WORKER AI', tag:'SERVICE',
-    desc:'공장 환경에서의 한국어 음성인식 및 비전 기반 작업자-AI 인터페이스 기술 개발.',
-    pipeline:['현장 서비스'],
-    detail:'• 공장 환경 한국어 음성인식 알고리즘\n• 비전 기반 손동작 영역 검출\n• 작업자-AI 인터페이스 기반 마련\n• 초거대 AI 적용을 위한 데이터 보안 체계',
-    tech:['음성인식','Computer Vision','NLP','딥러닝'],
-    kpi:[{l:'음성인식',v:'알고리즘 완성',c:'#22d3a5'},{l:'손동작 검출',v:'고도화',c:'#4f7cff'},{l:'보안체계',v:'구축완료',c:'#f59e42'},{l:'인터페이스',v:'Voice+Vision',c:'#7c5cfc'}],
-    url:'https://metaisquare.com'
-  },
+const MODALS = {
+  gntp: { tag:'Org', domain:'dc-org', name:'경남테크노파크', sub:'주관기관 · Project Management', desc:'PMBOK 및 ISO 21500 기반 사업총괄관리. 제조AI 생태계 활성화를 위한 얼라이언스 조성, 기술교류회·세미나·포럼·워크숍 등 네트워킹 운영을 담당합니다.', metrics:[{l:'네트워킹 활동',v:'5회 이상'},{l:'생태계 교류',v:'산·학·연·관·민'}], tech:['PMBOK','ISO 21500','SE 방법론'] },
+  ktl: { tag:'Org', domain:'dc-org', name:'한국산업기술시험원', sub:'참여기관1 · KTL · Verification', desc:'시스템엔지니어링(SE) 기반 기술개발 관리 체계화 지원. 적합성검증항목(CCL) 분석 및 현장 실증 지원, 적합성검증 확인서를 발급합니다.', metrics:[{l:'적합성검증 확인서',v:'1건'},{l:'검증 방식',v:'CCL 분석'}], tech:['ISO 15288','SE 가이드북','CCL 검증'] },
+  gnu: { tag:'Data', domain:'dc-data', name:'경남대학교 산학협력단', sub:'참여기관2 · AAS · Standardization', desc:'AAS Infer-Repository 설계·개발, Knowledge Graph 기반 제조 데이터 표준화, 기업 기밀 데이터 비식별화 기술 개발. EBC 공동구축 참여 및 MLOps 전문인력 양성 교육을 수행합니다. IDTA 아시아 유일 대학회원(2023.12 가입).', metrics:[{l:'비식별화 검출 대상',v:'4종 추가'},{l:'교육생',v:'20명'},{l:'특허 출원',v:'2건'},{l:'SW 등록',v:'1건'}], tech:['AAS','Knowledge Graph','IDTA','비식별화','MLOps','경남대 글로벌AI연구센터'] },
+  machbase: { tag:'Data', domain:'dc-data', name:'마크베이스', sub:'참여기관6 · High-Speed DB', desc:'시계열 DBMS 기반 OT 비정형 설비 데이터 초고속 수집·저장. 제조 데이터 관리·공유 서비스 API 개발 및 수요기업 실증·안정화를 담당합니다.', metrics:[{l:'초당 수집 건수',v:'200만 건 달성'},{l:'수집 태그 수',v:'2,000개 이상'}], tech:['시계열 DBMS','OT 데이터','REST API','태그 데이터'] },
+  amiq: { tag:'Data', domain:'dc-data', name:'아미크', sub:'참여기관7 · Legacy Connect', desc:'ERP 정형 데이터 클라우드 전송 자동화 아키텍처 설계 및 구현. LLM 학습 최적화를 위한 데이터 전처리 및 데이터셋 생성을 담당합니다.', metrics:[{l:'학습 데이터셋',v:'500만 건'},{l:'파이프라인',v:'자동화 ETL'}], tech:['ERP','Cloud ETL','데이터 레이크','LLM 학습 데이터'] },
+  nextfield: { tag:'Data', domain:'dc-data', name:'네스트필드', sub:'참여기관8 · Interoperability', desc:'AAS 기반 제조AI 데이터 교환 프레임워크 실증. EDC(Eclipse Data Connector) 기반 데이터 커넥터 인터페이스 개발 및 IDTA 활용사례 등록을 담당합니다.', metrics:[{l:'AAS 메타데이터 모델',v:'2종'},{l:'IDTA 사례 등록',v:'1건'}], tech:['AAS','EDC','MQTT','REST API','IDTA'] },
+  keti: { tag:'Data', domain:'dc-data', name:'한국전자기술연구원', sub:'참여기관14 · AIoT Edge · KETI', desc:'지능형 AIoT 센서 모듈 개발 및 Edge Computing 기술 개발. 데이터 스트리밍·분산처리를 고려한 AIoT 펌웨어 기술 개발 및 실환경 실증 테스트를 수행합니다.', metrics:[{l:'AIoT 센서 모듈',v:'6종'},{l:'필드 실증',v:'2건'},{l:'논문 게재',v:'1건'}], tech:['AIoT','Edge Computing','펌웨어','센서 융합'] },
+  kaist: { tag:'AI', domain:'dc-ai', name:'한국과학기술원', sub:'참여기관3 · KAIST · Hyperscale AI', desc:'제조 특화 전주기 통합형 초거대 AI 모델 개발. AI 모델 정확성·신뢰성 향상 기법 개발 및 초거대 제조AI 학습을 위한 공유 데이터셋 구축을 담당합니다.', metrics:[{l:'예측 정확도 향상',v:'+10%'},{l:'학습 속도 향상',v:'+20%'},{l:'특허',v:'2건'},{l:'SW 등록',v:'2건'}], tech:['LLM','Foundation Model','파인튜닝','제조 데이터셋','국제 표준화'] },
+  nextstudio: { tag:'AI', domain:'dc-ai', name:'넥스트스튜디오', sub:'참여기관4 · ESG AI', desc:'글로벌 제조 공급망 ESG 규제 대응 sLM Agent 개발. 경남 주요 수출국·품목 대상 국가별 ESG 규제 도메인 특화 모델 학습·파인튜닝을 수행합니다.', metrics:[{l:'sLM Agent 개발',v:'1종'},{l:'특허 출원',v:'1건'},{l:'SW 등록',v:'1건'}], tech:['sLM','파인튜닝','ESG','도메인 적응 학습','Knowledge Distillation'] },
+  megazone: { tag:'Infra', domain:'dc-infra', name:'메가존클라우드', sub:'참여기관5 · Cloud Infra', desc:'하이브리드 AI 클라우드 운영환경 고도화 및 실증. MLOps 워크로드 관리, AI Asset 활용기술 안정화, 초거대 제조AI 확산을 위한 EBC(Executive Briefing Center) 구축을 담당합니다.', metrics:[{l:'EBC 구축',v:'1개소'},{l:'온프레미스 서비스',v:'1건'},{l:'Uptime 목표',v:'99.98%'}], tech:['하이브리드 클라우드','MLOps','GPU 클러스터','AI DevOps','EBC'] },
+  lime: { tag:'Network', domain:'dc-network', name:'라임씨에스아이', sub:'참여기관13 · 5G Network', desc:'실증기업 2개소 대상 차세대 무선통신망 구축. 통합관제센터 구축 및 수요처-데이터센터 간 초고속 유선통신망(전용망) 구축을 담당합니다.', metrics:[{l:'Throughput 목표',v:'500 Mbps'},{l:'통합관제센터',v:'1개소'},{l:'유선망',v:'1회선'}], tech:['WiFi 7','5G 특화망','통합관제','광대역 유선'] },
+  sortech: { tag:'Service', domain:'dc-service', name:'소르테크 창원지사', sub:'참여기관9 · Vision AI · KG모빌리티', desc:'KG모빌리티 대상 엔진 품질 비전 검사 시스템 실증. Finger Follower 비전검사, 실런트 비전검사, 블록 정보 맵핑, OCR/사무자동화, AI 통합관리 대시보드 실증을 수행합니다.', metrics:[{l:'비전검사 실증',v:'3건'},{l:'QMS 실증',v:'1건'},{l:'사무자동화 실증',v:'1건'}], tech:['Vision AI','딥러닝','QMS','OCR','IIoT'] },
+  sdtech: { tag:'Service', domain:'dc-service', name:'에스디테크', sub:'참여기관10 · IIoT · KG모빌리티', desc:'CNC 장비 IIoT 기반 공정품질 데이터 수집 및 전자문서 플랫폼 실증. 신규·기존 데이터 연계 기반 데이터 Pool 확보 및 문서 무결성 강화를 담당합니다.', metrics:[{l:'데이터 정합성 확보',v:'1건'},{l:'전자문서 플랫폼 실증',v:'1건'}], tech:['CNC IIoT','Paperless','전자문서','LOT 추적'] },
+  dxsol: { tag:'Service', domain:'dc-service', name:'DX솔루션즈', sub:'참여기관11 · Traceability · 신성델타테크', desc:'신성델타테크 Drum-Tube 라인 대상 AI 불량 역추적 서비스 개발 및 초거대 AI 기반 지능형 관제시스템 구축. 비전 기반 손동작 검출 알고리즘 성능 고도화를 수행합니다.', metrics:[{l:'공정 불량률 감소',v:'18%'},{l:'라인 비가동 감소',v:'15%'},{l:'UPH 증가',v:'+8%'},{l:'작업공수 절감',v:'15%'}], tech:['AI Analytics','불량 역추적','Root Cause Analysis','관제시스템'] },
+  metaisq: { tag:'Service', domain:'dc-service', name:'메타아이스퀘어', sub:'참여기관12 · Voice AI · 신성델타테크', desc:'잡음 환경(SNR 5dB)에서의 공장 한국어 음성인식 알고리즘 고도화 및 비전 기반 손동작 영역 검출 정확도 향상. 3차년도 KOLAS 공인시험 평가를 받습니다.', metrics:[{l:'한국어 CER 목표',v:'≤38%'},{l:'손동작 검출',v:'≥92%'},{l:'평가',v:'KOLAS 공인'}], tech:['음성인식','CTC/LAS','컴퓨터비전','Hand Pose','KOLAS'] },
 };
 
+function navigate(page, el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+}
+
+function filterCards(domain, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.p-card').forEach(card => {
+    if (domain === 'all' || card.dataset.domain === domain) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+}
+
 function openModal(id) {
-  const o = orgs[id];
-  if(!o) return;
-  document.getElementById('m-icon').textContent = o.icon;
-  document.getElementById('m-name').textContent = o.name;
-  document.getElementById('m-role').textContent = o.role;
-  const t = document.getElementById('m-tag');
-  t.textContent = o.tag; t.className = 'tag '+o.tag;
-  document.getElementById('m-desc').textContent = o.desc;
-  document.getElementById('m-detail').style.whiteSpace = 'pre-line';
-  document.getElementById('m-detail').textContent = o.detail;
-
-  const pp = document.getElementById('m-pipeline');
-  const stages = ['사업관리','데이터 수집','5G 전송','클라우드 인프라','AI 모델','현장 서비스'];
-  pp.innerHTML = stages.map(s => `<span class="pos-chip ${o.pipeline.includes(s)?'':'inactive'}">${s}</span>`).join('');
-
-  const tt = document.getElementById('m-tech');
-  tt.innerHTML = o.tech.map(t=>`<span class="tech-tag">${t}</span>`).join('');
-
-  const kk = document.getElementById('m-kpi');
-  kk.innerHTML = o.kpi.map(k=>`<div class="kpi-card"><div class="kpi-label">${k.l}</div><div class="kpi-val" style="color:${k.c}">${k.v}</div></div>`).join('');
-
-  document.getElementById('m-preview-text').innerHTML = `<b>${o.name}</b> 실제 서비스 URL 연결 시<br>여기에 결과물이 표시됩니다`;
-  document.getElementById('m-url').textContent = o.url;
-
+  const d = MODALS[id];
+  if (!d) return;
+  document.getElementById('m-tag').textContent = d.tag;
+  document.getElementById('m-tag').className = 'modal-tag p-domain-tag ' + d.domain;
+  document.getElementById('m-name').textContent = d.name;
+  document.getElementById('m-sub').textContent = d.sub;
+  document.getElementById('m-desc').textContent = d.desc;
+  const mm = document.getElementById('m-metrics');
+  mm.innerHTML = d.metrics.map(m =>
+    `<div class="modal-metric"><div class="mm-label">${m.l}</div><div class="mm-val" style="color:var(--text)">${m.v}</div><div class="mm-note">목표값 — 실증 후 업데이트</div></div>`
+  ).join('');
+  document.getElementById('m-tech').innerHTML = d.tech.map(t => `<span class="tech-tag">${t}</span>`).join('');
   document.getElementById('modal-overlay').classList.add('open');
 }
-
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
-function closeModalOutside(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
-
-function filterCards(type, el) {
-  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
-  if(el) el.classList.add('active');
-  const cards = document.querySelectorAll('.org-card');
-  let count = 0;
-  cards.forEach(c => {
-    const show = type==='ALL' || c.dataset.type===type;
-    c.style.display = show ? '' : 'none';
-    if(show) count++;
-  });
-  document.getElementById('card-count').textContent = count;
-}
-
-function setPage(p) {
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-  const titles = {intro:'사업 개요', flow:'서비스 흐름도', participants:'참여기관 현황'};
-  document.getElementById('page-title').textContent = titles[p];
-}
-
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+function closeModalOutside(e) { if(e.target.id === 'modal-overlay') closeModal(); }
 </script>
 </body>
 </html>
