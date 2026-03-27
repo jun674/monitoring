@@ -242,17 +242,6 @@
                         <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">${item.role}</p>
                         <p class="text-[13px] text-gray-500 leading-relaxed line-clamp-2 mb-4">${item.results.title}</p>
 
-                        <!-- KPI 달성률 미니바 -->
-                        <div class="mb-2">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-[11px] font-semibold text-gray-400">${primaryKpi ? primaryKpi.label : 'KPI'}</span>
-                                <span class="text-[11px] font-bold ${kpiStatus === 'achieved' ? 'text-green-600' : kpiStatus === 'in-progress' ? 'text-amber-600' : 'text-gray-400'}">${avgVal}%</span>
-                            </div>
-                            <div class="kpi-mini-bar">
-                                <div class="fill ${kpiStatus}" style="width: ${Math.min(avgVal, 100)}%"></div>
-                            </div>
-                        </div>
-
                         <div class="mt-auto pt-5 border-t border-gray-50 flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <span class="text-[11px] font-bold text-gray-400 group-hover:text-gray-900 transition-colors">상세보기</span>
