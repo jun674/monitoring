@@ -175,10 +175,6 @@
             <div class="ai-badge">AI</div>
             <span class="topbar-title">Overview</span>
         </div>
-        <div class="topbar-tabs">
-            <button class="tab-btn active" onclick="scrollToSection('overview')">Overview</button>
-            <button class="tab-btn" onclick="scrollToSection('wbs')">WBS</button>
-        </div>
     </div>
 
     <main id="main-scroll" class="flex-1 overflow-y-auto">
@@ -342,31 +338,6 @@
                 tbody.appendChild(tr);
             });
         }
-
-        /* ── Navigation ── */
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        /* ── Scroll spy ── */
-        const sectionIds = ['overview', 'wbs'];
-
-        mainScroll.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('section');
-            const tabBtns = document.querySelectorAll('.topbar-tabs .tab-btn');
-            let current = '';
-            sections.forEach(section => {
-                if (mainScroll.scrollTop >= section.offsetTop - 120) {
-                    current = section.getAttribute('id');
-                }
-            });
-            // map timeline section to Overview tab
-            const tabIdx = (current === 'wbs') ? 1 : 0;
-            tabBtns.forEach((btn, i) => {
-                btn.classList.toggle('active', i === tabIdx);
-            });
-        });
 
         document.addEventListener('DOMContentLoaded', renderPage);
     </script>

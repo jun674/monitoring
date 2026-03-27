@@ -230,11 +230,10 @@
                 card.innerHTML = `
                     <div class="soft-card h-full cursor-pointer flex flex-col p-7 group">
                         <div class="flex justify-between items-start mb-5">
-                            <div class="w-11 h-11 rounded-2xl ${style.bg} flex items-center justify-center transition-transform group-hover:scale-110 duration-300">
-                                <i class="${item.icon} ${style.icon} text-lg"></i>
+                            <div class="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 shadow-sm transition-transform group-hover:scale-110 duration-300">
+                                <i class="${item.icon}"></i>
                             </div>
                             <div class="flex items-center gap-1.5">
-                                ${categoryBadge}
                                 <span class="badge-soft ${style.bg} ${style.text}">${item.type}</span>
                             </div>
                         </div>
