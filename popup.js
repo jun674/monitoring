@@ -55,25 +55,20 @@ const popupStyles = `
     }
 </style>`;
 
-const popupHTML = `<div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden"
-     style="background:rgba(0,0,0,0.4); backdrop-filter:blur(6px); transition: opacity 0.25s;">
-    <div class="modal-enter bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200"
-         style="width:920px; max-width:95vw; max-height:88vh;">
+const popupHTML = `<div id="detail-modal" class="fixed inset-0 z-50 hidden"
+     style="background:rgba(0,0,0,0.4); backdrop-filter:blur(6px); transition: opacity 0.25s; display: none;">
+    <div id="modal-content" class="modal-enter bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200"
+         style="width:1100px; height:700px; max-width:95vw; max-height:90vh;">
         
         <!-- 헤더 -->
         <div class="flex items-center justify-between px-6 shrink-0 border-b border-gray-100" style="padding-top:16px; padding-bottom:14px;">
-            <div class="flex items-center gap-3">
-                <div id="modal-icon-wrap" class="w-11 h-11 rounded-xl flex items-center justify-center border border-gray-100">
-                    <i id="modal-icon" class="fas fa-cube text-lg"></i>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h3 id="modal-title" class="font-bold text-gray-900" style="font-size:17px;">업체명</h3>
+                    <span id="modal-type" class="font-bold px-2 py-0.5 rounded-full uppercase" style="font-size:10px; letter-spacing:0.05em;">TYPE</span>
+                    <span id="modal-category" class="font-semibold px-2 py-0.5 rounded-full" style="font-size:10px;">분류</span>
                 </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h3 id="modal-title" class="font-bold text-gray-900" style="font-size:17px;">업체명</h3>
-                        <span id="modal-type" class="font-bold px-2 py-0.5 rounded-full uppercase" style="font-size:10px; letter-spacing:0.05em;">TYPE</span>
-                        <span id="modal-category" class="font-semibold px-2 py-0.5 rounded-full" style="font-size:10px;">분류</span>
-                    </div>
-                    <p id="modal-role-en" class="text-gray-400 font-medium" style="font-size:11px; margin-top:2px;"></p>
-                </div>
+                <p id="modal-role-en" class="text-gray-400 font-medium" style="font-size:11px; margin-top:2px;"></p>
             </div>
             <button id="close-modal-btn" class="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-400 hover:text-gray-700 flex items-center justify-center transition-all shrink-0" style="font-size:14px;">
                 ✕
@@ -84,7 +79,7 @@ const popupHTML = `<div id="detail-modal" class="fixed inset-0 z-50 flex items-c
         <div class="flex flex-1 overflow-hidden">
             
             <!-- 좌측 패널 -->
-            <div class="border-r border-gray-100 overflow-y-auto" id="modal-left-panel" style="width:300px; min-width:300px; padding:20px;">
+            <div class="border-r border-gray-100 overflow-y-auto flex-shrink-0" id="modal-left-panel" style="width:350px; min-width:350px; padding:24px;">
                 
                 <!-- Description -->
                 <div style="margin-bottom:20px;">
@@ -155,7 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
     modal = document.getElementById('detail-modal');
 
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeCompanyPopup();
+        if (e.target === modal) {
+            closeCompanyPopup();
+        }
     });
 
     document.getElementById('close-modal-btn').addEventListener('click', closeCompanyPopup);
@@ -163,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeCompanyPopup();
     });
+    
 });
 
 // ── 도메인 색상 (popup 내부 백업용) ──────────────────────────
@@ -206,7 +204,6 @@ function showCompanyPopup(item) {
     const roleEn = item.roleEn || '';
     const type = item.type || '';
     const category = item.category || '';
-    const icon = item.icon || 'fas fa-cube';
     const desc = item.details || item.desc || '';
     const techStack = item.techStack || [];
     const externalUrl = item.externalUrl || null;
@@ -216,14 +213,8 @@ function showCompanyPopup(item) {
     // ── 헤더 ──
     document.getElementById('modal-title').innerText = name;
     document.getElementById('modal-role-en').innerText = `${role} · ${roleEn}`;
-    document.getElementById('modal-icon').className = icon;
 
-    // 아이콘 색상
-    const iconWrap = document.getElementById('modal-icon-wrap');
     const domainStyle = _domainBadge[type] || { bg: '#F3F4F6', text: '#6B7280' };
-    iconWrap.style.backgroundColor = domainStyle.bg;
-    iconWrap.style.borderColor = domainStyle.bg;
-    document.getElementById('modal-icon').style.color = domainStyle.text;
 
     // 도메인 배지
     const typeEl = document.getElementById('modal-type');
@@ -296,8 +287,17 @@ function showCompanyPopup(item) {
     if (results?.screenshot) {
         // 스크린샷 이미지
         previewContainer.innerHTML = `
-            <img src="${results.screenshot}" alt="${name} 결과물" 
+            <img src="${results.screenshot}" alt="${name} 결과물"
                  style="width:100%; height:100%; object-fit:contain;" />
+        `;
+        previewContainer.style.padding = '0';
+        previewContainer.style.display = 'block';
+    } else if (name === '경남대학교') {
+        // 경남대학교 특별 처리 - iframe으로 표시
+        previewContainer.innerHTML = `
+            <iframe src="https://aas-system.netlify.app/"
+                    style="width:100%; height:100%; border:none;"
+                    title="${name} AAS 시스템"></iframe>
         `;
         previewContainer.style.padding = '0';
         previewContainer.style.display = 'block';
@@ -318,6 +318,9 @@ function showCompanyPopup(item) {
         `;
     }
 
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
     modal.classList.remove('hidden');
 }
 
@@ -325,4 +328,7 @@ function showCompanyPopup(item) {
 function closeCompanyPopup() {
     if (!modal) return;
     modal.classList.add('hidden');
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 250);
 }

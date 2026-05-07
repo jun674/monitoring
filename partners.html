@@ -124,6 +124,18 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 3px rgba(59, 130, 246, 0.7);
             transform: translateY(-8px);
         }
+        
+        /* 선택된 카드 표시 효과 */
+        .card-selected {
+            border: 2px solid #3B82F6;
+            background: linear-gradient(to bottom, rgba(59, 130, 246, 0.02), transparent);
+        }
+        
+        /* 마우스 오버 시 선택 효과 제거 */
+        .soft-card:hover.card-selected {
+            border: 1px solid rgba(0,0,0,0.02);
+            background: #FFFFFF;
+        }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
@@ -175,12 +187,27 @@
             'SERVICE': { bg: 'bg-rose-50', text: 'text-rose-600', icon: 'text-rose-500' }
         };
 
+        // 배열을 랜덤하게 섞는 함수
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
         function filterCards(filterType) {
             const grid = document.getElementById('card-grid');
             const listBar = document.getElementById('company-list');
             const countDisplay = document.getElementById('count-display');
             
-            const filtered = filterType === 'ALL' ? companies : companies.filter(c => c.type === filterType);
+            let filtered = filterType === 'ALL' ? companies : companies.filter(c => c.type === filterType);
+            
+            // ALL 탭일 때만 랜덤 순서 적용
+            if (filterType === 'ALL') {
+                filtered = shuffleArray(filtered);
+            }
             
             countDisplay.innerText = filtered.length;
 
@@ -200,7 +227,7 @@
                 const style = typeStyles[item.type];
                 const chip = document.createElement('div');
                 chip.className = `px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-gray-100 text-gray-600 flex items-center gap-2 shadow-sm cursor-pointer hover:bg-gray-50 transition-colors`;
-                chip.innerHTML = `<i class="${item.icon} ${style.icon}"></i> ${item.name}`;
+                chip.innerHTML = `${item.name}`;
                 chip.onclick = () => scrollToCard(item.id);
                 listBar.appendChild(chip);
             });
@@ -230,9 +257,6 @@
                 card.innerHTML = `
                     <div class="soft-card h-full cursor-pointer flex flex-col p-7 group">
                         <div class="flex justify-between items-start mb-5">
-                            <div class="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 shadow-sm transition-transform group-hover:scale-110 duration-300">
-                                <i class="${item.icon}"></i>
-                            </div>
                             <div class="flex items-center gap-1.5">
                                 <span class="badge-soft ${style.bg} ${style.text}">${item.type}</span>
                             </div>
@@ -259,11 +283,18 @@
         function scrollToCard(companyId) {
             const card = document.getElementById(`card-${companyId}`);
             if (card) {
+                // 기존에 선택된 카드가 있으면 제거
+                document.querySelectorAll('.card-selected').forEach(el => {
+                    el.classList.remove('card-selected');
+                });
+                
                 card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                card.classList.add('card-highlight');
-                setTimeout(() => {
-                    card.classList.remove('card-highlight');
-                }, 2000);
+                
+                // 카드 내부의 soft-card에 선택 효과 추가
+                const softCard = card.querySelector('.soft-card');
+                if (softCard) {
+                    softCard.classList.add('card-selected');
+                }
             }
         }
 

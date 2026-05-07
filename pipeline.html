@@ -103,7 +103,7 @@
     </div>
 
     <main class="flex overflow-x-auto overflow-y-hidden h-full items-center gap-14 px-8" id="main-scroll">
-        <section id="stage-1" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
+        <section id="stage-1" class="stage-section relative min-w-[320px] flex flex-col gap-4 py-8">
             <div class="flex items-center gap-3 mb-2">
                 <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">01</span>
                 <div>
@@ -113,7 +113,7 @@
             </div>
             <div class="flex flex-col gap-5" id="container-1"></div>
         </section>
-        <section id="stage-2" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
+        <section id="stage-2" class="stage-section relative min-w-[320px] flex flex-col gap-4 py-8">
             <div class="flex items-center gap-3 mb-2">
                 <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">02</span>
                 <div>
@@ -123,7 +123,7 @@
             </div>
             <div class="flex flex-col gap-5" id="container-2"></div>
         </section>
-        <section id="stage-3" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
+        <section id="stage-3" class="stage-section relative min-w-[320px] flex flex-col gap-4 py-8">
             <div class="flex items-center gap-3 mb-2">
                 <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">03</span>
                 <div>
@@ -133,7 +133,7 @@
             </div>
             <div class="flex flex-col gap-5" id="container-3"></div>
         </section>
-        <section id="stage-4" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
+        <section id="stage-4" class="stage-section relative min-w-[320px] flex flex-col gap-4 py-8">
             <div class="flex items-center gap-3 mb-2">
                 <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">04</span>
                 <div>
@@ -143,7 +143,7 @@
             </div>
             <div class="flex flex-col gap-5" id="container-4"></div>
         </section>
-        <section id="stage-5" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
+        <section id="stage-5" class="stage-section relative min-w-[320px] flex flex-col gap-4 py-8">
             <div class="flex items-center gap-3 mb-2">
                 <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">05</span>
                 <div>
@@ -153,7 +153,7 @@
             </div>
             <div class="flex flex-col gap-5" id="container-5"></div>
         </section>
-        <section id="stage-6" class="stage-section relative min-w-[380px] flex flex-col gap-4 py-8">
+        <section id="stage-6" class="stage-section relative min-w-[320px] flex flex-col gap-4 py-8">
             <div class="flex items-center gap-3 mb-2">
                 <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">06</span>
                 <div>
@@ -192,38 +192,23 @@
                     : '—';
 
                 const card = document.createElement('div');
-                card.className = `soft-card p-6 cursor-pointer flex flex-col justify-between group h-[220px] w-full`;
+                card.className = `soft-card p-5 cursor-pointer flex flex-col justify-between group h-[180px] w-full`;
                 card.onclick = () => showCompanyPopup(companies[index]);
                 card.innerHTML = `
                     <div>
                         <div class="flex justify-between items-start mb-2">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 shadow-sm transition-transform duration-300">
-                                    <i class="${item.icon}"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-gray-800 text-[15px]">${item.name}</h3>
-                                    <p class="text-[11px] text-gray-400 font-medium">${item.role}</p>
-                                </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800 text-[15px]">${item.name}</h3>
+                                <p class="text-[11px] text-gray-400 font-medium">${item.role}</p>
                             </div>
                             <div class="px-2.5 py-1 rounded-full ${st.bg} flex items-center gap-1.5">
                                 <span class="w-1.5 h-1.5 rounded-full ${st.dot}"></span>
                                 <span class="text-[10px] font-bold ${st.text}">${st.label}</span>
                             </div>
                         </div>
-                        <p class="text-[13px] text-gray-500 leading-snug line-clamp-2 mb-3">${item.results.title}</p>
-                        <!-- KPI Mini Bar -->
-                        <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-[10px] font-semibold text-gray-400">${primaryKpi ? primaryKpi.label : 'KPI'}</span>
-                                <span class="text-[10px] font-bold ${kpiStatus === 'achieved' ? 'text-green-600' : kpiStatus === 'in-progress' ? 'text-amber-600' : 'text-gray-400'}">${avgAchievement}%</span>
-                            </div>
-                            <div class="kpi-pipe-bar">
-                                <div class="fill ${kpiStatus}" style="width: ${Math.min(avgAchievement, 100)}%"></div>
-                            </div>
-                        </div>
+                        <p class="text-[13px] text-gray-500 leading-snug line-clamp-2 mb-2">${item.results.title}</p>
                     </div>
-                    <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
+                    <div class="pt-2.5 border-t border-gray-100 flex justify-between items-center">
                         <div>
                             <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Target</p>
                             <p class="font-tech text-sm font-bold text-gray-700">${kpiDisplay}</p>
