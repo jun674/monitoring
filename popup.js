@@ -266,7 +266,36 @@ function showCompanyPopup(item) {
 
     // 성과 지표 (2xN grid)
     const kpiContainer = document.getElementById('modal-kpis');
-    if (results?.kpis && results.kpis.length > 0) {
+
+    if (name === '경남대학교') {
+        kpiContainer.innerHTML = `
+            <div class="modal-kpi-card" style="grid-column: span 2;">
+                <div class="modal-kpi-label">데이터 로딩 중...</div>
+            </div>`;
+
+        Promise.all([
+            fetch('https://aas-system.netlify.app/api/aas?page=1').then(r => r.json()),
+            fetch('https://aas-system.netlify.app/api/submodel?page=1').then(r => r.json()),
+            fetch('https://aas-system.netlify.app/api/concept/description?page=1').then(r => r.json())
+        ]).then(([aas, submodel, concept]) => {
+            kpiContainer.innerHTML = [
+                { label: 'Total AAS', value: aas.totalCount.toLocaleString(), unit: 'Models', color: '#2563EB' },
+                { label: 'Total Submodel', value: submodel.totalCount.toLocaleString(), unit: 'Items', color: '#059669' },
+                { label: 'ConceptDescription', value: concept.totalCount.toLocaleString(), unit: 'Items', color: '#7C3AED' }
+            ].map(kpi => `
+                <div class="modal-kpi-card">
+                    <div class="modal-kpi-label">${kpi.label}</div>
+                    <div class="modal-kpi-val" style="color:${kpi.color}">
+                        ${kpi.value}
+                        <span class="modal-kpi-unit">${kpi.unit}</span>
+                    </div>
+                </div>
+            `).join('');
+        }).catch(() => {
+            kpiContainer.innerHTML = '<div style="grid-column:span 2; font-size:12px; color:#9ca3af; font-style:italic;">데이터 조회 실패</div>';
+        });
+
+    } else if (results?.kpis && results.kpis.length > 0) {
         kpiContainer.innerHTML = results.kpis.map((kpi, i) => {
             const color = _kpiColors[i % _kpiColors.length];
             const unitHtml = kpi.unit ? `<span class="modal-kpi-unit">${kpi.unit}</span>` : '';
