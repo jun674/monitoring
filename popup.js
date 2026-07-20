@@ -1,7 +1,19 @@
 // ═══════════════════════════════════════════════════════════════
-// 📋 팝업 모달 컴포넌트 (mockUp4 스타일 재설계)
-//   좌측: Description + 파이프라인 위치 + 주요 역할 + Tech Stack + 성과 지표
-//   우측: 결과물 미리보기 (스크린샷/URL)
+// 📋 팝업 모달 컴포넌트
+//   좌측: sections 배열 기반 동적 렌더링
+//   우측: preview.type 기반 동적 렌더링
+//
+// [sections type]
+//   'list'       - 제목(title) + 불릿 목록(items)
+//   'tags'       - 태그 뱃지 (items)
+//   'kpi-static' - 하드코딩 수치 카드 (items: [{label, value, unit, color}])
+//   'kpi-api'    - API 실시간 수치 카드 (endpoints: [{label, url, key, unit, color}])
+//
+// [preview type]
+//   'iframe'      - url 필요
+//   'youtube'     - videoId 필요
+//   'image'       - url 필요, caption 선택
+//   'placeholder' - 준비 중 표시
 // ═══════════════════════════════════════════════════════════════
 
 const popupStyles = `
@@ -53,6 +65,12 @@ const popupStyles = `
         from { transform: scale(0.96) translateY(10px); opacity: 0; }
         to   { transform: scale(1) translateY(0); opacity: 1; }
     }
+
+    .kpi-loading {
+        grid-column: span 2;
+        font-size: 12px; color: #9ca3af; font-style: italic;
+        padding: 8px 0;
+    }
 </style>`;
 
 const popupHTML = `<div id="detail-modal" class="fixed inset-0 z-50 hidden"
@@ -77,10 +95,10 @@ const popupHTML = `<div id="detail-modal" class="fixed inset-0 z-50 hidden"
 
         <!-- 본문 -->
         <div class="flex flex-1 overflow-hidden">
-            
+
             <!-- 좌측 패널 -->
             <div class="border-r border-gray-100 overflow-y-auto flex-shrink-0" id="modal-left-panel" style="width:350px; min-width:350px; padding:24px;">
-                
+
                 <!-- Description -->
                 <div style="margin-bottom:20px;">
                     <div class="modal-section-label">Description</div>
@@ -93,35 +111,19 @@ const popupHTML = `<div id="detail-modal" class="fixed inset-0 z-50 hidden"
                     <div id="modal-pipeline" class="flex flex-wrap gap-1"></div>
                 </div>
 
-                <!-- 주요 역할 -->
-                <div style="margin-bottom:20px;">
-                    <div class="modal-section-label">주요 역할</div>
-                    <div id="modal-roles"></div>
-                </div>
+                <!-- 동적 섹션 렌더링 영역 -->
+                <div id="modal-sections"></div>
 
-                <!-- Tech Stack -->
-                <div style="margin-bottom:20px;">
-                    <div class="modal-section-label">Tech Stack</div>
-                    <div id="modal-tech-stack" class="flex flex-wrap gap-1.5"></div>
-                </div>
-
-                <!-- 성과 지표 -->
-                <div>
-                    <div class="modal-section-label">성과 지표</div>
-                    <div id="modal-kpis" class="grid grid-cols-2 gap-2"></div>
-                </div>
             </div>
 
             <!-- 우측 패널 -->
             <div class="flex-1 flex flex-col overflow-hidden">
-                <!-- 탭 바 (결과물 미리보기 only) -->
                 <div class="flex border-b border-gray-100" style="padding:0 20px;">
-                    <div class="font-semibold text-gray-900 cursor-default" 
+                    <div class="font-semibold text-gray-900 cursor-default"
                          style="padding:12px 14px; font-size:11px; border-bottom:2px solid #2563EB; margin-bottom:-1px;">
                         결과물 미리보기
                     </div>
                 </div>
-                <!-- 미리보기 영역 -->
                 <div class="flex-1 overflow-hidden" style="padding:16px;">
                     <div id="modal-preview" class="w-full h-full rounded-xl bg-gray-50 border border-gray-200 overflow-auto"
                          style="display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px;">
@@ -138,7 +140,6 @@ let modal = null;
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('detail-modal')) return;
 
-    // 스타일 삽입
     if (!document.getElementById('popup-styles')) {
         document.head.insertAdjacentHTML('beforeend', popupStyles);
     }
@@ -146,13 +147,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalContainer = document.createElement('div');
     modalContainer.innerHTML = popupHTML;
     document.body.appendChild(modalContainer);
-    
+
     modal = document.getElementById('detail-modal');
 
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeCompanyPopup();
-        }
+        if (e.target === modal) closeCompanyPopup();
     });
 
     document.getElementById('close-modal-btn').addEventListener('click', closeCompanyPopup);
@@ -160,10 +159,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeCompanyPopup();
     });
-    
 });
 
-// ── 도메인 색상 (popup 내부 백업용) ──────────────────────────
+// ── 도메인 / 카테고리 색상 ───────────────────────────────────
 const _domainBadge = {
     DATA:    { bg: '#EFF6FF', text: '#2563EB' },
     AI:      { bg: '#F5F3FF', text: '#7C3AED' },
@@ -174,15 +172,11 @@ const _domainBadge = {
 };
 
 const _categoryBadge = {
-    '주관':   { bg: '#FEF3C7', text: '#92400E' },
-    '참여':   { bg: '#F3F4F6', text: '#374151' },
+    '주관':    { bg: '#FEF3C7', text: '#92400E' },
+    '참여':    { bg: '#F3F4F6', text: '#374151' },
     '수요기업': { bg: '#DBEAFE', text: '#1E40AF' }
 };
 
-// 성과 지표 카드 색상 (순환)
-const _kpiColors = ['#2563EB', '#059669', '#EA580C', '#7C3AED'];
-
-// 파이프라인 스테이지 이름 (stageConfig 대응)
 const _pipelineStages = [
     { id: 1, name: '데이터 수집' },
     { id: 2, name: '데이터 전송' },
@@ -192,160 +186,213 @@ const _pipelineStages = [
     { id: 6, name: '운영 관리' }
 ];
 
-// ── 팝업 열기 ───────────────────────────────────────────────
-function showCompanyPopup(item) {
-    if (!modal) {
-        console.error("Popup not initialized!");
+// ── 섹션 렌더러 ─────────────────────────────────────────────
+
+function _renderSection(section) {
+    const wrap = document.createElement('div');
+    wrap.style.marginBottom = '20px';
+
+    const label = `<div class="modal-section-label">${section.label}</div>`;
+
+    switch (section.type) {
+
+        // 불릿 목록
+        case 'list': {
+            let inner = label;
+            if (section.title) {
+                inner += `<div style="font-size:12px; color:#374151; font-weight:500; margin-bottom:8px; line-height:1.6;">${section.title}</div>`;
+            }
+            if (section.items && section.items.length > 0) {
+                inner += section.items.map(d =>
+                    `<div style="display:flex; align-items:flex-start; gap:6px; font-size:12px; color:#6b7280; line-height:1.5; margin-bottom:3px;">
+                        <span style="color:#d1d5db; margin-top:1px; flex-shrink:0;">•</span>
+                        <span>${d}</span>
+                    </div>`
+                ).join('');
+            }
+            wrap.innerHTML = inner;
+            break;
+        }
+
+        // 태그 뱃지
+        case 'tags': {
+            const tags = (section.items || []).map(t =>
+                `<span class="modal-tech-tag">${t}</span>`
+            ).join('');
+            wrap.innerHTML = label + `<div class="flex flex-wrap gap-1.5">${tags || '<span style="font-size:12px;color:#9ca3af;font-style:italic;">없음</span>'}</div>`;
+            break;
+        }
+
+        // 하드코딩 KPI 카드
+        case 'kpi-static': {
+            const cards = (section.items || []).map(kpi =>
+                `<div class="modal-kpi-card">
+                    <div class="modal-kpi-label">${kpi.label}</div>
+                    <div class="modal-kpi-val" style="color:${kpi.color || '#2563EB'}">
+                        ${kpi.value}${kpi.unit ? `<span class="modal-kpi-unit">${kpi.unit}</span>` : ''}
+                    </div>
+                </div>`
+            ).join('');
+            wrap.innerHTML = label + `<div class="grid grid-cols-2 gap-2">${cards}</div>`;
+            break;
+        }
+
+        // API 실시간 KPI 카드
+        case 'kpi-api': {
+            const grid = document.createElement('div');
+            grid.className = 'grid grid-cols-2 gap-2';
+            grid.innerHTML = `<div class="kpi-loading">데이터 로딩 중...</div>`;
+            wrap.innerHTML = label;
+            wrap.appendChild(grid);
+
+            const endpoints = section.endpoints || [];
+            Promise.all(
+                endpoints.map(ep =>
+                    fetch(ep.url)
+                        .then(r => r.json())
+                        .then(data => ({ ...ep, result: data[ep.key] }))
+                )
+            ).then(results => {
+                grid.innerHTML = results.map(ep =>
+                    `<div class="modal-kpi-card">
+                        <div class="modal-kpi-label">${ep.label}</div>
+                        <div class="modal-kpi-val" style="color:${ep.color || '#2563EB'}">
+                            ${Number(ep.result).toLocaleString()}${ep.unit ? `<span class="modal-kpi-unit">${ep.unit}</span>` : ''}
+                        </div>
+                    </div>`
+                ).join('');
+            }).catch(() => {
+                grid.innerHTML = `<div class="kpi-loading">데이터 조회 실패</div>`;
+            });
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    return wrap;
+}
+
+// ── 미리보기 렌더러 ──────────────────────────────────────────
+
+function _renderPreview(preview, name, externalUrl) {
+    const container = document.getElementById('modal-preview');
+
+    if (!preview || preview.type === 'placeholder') {
+        container.style.padding = '';
+        container.style.display = 'flex';
+        const url = externalUrl || null;
+        container.innerHTML = `
+            <div style="font-size:36px; opacity:0.25;">🖥️</div>
+            <div style="font-size:12px; color:#9ca3af; text-align:center; line-height:1.6;">
+                <b style="color:#6b7280;">${name}</b> 실제 서비스 URL 연결 시<br>여기에 결과물이 표시됩니다
+            </div>
+            ${url
+                ? `<a href="${url}" target="_blank" rel="noopener" class="preview-url-badge">${url}</a>`
+                : `<span class="preview-url-badge" style="cursor:default; opacity:0.6;">준비 중</span>`
+            }`;
         return;
     }
 
-    const name = item.name || '';
-    const role = item.role || '';
-    const roleEn = item.roleEn || '';
-    const type = item.type || '';
-    const category = item.category || '';
-    const desc = item.details || item.desc || '';
-    const techStack = item.techStack || [];
+    switch (preview.type) {
+
+        // iframe
+        case 'iframe':
+            container.innerHTML = `
+                <iframe src="${preview.url}"
+                        style="width:100%; height:100%; border:none;"
+                        title="${name}"></iframe>`;
+            container.style.padding = '0';
+            container.style.display = 'block';
+            break;
+
+        // 유튜브
+        case 'youtube':
+            container.innerHTML = `
+                <iframe src="https://www.youtube.com/embed/${preview.videoId}?rel=0&modestbranding=1"
+                        style="width:100%; height:100%; border:none;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        title="${name}"></iframe>`;
+            container.style.padding = '0';
+            container.style.display = 'block';
+            break;
+
+        // 이미지
+        case 'image':
+            container.style.padding = '0';
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
+            container.style.alignItems = 'center';
+            container.style.justifyContent = 'center';
+            container.style.gap = '10px';
+            container.innerHTML = `
+                <img src="${preview.url}" alt="${name}"
+                     style="max-width:100%; max-height:90%; object-fit:contain; border-radius:8px;" />
+                ${preview.caption
+                    ? `<p style="font-size:11px; color:#9ca3af; text-align:center;">${preview.caption}</p>`
+                    : ''}`;
+            break;
+
+        default:
+            _renderPreview(null, name, externalUrl);
+            break;
+    }
+}
+
+// ── 팝업 열기 ───────────────────────────────────────────────
+function showCompanyPopup(item) {
+    if (!modal) {
+        console.error('Popup not initialized!');
+        return;
+    }
+
+    const name        = item.name     || '';
+    const role        = item.role     || '';
+    const roleEn      = item.roleEn   || '';
+    const type        = item.type     || '';
+    const category    = item.category || '';
+    const desc        = item.details  || item.desc || '';
+    const stage       = item.stage    || 0;
+    const sections    = item.sections || [];
+    const preview     = item.preview  || null;
     const externalUrl = item.externalUrl || null;
-    const results = item.results || null;
-    const stage = item.stage || 0;
 
     // ── 헤더 ──
     document.getElementById('modal-title').innerText = name;
     document.getElementById('modal-role-en').innerText = `${role} · ${roleEn}`;
 
     const domainStyle = _domainBadge[type] || { bg: '#F3F4F6', text: '#6B7280' };
-
-    // 도메인 배지
     const typeEl = document.getElementById('modal-type');
     typeEl.innerText = type;
     typeEl.style.backgroundColor = domainStyle.bg;
     typeEl.style.color = domainStyle.text;
 
-    // 카테고리 배지
     const catEl = document.getElementById('modal-category');
     const catStyle = _categoryBadge[category] || { bg: '#F3F4F6', text: '#6B7280' };
     catEl.innerText = category;
     catEl.style.backgroundColor = catStyle.bg;
     catEl.style.color = catStyle.text;
 
-    // ────────────────────────────────────────────
-    // 좌측 패널
-    // ────────────────────────────────────────────
-
-    // Description
+    // ── Description ──
     document.getElementById('modal-desc').innerText = desc;
 
-    // 파이프라인 위치
+    // ── 파이프라인 위치 ──
     const pipelineContainer = document.getElementById('modal-pipeline');
     pipelineContainer.innerHTML = _pipelineStages.map(s =>
         `<span class="pipeline-chip ${s.id === stage ? 'active' : 'inactive'}">${s.name}</span>`
     ).join('');
 
-    // 주요 역할
-    const rolesContainer = document.getElementById('modal-roles');
-    let roleHTML = '';
-    if (results?.year3Goal) {
-        roleHTML += `<div style="font-size:12px; color:#374151; font-weight:500; margin-bottom:8px; line-height:1.6;">${results.year3Goal}</div>`;
-    }
-    if (results?.deliverables && results.deliverables.length > 0) {
-        roleHTML += results.deliverables.map(d =>
-            `<div style="display:flex; align-items:flex-start; gap:6px; font-size:12px; color:#6b7280; line-height:1.5; margin-bottom:3px;">
-                <span style="color:#d1d5db; margin-top:1px; flex-shrink:0;">•</span>
-                <span>${d}</span>
-            </div>`
-        ).join('');
-    }
-    rolesContainer.innerHTML = roleHTML || '<span style="font-size:12px; color:#9ca3af; font-style:italic;">정보 없음</span>';
+    // ── 동적 섹션 렌더링 ──
+    const sectionsContainer = document.getElementById('modal-sections');
+    sectionsContainer.innerHTML = '';
+    sections.forEach(section => {
+        sectionsContainer.appendChild(_renderSection(section));
+    });
 
-    // Tech Stack
-    const techContainer = document.getElementById('modal-tech-stack');
-    techContainer.innerHTML = techStack.map(tech =>
-        `<span class="modal-tech-tag">${tech}</span>`
-    ).join('');
-
-    // 성과 지표 (2xN grid)
-    const kpiContainer = document.getElementById('modal-kpis');
-
-    if (name === '경남대학교') {
-        kpiContainer.innerHTML = `
-            <div class="modal-kpi-card" style="grid-column: span 2;">
-                <div class="modal-kpi-label">데이터 로딩 중...</div>
-            </div>`;
-
-        Promise.all([
-            fetch('https://aas-system.netlify.app/api/aas?page=1').then(r => r.json()),
-            fetch('https://aas-system.netlify.app/api/submodel?page=1').then(r => r.json()),
-            fetch('https://aas-system.netlify.app/api/concept/description?page=1').then(r => r.json())
-        ]).then(([aas, submodel, concept]) => {
-            kpiContainer.innerHTML = [
-                { label: 'Total AAS', value: aas.totalCount.toLocaleString(), unit: 'Models', color: '#2563EB' },
-                { label: 'Total Submodel', value: submodel.totalCount.toLocaleString(), unit: 'Items', color: '#059669' },
-                { label: 'ConceptDescription', value: concept.totalCount.toLocaleString(), unit: 'Items', color: '#7C3AED' }
-            ].map(kpi => `
-                <div class="modal-kpi-card">
-                    <div class="modal-kpi-label">${kpi.label}</div>
-                    <div class="modal-kpi-val" style="color:${kpi.color}">
-                        ${kpi.value}
-                        <span class="modal-kpi-unit">${kpi.unit}</span>
-                    </div>
-                </div>
-            `).join('');
-        }).catch(() => {
-            kpiContainer.innerHTML = '<div style="grid-column:span 2; font-size:12px; color:#9ca3af; font-style:italic;">데이터 조회 실패</div>';
-        });
-
-    } else if (results?.kpis && results.kpis.length > 0) {
-        kpiContainer.innerHTML = results.kpis.map((kpi, i) => {
-            const color = _kpiColors[i % _kpiColors.length];
-            const unitHtml = kpi.unit ? `<span class="modal-kpi-unit">${kpi.unit}</span>` : '';
-            return `<div class="modal-kpi-card">
-                <div class="modal-kpi-label">${kpi.label}</div>
-                <div class="modal-kpi-val" style="color:${color}">${kpi.value}${unitHtml}</div>
-            </div>`;
-        }).join('');
-    } else {
-        kpiContainer.innerHTML = '<div style="grid-column:span 2; font-size:12px; color:#9ca3af; font-style:italic;">KPI 데이터 없음</div>';
-    }
-
-    // ────────────────────────────────────────────
-    // 우측 패널: 결과물 미리보기
-    // ────────────────────────────────────────────
-    const previewContainer = document.getElementById('modal-preview');
-
-    if (results?.screenshot) {
-        // 스크린샷 이미지
-        previewContainer.innerHTML = `
-            <img src="${results.screenshot}" alt="${name} 결과물"
-                 style="width:100%; height:100%; object-fit:contain;" />
-        `;
-        previewContainer.style.padding = '0';
-        previewContainer.style.display = 'block';
-    } else if (name === '경남대학교') {
-        // 경남대학교 특별 처리 - iframe으로 표시
-        previewContainer.innerHTML = `
-            <iframe src="https://aas-system.netlify.app/"
-                    style="width:100%; height:100%; border:none;"
-                    title="${name} AAS 시스템"></iframe>
-        `;
-        previewContainer.style.padding = '0';
-        previewContainer.style.display = 'block';
-    } else {
-        // URL 플레이스홀더
-        const urlDisplay = externalUrl || `https://${name.replace(/\s/g, '').toLowerCase()}.com`;
-        previewContainer.style.padding = '';
-        previewContainer.style.display = 'flex';
-        previewContainer.innerHTML = `
-            <div style="font-size:36px; opacity:0.25;">🖥️</div>
-            <div style="font-size:12px; color:#9ca3af; text-align:center; line-height:1.6;">
-                <b style="color:#6b7280;">${name}</b> 실제 서비스 URL 연결 시<br>여기에 결과물이 표시됩니다
-            </div>
-            ${externalUrl
-                ? `<a href="${externalUrl}" target="_blank" rel="noopener" class="preview-url-badge">${externalUrl}</a>`
-                : `<span class="preview-url-badge" style="cursor:default; opacity:0.6;">${urlDisplay}</span>`
-            }
-        `;
-    }
+    // ── 우측 미리보기 ──
+    _renderPreview(preview, name, externalUrl);
 
     modal.style.display = 'flex';
     modal.style.alignItems = 'center';
