@@ -349,11 +349,11 @@ const companies = [
             '비전 기반 불량 검출, 시계열 기반 설비 이상 예측, 제조 특화 LLM 기반 원인 분석 및 조치 지원을 연결하여 현장 작업자가 문제를 더 빠르게 이해하고 대응할 수 있도록 지원합니다.'
         ],
         // 기본 정보
-        contact: {
-            name: '한국과학기술원 / 박재은',
-            email: 'jep54@kaist.ac.kr',
-            phone: '010-3766-3703'
-        },
+        // contact: {
+        //     name: '한국과학기술원 / 박재은',
+        //     email: 'jep54@kaist.ac.kr',
+        //     phone: '010-3766-3703'
+        // },
         sections: [
             {
                 label: '3차년도 목표',
