@@ -13,6 +13,7 @@
 //   'iframe'      - url 필요
 //   'youtube'     - videoId 필요
 //   'image'       - url 필요, caption 선택
+//   'slideshow'   - slides 배열 필요 (각 슬라이드: {url, caption})
 //   'placeholder' - 준비 중 표시
 // ═══════════════════════════════════════════════════════════════
 
@@ -66,10 +67,83 @@ const popupStyles = `
         to   { transform: scale(1) translateY(0); opacity: 1; }
     }
 
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to   { transform: rotate(360deg); }
+    }
+
     .kpi-loading {
         grid-column: span 2;
         font-size: 12px; color: #9ca3af; font-style: italic;
         padding: 8px 0;
+    }
+
+    /* Slideshow Styles */
+    .slideshow-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .slideshow-viewer {
+        width: 100%;
+        height: 85%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .slideshow-viewer img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 8px;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .slideshow-caption {
+        font-size: 11px;
+        color: #6b7280;
+        text-align: center;
+        padding: 0 10px;
+        line-height: 1.4;
+        height: 15%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-top: 1px solid #e5e7eb;
+        width: 100%;
+    }
+
+    .slideshow-indicators {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+    }
+
+    .slideshow-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #d1d5db;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .slideshow-dot.active {
+        background: #2563EB;
+        width: 24px;
+        border-radius: 4px;
     }
 </style>`;
 
@@ -168,7 +242,8 @@ const _domainBadge = {
     INFRA:   { bg: '#F9FAFB', text: '#4B5563' },
     NETWORK: { bg: '#ECFDF5', text: '#059669' },
     ORG:     { bg: '#FFF7ED', text: '#EA580C' },
-    SERVICE: { bg: '#FFF1F2', text: '#E11D48' }
+    SERVICE: { bg: '#FFF1F2', text: '#E11D48' },
+    DEMAND:  { bg: '#F0F9FF', text: '#0284C7' }
 };
 
 const _categoryBadge = {
@@ -186,83 +261,142 @@ const _pipelineStages = [
     { id: 6, name: '운영 관리' }
 ];
 
-// ── 섹션 렌더러 ─────────────────────────────────────────────
-
+// ── 섹션 렌더러 ──────────────────────────────────────────────
 function _renderSection(section) {
     const wrap = document.createElement('div');
-    wrap.style.marginBottom = '20px';
+    wrap.style.marginBottom = '24px';
 
-    const label = `<div class="modal-section-label">${section.label}</div>`;
+    if (!section.label && !section.type) return wrap;
 
+    // 섹션 제목
+    const label = document.createElement('div');
+    label.className = 'modal-section-label';
+    label.innerText = section.label || '';
+    wrap.appendChild(label);
+
+    // 섹션 type별 렌더링
     switch (section.type) {
-
-        // 불릿 목록
         case 'list': {
-            let inner = label;
             if (section.title) {
-                inner += `<div style="font-size:12px; color:#374151; font-weight:500; margin-bottom:8px; line-height:1.6;">${section.title}</div>`;
+                const title = document.createElement('p');
+                title.style.cssText = 'font-size:12px; font-weight:600; color:#4B5563; margin-bottom:10px;';
+                title.innerHTML = section.title;
+                wrap.appendChild(title);
             }
-            if (section.items && section.items.length > 0) {
-                inner += section.items.map(d =>
-                    `<div style="display:flex; align-items:flex-start; gap:6px; font-size:12px; color:#6b7280; line-height:1.5; margin-bottom:3px;">
-                        <span style="color:#d1d5db; margin-top:1px; flex-shrink:0;">•</span>
-                        <span>${d}</span>
-                    </div>`
-                ).join('');
-            }
-            wrap.innerHTML = inner;
+
+            const items = (section.items || []).map(item => {
+                const li = document.createElement('div');
+                li.style.cssText = 'font-size:11px; color:#6B7280; line-height:1.8; padding-left:12px; position:relative; margin-bottom:2px;';
+                li.innerHTML = `<span style="position:absolute; left:0;">·</span> ${item}`;
+                return li;
+            });
+
+            const ul = document.createElement('div');
+            items.forEach(item => ul.appendChild(item));
+            wrap.appendChild(ul);
             break;
         }
 
-        // 태그 뱃지
         case 'tags': {
-            const tags = (section.items || []).map(t =>
-                `<span class="modal-tech-tag">${t}</span>`
-            ).join('');
-            wrap.innerHTML = label + `<div class="flex flex-wrap gap-1.5">${tags || '<span style="font-size:12px;color:#9ca3af;font-style:italic;">없음</span>'}</div>`;
+            const container = document.createElement('div');
+            container.style.display = 'flex';
+            container.style.flexWrap = 'wrap';
+            container.style.gap = '6px';
+
+            (section.items || []).forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'modal-tech-tag';
+                span.innerText = tag;
+                container.appendChild(span);
+            });
+
+            wrap.appendChild(container);
             break;
         }
 
-        // 하드코딩 KPI 카드
         case 'kpi-static': {
-            const cards = (section.items || []).map(kpi =>
-                `<div class="modal-kpi-card">
+            const grid = document.createElement('div');
+            grid.style.display = 'grid';
+            grid.style.gridTemplateColumns = '1fr 1fr';
+            grid.style.gap = '10px';
+
+            (section.items || []).forEach(kpi => {
+                const card = document.createElement('div');
+                card.className = 'modal-kpi-card';
+                card.innerHTML = `
                     <div class="modal-kpi-label">${kpi.label}</div>
                     <div class="modal-kpi-val" style="color:${kpi.color || '#2563EB'}">
                         ${kpi.value}${kpi.unit ? `<span class="modal-kpi-unit">${kpi.unit}</span>` : ''}
                     </div>
-                </div>`
-            ).join('');
-            wrap.innerHTML = label + `<div class="grid grid-cols-2 gap-2">${cards}</div>`;
+                `;
+                grid.appendChild(card);
+            });
+
+            wrap.appendChild(grid);
             break;
         }
 
-        // API 실시간 KPI 카드
         case 'kpi-api': {
             const grid = document.createElement('div');
-            grid.className = 'grid grid-cols-2 gap-2';
-            grid.innerHTML = `<div class="kpi-loading">데이터 로딩 중...</div>`;
-            wrap.innerHTML = label;
+            grid.id = `kpi-grid-${Date.now()}`;
+            grid.style.display = 'grid';
+            grid.style.gridTemplateColumns = '1fr 1fr';
+            grid.style.gap = '10px';
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'kpi-loading';
+            loadingDiv.innerText = 'KPI 데이터 조회 중...';
+            grid.appendChild(loadingDiv);
+
             wrap.appendChild(grid);
 
+            const KPI_TIMEOUT_MS = 5000;
             const endpoints = section.endpoints || [];
+
             Promise.all(
-                endpoints.map(ep =>
-                    fetch(ep.url)
-                        .then(r => r.json())
-                        .then(data => ({ ...ep, result: data[ep.key] }))
-                )
+                endpoints.map(ep => {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), KPI_TIMEOUT_MS);
+
+                    return fetch(ep.url, { signal: controller.signal })
+                        .then(r => {
+                            clearTimeout(timeoutId);
+                            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                            return r.json();
+                        })
+                        .then(data => {
+                            const val = data[ep.key];
+                            return { ...ep, result: val, error: null };
+                        })
+                        .catch(err => {
+                            clearTimeout(timeoutId);
+                            let reason = '조회 실패';
+                            if (err.name === 'AbortError') reason = '시간 초과';
+                            else if (err.message && err.message.includes('Failed to fetch')) reason = '연결 불가';
+                            else if (err.message && err.message.startsWith('HTTP')) reason = err.message;
+                            return { ...ep, result: null, error: reason };
+                        });
+                })
             ).then(results => {
-                grid.innerHTML = results.map(ep =>
-                    `<div class="modal-kpi-card">
+                grid.innerHTML = results.map(ep => {
+                    if (ep.error) {
+                        return `<div class="modal-kpi-card" style="opacity:0.6;">
+                            <div class="modal-kpi-label">${ep.label}</div>
+                            <div class="modal-kpi-val" style="color:#9ca3af; font-size:13px;">
+                                <i class="fas fa-exclamation-triangle" style="font-size:10px; margin-right:4px; color:#f59e0b;"></i>${ep.error}
+                            </div>
+                        </div>`;
+                    }
+                    const displayVal = (ep.result != null && !isNaN(Number(ep.result)))
+                        ? Number(ep.result).toLocaleString()
+                        : (ep.result != null ? ep.result : '-');
+                    return `<div class="modal-kpi-card">
                         <div class="modal-kpi-label">${ep.label}</div>
                         <div class="modal-kpi-val" style="color:${ep.color || '#2563EB'}">
-                            ${Number(ep.result).toLocaleString()}${ep.unit ? `<span class="modal-kpi-unit">${ep.unit}</span>` : ''}
+                            ${displayVal}${ep.unit ? `<span class="modal-kpi-unit">${ep.unit}</span>` : ''}
                         </div>
-                    </div>`
-                ).join('');
-            }).catch(() => {
-                grid.innerHTML = `<div class="kpi-loading">데이터 조회 실패</div>`;
+                    </div>`;
+                }).join('');
             });
             break;
         }
@@ -335,6 +469,79 @@ function _renderPreview(preview, name, externalUrl) {
                     : ''}`;
             break;
 
+        // 슬라이드쇼
+        case 'slideshow': {
+            container.style.padding = '0';
+            container.style.display = 'flex';
+            
+            const slides = preview.slides || [];
+            if (slides.length === 0) {
+                container.innerHTML = `<p style="color:#9ca3af;">슬라이드 데이터가 없습니다.</p>`;
+                break;
+            }
+
+            let currentIndex = 0;
+            let slideshowInterval;
+
+            const renderSlide = () => {
+                const slide = slides[currentIndex];
+                container.innerHTML = `
+                    <div class="slideshow-container">
+                        <div class="slideshow-viewer">
+                            <img src="${slide.url}"
+                                 alt="Slide ${currentIndex + 1}"
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+CiAgICDsnbTrr7jsp4Drpbwg66Gc65OcIO2VoCDsiJgg7JeG7Iq164uI64ukCiAgPC90ZXh0Pgo8L3N2Zz4=';" />
+                        </div>
+                        <div class="slideshow-caption">${slide.caption || ''}</div>
+                        <div class="slideshow-indicators">
+                            ${slides.map((_, idx) => `
+                                <div class="slideshow-dot ${idx === currentIndex ? 'active' : ''}"
+                                     onclick="slideshowGoto(${idx})"></div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                // 이미지 로드 상태 확인
+                const img = container.querySelector('.slideshow-viewer img');
+                img.addEventListener('load', function() {
+                    console.log(`슬라이드 ${currentIndex + 1} 이미지 로드 성공:`, slide.url);
+                });
+                img.addEventListener('error', function() {
+                    console.error(`슬라이드 ${currentIndex + 1} 이미지 로드 실패:`, slide.url);
+                });
+            };
+
+            // 전역 함수로 정의 (클릭 핸들러에서 접근 가능하게)
+            window.slideshowGoto = (idx) => {
+                currentIndex = idx;
+                clearInterval(slideshowInterval);
+                renderSlide();
+                startAutoPlay();
+            };
+
+            const nextSlide = () => {
+                currentIndex = (currentIndex + 1) % slides.length;
+                renderSlide();
+            };
+
+            const startAutoPlay = () => {
+                slideshowInterval = setInterval(nextSlide, 5000);
+            };
+
+            renderSlide();
+            startAutoPlay();
+
+            // cleanup (모달 닫힐 때 interval 정리)
+            const originalCloseModal = window.closeCompanyPopup;
+            window.closeCompanyPopup = function() {
+                clearInterval(slideshowInterval);
+                originalCloseModal.call(this);
+            };
+
+            break;
+        }
+
         default:
             _renderPreview(null, name, externalUrl);
             break;
@@ -376,7 +583,19 @@ function showCompanyPopup(item) {
     catEl.style.color = catStyle.text;
 
     // ── Description ──
-    document.getElementById('modal-desc').innerText = desc;
+    const descEl = document.getElementById('modal-desc');
+    if (Array.isArray(desc)) {
+        // 배열인 경우 리스트로 표시
+        descEl.innerHTML = desc.map(item => `<li style="margin-bottom: 8px;">${item}</li>`).join('');
+        descEl.style.listStyleType = 'disc';
+        descEl.style.paddingLeft = '20px';
+        descEl.style.margin = '0';
+    } else {
+        // 문자열인 경우 기존처럼 표시
+        descEl.innerText = desc;
+        descEl.style.listStyleType = 'none';
+        descEl.style.paddingLeft = '0';
+    }
 
     // ── 파이프라인 위치 ──
     const pipelineContainer = document.getElementById('modal-pipeline');

@@ -337,52 +337,112 @@ const companies = [
         category: '참여',
         ca: 'CA2',
         name: 'KAIST',
-        role: '초거대 AI 모델',
-        roleEn: 'Hyperscale AI',
-        desc: '제조 특화 LLM 모델 개발 및 질의응답',
+        role: '제조 특화 AI 모델 개발',
+        roleEn: 'Manufacturing AI',
+        desc: '품질 설비 이상 통합 대응 제조 AI',
         icon: 'fas fa-brain',
         color: 'purple',
         status: 'normal',
         stage: 4,
-        details: '플랫폼의 핵심 두뇌 역할을 하는 제조 특화 초거대 언어모델(LLM)을 개발합니다. 이 모델은 공정 이상 원인 분석, 해결책 제안 등의 기능을 수행합니다.',
+        details: [
+            '제품 조립 공정과 설비 운영 공정에서 발생하는 품질 이상과 설비 이상을 AI로 감지 예측하는 통합 제조 AI 서비스입니다.',
+            '비전 기반 불량 검출, 시계열 기반 설비 이상 예측, 제조 특화 LLM 기반 원인 분석 및 조치 지원을 연결하여 현장 작업자가 문제를 더 빠르게 이해하고 대응할 수 있도록 지원합니다.'
+        ],
+        // 기본 정보
+        contact: {
+            name: '한국과학기술원 / 박재은',
+            email: 'jep54@kaist.ac.kr',
+            phone: '010-3766-3703'
+        },
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: 'MoE 아키텍처 기반 도메인별 Expert 모델 통합 및 제조 LLM 파인튜닝',
+                title: '<strong>품질 이상 검출과 설비 이상 사전 대응 및 작업자의 의사결정 지원 체계 구축</strong>',
                 items: [
-                    'MoE 통합 모델 v1.0',
-                    '제조 LLM 파인튜닝 모델',
-                    'Expert Router 모듈',
-                    'AI 추론 API 서버'
+                    '비전 기반 불량 역추적 모델',
+                    '시계열 기반 불량 예측 모델',
+                    '제조 특화 LLM 챗봇'
                 ]
             },
             {
-                label: 'Tech Stack',
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['LLM', '생성형 AI', 'Fine-tuning', 'MoE']
+                items: ['Merge-of-Experts', 'YOLO', 'LSTM', 'LLM', 'RAG']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: 'MoE 모델 정확도', value: '92',  unit: '%',     color: '#2563EB' },
-                    { label: 'Expert 모델 수',  value: '6',   unit: 'Models', color: '#059669' },
-                    { label: '추론 응답시간',   value: '1.2', unit: 's',     color: '#7C3AED' }
+                    { label: '비전 기반 불량 검출 평균 Accuracy', value: '98', unit: '%', color: '#2563EB' },
+                    { label: '시계열 기반 설비 이상 예측 평균 F1-Score', value: '85', unit: '%', color: '#059669' },
+                    { label: '제조 특화 LLM 응답 정확도', value: '100', unit: '%', color: '#7C3AED' }
                 ]
             }
         ],
-        preview: { type: 'placeholder' },
+        // 결과물 미리보기 콘텐츠
+        previewContent: {
+            type: 'custom',
+            sections: [
+                {
+                    title: '선택 유형',
+                    content: 'C 이미지'
+                },
+                {
+                    title: 'URL 또는 파일명',
+                    content: '시스템 URL, 유튜브 링크, 첨부 파일명 등',
+                    items: [
+                        '그림 폴더(그림1, 그림2, 그림3, 그림4, 그림5)'
+                    ]
+                },
+                {
+                    title: '캡션·요청사항',
+                    content: '이미지 설명 문구, 특별히 원하시는 표현 방식 등 자유 기재',
+                    items: [
+                        '그림1: 비전 기반 불량 검출 및 유형별 대응 정보 제공 구조',
+                        '그림2: 비전 기반 불량 검출 모델의 유형별 성능 평가 결과',
+                        '그림3: 시계열 기반 이상 예측 및 LLM 연계 대응 가이드 생성 구조',
+                        '그림4: 시계열 기반 설비 이상 예측 모델의 성능 평가 결과',
+                        '그림5: 설비 이상 원인 분석 및 대응 조치를 제공하는 제조 특화 LLM 챗봇 구조'
+                    ]
+                }
+            ]
+        },
+        preview: {
+            type: 'slideshow',
+            slides: [
+                {
+                    url: './images/kaist_1.png',
+                    caption: '그림1: 비전 기반 불량 검출 및 유형별 대응 정보 제공 구조'
+                },
+                {
+                    url: './images/kaist_2.png',
+                    caption: '그림2: 비전 기반 불량 검출 모델의 유형별 성능 평가 결과'
+                },
+                {
+                    url: './images/kaist_3.png',
+                    caption: '그림3: 시계열 기반 이상 예측 및 LLM 연계 대응 가이드 생성 구조'
+                },
+                {
+                    url: './images/kaist_4.png',
+                    caption: '그림4: 시계열 기반 설비 이상 예측 모델의 성능 평가 결과'
+                },
+                {
+                    url: './images/kaist_5.png',
+                    caption: '그림5: 설비 이상 원인 분석 및 대응 조치를 제공하는 제조 특화 LLM 챗봇 구조'
+                }
+            ]
+        },
         externalUrl: 'https://www.kaist.ac.kr/',
         results: {
-            title: 'MoE 통합 제조 AI 모델 개발',
-            year3Goal: 'MoE 아키텍처 기반 도메인별 Expert 모델 통합 및 제조 LLM 파인튜닝',
+            title: '품질 설비 이상 통합 대응 제조 AI',
+            year3Goal: '품질 이상 검출과 설비 이상 사전 대응 및 작업자의 의사결정 지원 체계 구축',
             kpis: [
-                { label: 'MoE 모델 정확도', value: '92',  unit: '%',      target: '90',  achievement: 102.2, status: 'achieved' },
-                { label: 'Expert 모델 수',  value: '6',   unit: 'Models', target: '6',   achievement: 100.0, status: 'achieved' },
-                { label: '추론 응답시간',   value: '1.2', unit: 's',      target: '2.0', achievement: 140.0, status: 'achieved' }
+                { label: '비전 기반 불량 검출 평균 Accuracy', value: '98', unit: '%', target: '95', achievement: 103.2, status: 'achieved' },
+                { label: '시계열 기반 설비 이상 예측 평균 F1-Score', value: '85', unit: '%', target: '85', achievement: 100.0, status: 'achieved' },
+                { label: '제조 특화 LLM 응답 정확도', value: '100', unit: '%', target: '95', achievement: 105.3, status: 'achieved' }
             ],
-            deliverables: ['MoE 통합 모델 v1.0', '제조 LLM 파인튜닝 모델', 'Expert Router 모듈', 'AI 추론 API 서버'],
+            deliverables: ['비전 기반 불량 역추적 모델', '시계열 기반 불량 예측 모델', '제조 특화 LLM 챗봇'],
             screenshot: null
         }
     },
