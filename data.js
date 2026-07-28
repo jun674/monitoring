@@ -834,46 +834,56 @@ const companies = [
         category: '참여',
         ca: 'CA3',
         name: '메타아이스퀘어',
-        role: '음성 AI / 관제',
-        roleEn: 'Monitoring',
-        desc: '제조 공정 이상 징후 실시간 관제',
-        icon: 'fas fa-chart-line',
+        role: '한국어 음성인식',
+        roleEn: 'Korean Speech Recognition (STT)',
+        desc: '공장 소음 속에서도 정확한 한국어 음성인식·불량 조치 음성 안내',
+        icon: 'fas fa-microphone-alt',
         color: 'rose',
         status: 'normal',
         stage: 5,
-        details: '작업자의 음성 명령을 인식하고, 수집된 데이터를 종합하여 제조 공정의 이상 징후를 실시간으로 관제하는 대시보드를 제공합니다.',
+        details: '공장 소음, 마스크 착용, 현장 발화 습관 등 악조건에서도 높은 인식률을 갖는 한국어 STT 모델을 고도화합니다. SLM으로 발음 모호성을 교정하고, TTS로 불량 원인과 조치방법을 오퍼레이터에게 음성으로 안내하는 AI 기반 불량 역추적 서비스를 실증합니다.',
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: '한국어 음성인식 AI 현장 적용 및 실시간 관제 대시보드 완성',
-                items: ['한국어 음성인식 AI v3.0', '실시간 관제 대시보드', '이상 징후 알림 시스템']
+                title: '<strong>잡음 환경에서도 CER을 최소화한 한국어 음성인식(STT) 모델을 고도화하고, SLM·TTS 기반 불량 역추적 음성 안내 서비스를 실증한다.</strong>'
             },
             {
-                label: 'Tech Stack',
+                label: '대표 산출물',
+                type: 'list',
+                items: [
+                    'STT 개발 보고서',
+                    '공인시험 성적서',
+                    'STT 기술이 포함된 AI 기반 불량 역추적 서비스'
+                ]
+            },
+            {
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['음성인식', 'Data Visualization', 'Real-time Monitoring']
+                items: ['STT', 'CER 최소화', 'SLM', 'TTS', '노이즈 캔슬링']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '음성인식 정확도',  value: '92', unit: '%', color: '#2563EB' },
-                    { label: '이상 징후 감지율', value: '88', unit: '%', color: '#059669' }
+                    { label: '한국어 STT 인식 오차율 (CER)', value: '14.43', unit: '%', color: '#2563EB', target: '25' }
                 ]
             }
         ],
-        preview: { type: 'placeholder' },
-        externalUrl: null,
+        preview: {
+            type: 'image',
+            url: './images/metaisquare_1.png',
+            caption: 'Whisper 기반 STT 파인튜닝 및 Supertone 3 TTS 파이프라인 구조'
+        },
+        externalUrl: 'https://metaisquare.com/',
         results: {
-            title: '한국어 음성인식 현장 적용 + 관제 대시보드',
-            year3Goal: '한국어 음성인식 AI 현장 적용 및 실시간 관제 대시보드 완성',
+            title: 'AI 기반 불량 역추적 음성 안내 서비스 실증',
+            year3Goal: '잡음 환경에서도 CER을 최소화한 한국어 음성인식(STT) 모델을 고도화하고, SLM·TTS 기반 불량 역추적 음성 안내 서비스를 실증한다.',
             kpis: [
-                { label: '음성인식 정확도',  value: '92', unit: '%', target: '90', achievement: 102.2, status: 'achieved' },
-                { label: '이상 징후 감지율', value: '88', unit: '%', target: '85', achievement: 103.5, status: 'achieved' }
+                { label: '한국어 STT 인식 오차율(CER)', value: '14.43', unit: '%', target: '25', achievement: 142.28, status: 'achieved' }
             ],
-            deliverables: ['한국어 음성인식 AI v3.0', '실시간 관제 대시보드', '이상 징후 알림 시스템'],
-            screenshot: null
+            deliverables: ['STT 개발 보고서', '공인시험 성적서', 'AI 기반 불량 역추적 서비스'],
+            screenshot: './images/metaisquare_1.png'
         }
     }
 ];

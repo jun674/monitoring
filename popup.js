@@ -549,11 +549,17 @@ function _renderPreview(preview, name, externalUrl) {
             startAutoPlay();
 
             // cleanup (모달 닫힐 때 interval 정리)
-            const originalCloseModal = window.closeCompanyPopup;
-            window.closeCompanyPopup = function() {
-                clearInterval(slideshowInterval);
-                originalCloseModal.call(this);
-            };
+            // 팝업이 닫힐 때 interval을 확실히 정리하기 위한 로직
+            const modal = document.getElementById('detail-modal');
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'style' && modal.style.display === 'none') {
+                        clearInterval(slideshowInterval);
+                        observer.disconnect(); // 관찰 중지
+                    }
+                });
+            });
+            observer.observe(modal, { attributes: true });
 
             break;
         }
