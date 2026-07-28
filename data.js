@@ -191,45 +191,79 @@ const companies = [
         category: '참여',
         ca: 'CA3',
         name: '아미크',
-        role: '스마트팩토리 ERP',
-        roleEn: 'Legacy Connect',
-        desc: '기존 ERP 데이터 연동 파이프라인 구축',
+        role: 'IT 데이터 파이프라인',
+        roleEn: 'IT Data Pipeline',
+        desc: '초당 10만 건의 IT 데이터 전송 성능 확보',
         icon: 'fas fa-link',
         color: 'blue',
         status: 'normal',
         stage: 1,
-        details: '기업의 기존 ERP, MES 등 IT(정보기술) 시스템과 초거대 AI 플랫폼을 안정적으로 연동하기 위한 데이터 파이프라인을 구축합니다.',
+        details: [
+            '인공지능이 기업의 복잡한 IT 데이터를 쉽게 학습할 수 있도록 데이터를 가공하고 초고속으로 전달하는 IT 데이터 파이프라인 구축 역할.',
+            '1초에 10만 건에 달하는 대용량 데이터를 지연 없이 전송하여, 줄어든 정보를 하나로 모아 AI에게 안정적으로 공급.',
+            '이를 통해 지능형 AI 모델이 원활하게 작동할 수 있는 튼튼한 데이터 공급망 기반을 마련함.'
+        ],
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: 'ERP-AI 연동 완성 및 데이터 파이프라인 안정화',
-                items: ['ERP-AI 연동 모듈', '데이터 파이프라인 v3.0', 'API Gateway']
+                title: '<strong>초당 10만 건의 IT 데이터 전송 성능 달성 및 경남대 EBC 연동</strong>'
             },
             {
-                label: 'Tech Stack',
+                label: '대표 산출물',
+                type: 'list',
+                items: [
+                    'IT 데이터 파이프라인 플랫폼',
+                    '공인성적서 (100,000 row/Sec)',
+                    '데이터 수집 및 전처리 데이터 셋 500만건'
+                ]
+            },
+            {
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['ETL', 'Data Pipeline', 'API Integration']
+                items: ['IT Data Pipeline', 'Data Preprocessing', 'High-speed Transmission', 'AI']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: 'ERP 연동 성공률',  value: '99.8', unit: '%',          color: '#2563EB' },
-                    { label: '파이프라인 처리량', value: '50K',  unit: 'events/min', color: '#059669' }
+                    { label: 'IT 데이터 파이프라인 플랫폼', value: '90', unit: '%', color: '#2563EB' },
+                    { label: '공인성적서 (100,000 row/Sec)', value: '800,000', unit: 'row/Sec', color: '#059669' },
+                    { label: '학습 데이터 셋 500만건', value: '0', unit: '건', color: '#7C3AED' }
                 ]
             }
         ],
-        preview: { type: 'placeholder' },
+        preview: {
+            type: 'slideshow',
+            slides: [
+                {
+                    url: './images/armiq_1.png',
+                    caption: 'IT 데이터 파이프라인 플랫폼 캡쳐 사진'
+                },
+                {
+                    url: './images/armiq_2.png',
+                    caption: 'IT 데이터 파이프라인 플랫폼 캡쳐 사진'
+                },
+                {
+                    url: './images/armiq_3.png',
+                    caption: 'IT 데이터 파이프라인 플랫폼 캡쳐 사진'
+                },
+                {
+                    url: './images/armiq_4.png',
+                    caption: 'IT 데이터 파이프라인 플랫폼 캡쳐 사진'
+                }
+            ]
+        },
         externalUrl: 'http://www.amiqu.com/',
         results: {
-            title: 'ERP-AI 연동 및 데이터 파이프라인 고도화',
-            year3Goal: 'ERP-AI 연동 완성 및 데이터 파이프라인 안정화',
+            title: 'IT 데이터 파이프라인 구축',
+            year3Goal: '초당 10만 건의 IT 데이터 전송 성능 달성 및 경남대 EBC 연동',
             kpis: [
-                { label: 'ERP 연동 성공률',  value: '99.8', unit: '%',          target: '99',  achievement: 100.8, status: 'achieved' },
-                { label: '파이프라인 처리량', value: '50K',  unit: 'events/min', target: '30K', achievement: 166.7, status: 'achieved' }
+                { label: 'IT 데이터 파이프라인 플랫폼', value: '90', unit: '%', target: '100', achievement: 90, status: 'in-progress' },
+                { label: '공인성적서 (100,000 row/Sec)', value: '800,000', unit: 'row/Sec', target: '100,000', achievement: 800, status: 'achieved' },
+                { label: '학습 데이터 셋', value: '0', unit: '건', target: '5,000,000', achievement: 0, status: 'not-started' }
             ],
-            deliverables: ['ERP-AI 연동 모듈', '데이터 파이프라인 v3.0', 'API Gateway'],
+            deliverables: ['IT 데이터 파이프라인 플랫폼', '공인성적서 (100,000 row/Sec)', '데이터 수집 및 전처리 데이터 셋 500만건'],
             screenshot: null
         }
     },
@@ -352,7 +386,11 @@ const companies = [
             {
                 label: '3차년도 목표',
                 type: 'list',
-                title: '<strong>품질 이상 검출과 설비 이상 사전 대응 및 작업자의 의사결정 지원 체계 구축</strong>',
+                title: '<strong>품질 이상 검출과 설비 이상 사전 대응 및 작업자의 의사결정 지원 체계 구축</strong>'
+            },
+            {
+                label: '대표 산출물',
+                type: 'list',
                 items: [
                     '비전 기반 불량 역추적 모델',
                     '시계열 기반 불량 예측 모델',
@@ -374,34 +412,6 @@ const companies = [
                 ]
             }
         ],
-        // 결과물 미리보기 콘텐츠
-        previewContent: {
-            type: 'custom',
-            sections: [
-                {
-                    title: '선택 유형',
-                    content: 'C 이미지'
-                },
-                {
-                    title: 'URL 또는 파일명',
-                    content: '시스템 URL, 유튜브 링크, 첨부 파일명 등',
-                    items: [
-                        '그림 폴더(그림1, 그림2, 그림3, 그림4, 그림5)'
-                    ]
-                },
-                {
-                    title: '캡션·요청사항',
-                    content: '이미지 설명 문구, 특별히 원하시는 표현 방식 등 자유 기재',
-                    items: [
-                        '그림1: 비전 기반 불량 검출 및 유형별 대응 정보 제공 구조',
-                        '그림2: 비전 기반 불량 검출 모델의 유형별 성능 평가 결과',
-                        '그림3: 시계열 기반 이상 예측 및 LLM 연계 대응 가이드 생성 구조',
-                        '그림4: 시계열 기반 설비 이상 예측 모델의 성능 평가 결과',
-                        '그림5: 설비 이상 원인 분석 및 대응 조치를 제공하는 제조 특화 LLM 챗봇 구조'
-                    ]
-                }
-            ]
-        },
         preview: {
             type: 'slideshow',
             slides: [
