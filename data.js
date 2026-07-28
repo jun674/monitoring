@@ -205,13 +205,9 @@ const companies = [
         ],
         sections: [
             {
-                label: '3차년도 목표',
+                label: '주요 역할',
                 type: 'list',
-                title: '<strong>초당 10만 건의 IT 데이터 전송 성능 달성 및 경남대 EBC 연동</strong>'
-            },
-            {
-                label: '대표 산출물',
-                type: 'list',
+                title: '<strong>초당 10만 건의 IT 데이터 전송 성능 달성 및 경남대 EBC 연동</strong>',
                 items: [
                     'IT 데이터 파이프라인 플랫폼',
                     '공인성적서 (100,000 row/Sec)',
@@ -368,13 +364,9 @@ const companies = [
         ],
         sections: [
             {
-                label: '3차년도 목표',
+                label: '주요 역할',
                 type: 'list',
-                title: '<strong>품질 이상 검출과 설비 이상 사전 대응 및 작업자의 의사결정 지원 체계 구축</strong>'
-            },
-            {
-                label: '대표 산출물',
-                type: 'list',
+                title: '<strong>품질 이상 검출과 설비 이상 사전 대응 및 작업자의 의사결정 지원 체계 구축</strong>',
                 items: [
                     '비전 기반 불량 역추적 모델',
                     '시계열 기반 불량 예측 모델',
@@ -844,13 +836,9 @@ const companies = [
         details: '공장 소음, 마스크 착용, 현장 발화 습관 등 악조건에서도 높은 인식률을 갖는 한국어 STT 모델을 고도화합니다. SLM으로 발음 모호성을 교정하고, TTS로 불량 원인과 조치방법을 오퍼레이터에게 음성으로 안내하는 AI 기반 불량 역추적 서비스를 실증합니다.',
         sections: [
             {
-                label: '3차년도 목표',
+                label: '주요 역할',
                 type: 'list',
-                title: '<strong>잡음 환경에서도 CER을 최소화한 한국어 음성인식(STT) 모델을 고도화하고, SLM·TTS 기반 불량 역추적 음성 안내 서비스를 실증한다.</strong>'
-            },
-            {
-                label: '대표 산출물',
-                type: 'list',
+                title: '<strong>잡음 환경에서도 CER을 최소화한 한국어 음성인식(STT) 모델을 고도화하고, SLM·TTS 기반 불량 역추적 음성 안내 서비스를 실증한다.</strong>',
                 items: [
                     'STT 개발 보고서',
                     '공인시험 성적서',
