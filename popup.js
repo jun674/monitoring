@@ -454,20 +454,36 @@ function _renderPreview(preview, name, externalUrl) {
             break;
 
         // 이미지
-        case 'image':
+        case 'image': {
             container.style.padding = '0';
             container.style.display = 'flex';
             container.style.flexDirection = 'column';
             container.style.alignItems = 'center';
             container.style.justifyContent = 'center';
             container.style.gap = '10px';
+
+            const isVideo = preview.url && preview.url.toLowerCase().endsWith('.mp4');
+            
+            let mediaHTML = '';
+            if (isVideo) {
+                mediaHTML = `
+                    <video src="${preview.url}" controls autoplay muted loop
+                           style="max-width:100%; max-height:90%; object-fit:contain; border-radius:8px;">
+                        Your browser does not support the video tag.
+                    </video>`;
+            } else {
+                mediaHTML = `
+                    <img src="${preview.url}" alt="${name}"
+                         style="max-width:100%; max-height:90%; object-fit:contain; border-radius:8px;" />`;
+            }
+
             container.innerHTML = `
-                <img src="${preview.url}" alt="${name}"
-                     style="max-width:100%; max-height:90%; object-fit:contain; border-radius:8px;" />
+                ${mediaHTML}
                 ${preview.caption
                     ? `<p style="font-size:11px; color:#9ca3af; text-align:center;">${preview.caption}</p>`
                     : ''}`;
             break;
+        }
 
         // 슬라이드쇼
         case 'slideshow': {

@@ -234,25 +234,9 @@ const companies = [
             }
         ],
         preview: {
-            type: 'slideshow',
-            slides: [
-                {
-                    url: './images/armiq_1.png',
-                    caption: 'IT 데이터 파이프라인 플랫폼 캡쳐 사진'
-                },
-                {
-                    url: './images/armiq_2.png',
-                    caption: 'IT 데이터 파이프라인 플랫폼 캡쳐 사진'
-                },
-                {
-                    url: './images/armiq_3.png',
-                    caption: 'IT 데이터 파이프라인 플랫폼 캡쳐 사진'
-                },
-                {
-                    url: './images/armiq_4.png',
-                    caption: 'IT 데이터 파이프라인 플랫폼 캡쳐 사진'
-                }
-            ]
+            type: 'image',
+            url: './images/armiq_v.mp4',
+            caption: '아미크 IT 데이터 파이프라인 데모 영상'
         },
         externalUrl: 'http://www.amiqu.com/',
         results: {
