@@ -74,76 +74,72 @@ const companies = [
         id: 'kyungnam',
         type: 'DATA',
         category: '참여',
-        ca: 'CA2',
         name: '경남대학교',
-        role: '데이터 표준화',
-        roleEn: 'Standardization',
-        desc: 'AAS 기반 이기종 설비 데이터 표준 모델링',
-        icon: 'fas fa-project-diagram',
-        color: 'blue',
+        role: '데이터 표준화 / 인력양성',
+        roleEn: 'Data Standardization / Capacity Building',
+        desc: '제조데이터 표준화와 AI 인재양성 거점',
         status: 'normal',
         stage: 3,
-        details: '제조 현장에서 수집되는 다양한 형태의 데이터를 자산관리쉘(AAS) 기반의 표준 모델로 변환하여 데이터의 일관성과 활용성을 높입니다.',
+        details: 'AAS 기반 제조데이터 표준화 및 중요 데이터 보호 기술 개발, 초거대 제조 AI 통합 운영환경 구축·운영, 제조 현장 활용형 AI 전문인력 교육 및 산학협력 추진',
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: 'Knowledge Graph 기반 제조데이터 온톨로지 완성 및 AAS 보안 체계 구축',
+                title: '제조데이터 표준·기술 및 초거대 제조 AI 운영환경 고도화·실증, 제조 AI 전문인력 양성'
+            },
+            {
+                label: '대표 산출물',
+                type: 'list',
                 items: [
-                    'AAS Infer-Repository v3.0',
-                    'Knowledge Graph 온톨로지 스키마',
-                    'AAS 보안 프레임워크',
-                    'IDTA 표준 Submodel 연동 모듈'
+                    'AAS 포털 사이트 (https://aas-system.netlify.app/)',
+                    '비식별 소프트웨어 공인인증시험서',
+                    '산업체 협력 프로젝트 운영 보고서'
                 ]
             },
             {
-                label: 'Tech Stack',
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['AAS', '데이터 모델링', 'Knowledge Graph']
+                items: ['데이터 표준화', '데이터 보안', '인력양성', '컴퓨팅 인프라']
             },
             {
                 label: '성과 지표',
-                type: 'kpi-api',
-                endpoints: [
-                    { label: 'Total AAS',          url: 'https://aas-system.netlify.app/api/aas?page=1',                  key: 'totalCount', unit: 'Models', color: '#2563EB' },
-                    { label: 'Total Submodel',     url: 'https://aas-system.netlify.app/api/submodel?page=1',             key: 'totalCount', unit: 'Items',  color: '#059669' },
-                    { label: 'ConceptDescription', url: 'https://aas-system.netlify.app/api/concept/description?page=1', key: 'totalCount', unit: 'Items',  color: '#7C3AED' }
+                type: 'kpi-static',
+                items: [
+                    { label: '초거대제조AI 플랫폼 대시보드 구축율', value: '100', unit: '%', color: '#2563EB' },
+                    { label: '기업 기밀 데이터 비식별 대상 검출 기술', value: '10', unit: '종', color: '#059669' },
+                    { label: '교육내용 기업 내 활용 보고서', value: '20', unit: '건', color: '#7C3AED' },
+                    { label: '제조AI 전문인력 양성', value: '20', unit: '명', color: '#f59e0b' }
                 ]
             }
         ],
         preview: {
-            type: 'iframe',
-            url: 'https://aas-system.netlify.app/'
+            type: 'image',
+            url: './images/kyungnam_v.mp4',
+            caption: '2025_10_23_단일처리 비식별화'
         },
-        // 하위 호환용 (pipeline.html 등에서 사용)
-        externalUrl: 'https://aas-system.netlify.app',
+        externalUrl: 'https://www.kyungnam.ac.kr/',
         results: {
-            title: 'AAS Infer-Repository 및 보안 통합',
-            year3Goal: 'Knowledge Graph 기반 제조데이터 온톨로지 완성 및 AAS 보안 체계 구축',
             kpis: [
-                { label: 'AAS 변환 모델 수', value: '1,204', unit: 'Models', target: '1,000', achievement: 120.4, status: 'achieved' },
-                { label: '데이터 표준화율',  value: '95.2',  unit: '%',      target: '90',    achievement: 105.8, status: 'achieved' }
+                { label: '플랫폼 대시보드 구축율', value: '100', unit: '%', target: '100', achievement: 100 },
+                { label: '비식별 대상 검출 기술', value: '10', unit: '종', target: '10', achievement: 100 },
+                { label: '기업 내 활용 보고서', value: '20', unit: '건', target: '40', achievement: 50 },
+                { label: '제조AI 전문인력 양성', value: '20', unit: '명', target: '40', achievement: 50 }
             ],
             deliverables: [
-                'AAS Infer-Repository v3.0',
-                'Knowledge Graph 온톨로지 스키마',
-                'AAS 보안 프레임워크',
-                'IDTA 표준 Submodel 연동 모듈'
-            ],
-            screenshot: null
+                'AAS 포털 사이트',
+                '비식별 소프트웨어 공인인증시험서',
+                '산업체 협력 프로젝트 운영 보고서'
+            ]
         }
     },
     {
         id: 'markbase',
         type: 'DATA',
         category: '참여',
-        ca: 'CA2',
         name: '마크베이스',
         role: '시계열 DB',
         roleEn: 'High-Speed DB',
         desc: '초당 100만 건 데이터 처리 성능 확보',
-        icon: 'fas fa-tachometer-alt',
-        color: 'blue',
         status: 'normal',
         stage: 1,
         details: '설비의 PLC, 센서 등 OT(운영 기술) 환경에서 발생하는 대용량 시계열 데이터를 초당 100만 건 이상 처리할 수 있는 고성능 데이터베이스를 제공합니다.',
@@ -175,27 +171,21 @@ const companies = [
         preview: { type: 'placeholder' },
         externalUrl: 'https://www.machbase.com/',
         results: {
-            title: '시계열 DB 200만건/초 처리 고도화',
-            year3Goal: '200만건/초 데이터 처리 성능 달성 및 에지컴퓨팅 연동',
             kpis: [
-                { label: 'DB 처리속도',       value: '1.21M', unit: 'rec/s',    target: '2.0M', achievement: 60.5,  status: 'in-progress' },
-                { label: '데이터 수집 안정성', value: '99.8',  unit: '%',        target: '99.5', achievement: 100.3, status: 'achieved' }
+                { label: 'DB 처리속도',       value: '1.21M', unit: 'rec/s',    target: '2.0M', achievement: 60.5 },
+                { label: '데이터 수집 안정성', value: '99.8',  unit: '%',        target: '99.5', achievement: 100.3 }
             ],
-            deliverables: ['시계열 DB v3.0', 'Edge-DB 연동 모듈', '실시간 데이터 수집기'],
-            screenshot: null
+            deliverables: ['시계열 DB v3.0', 'Edge-DB 연동 모듈', '실시간 데이터 수집기']
         }
     },
     {
         id: 'amiqu',
         type: 'DATA',
         category: '참여',
-        ca: 'CA3',
         name: '아미크',
         role: 'IT 데이터 파이프라인',
         roleEn: 'IT Data Pipeline',
         desc: '초당 10만 건의 IT 데이터 전송 성능 확보',
-        icon: 'fas fa-link',
-        color: 'blue',
         status: 'normal',
         stage: 1,
         details: [
@@ -205,9 +195,13 @@ const companies = [
         ],
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: '<strong>초당 10만 건의 IT 데이터 전송 성능 달성 및 경남대 EBC 연동</strong>',
+                title: '초당 10만 건의 IT 데이터 전송 성능 달성 및 경남대 EBC 연동'
+            },
+            {
+                label: '대표 산출물',
+                type: 'list',
                 items: [
                     'IT 데이터 파이프라인 플랫폼',
                     '공인성적서 (100,000 row/Sec)',
@@ -236,15 +230,12 @@ const companies = [
         },
         externalUrl: 'http://www.amiqu.com/',
         results: {
-            title: 'IT 데이터 파이프라인 구축',
-            year3Goal: '초당 10만 건의 IT 데이터 전송 성능 달성 및 경남대 EBC 연동',
             kpis: [
-                { label: 'IT 데이터 파이프라인 플랫폼', value: '90', unit: '%', target: '100', achievement: 90, status: 'in-progress' },
-                { label: '공인성적서 (100,000 row/Sec)', value: '800,000', unit: 'row/Sec', target: '100,000', achievement: 800, status: 'achieved' },
-                { label: '학습 데이터 셋', value: '0', unit: '건', target: '5,000,000', achievement: 0, status: 'not-started' }
+                { label: 'IT 데이터 파이프라인 플랫폼', value: '90', unit: '%', target: '100', achievement: 90 },
+                { label: '공인성적서 (100,000 row/Sec)', value: '800,000', unit: 'row/Sec', target: '100,000', achievement: 800 },
+                { label: '학습 데이터 셋', value: '0', unit: '건', target: '5,000,000', achievement: 0 }
             ],
-            deliverables: ['IT 데이터 파이프라인 플랫폼', '공인성적서 (100,000 row/Sec)', '데이터 수집 및 전처리 데이터 셋 500만건'],
-            screenshot: null
+            deliverables: ['IT 데이터 파이프라인 플랫폼', '공인성적서 (100,000 row/Sec)', '데이터 수집 및 전처리 데이터 셋 500만건']
         }
     },
     {
@@ -254,44 +245,73 @@ const companies = [
         ca: 'CA3',
         name: '네스트필드',
         role: '데이터 교환',
-        roleEn: 'Interoperability',
-        desc: '이종 시스템 간 데이터 상호운용성 확보',
+        roleEn: 'Data Exchange',
+        desc: '국제 표준(AAS) 기반 제조데이터 교환 체계 구축',
         icon: 'fas fa-exchange-alt',
         color: 'blue',
-        status: 'warning',
+        status: 'normal',
         stage: 3,
-        details: '다양한 제조 장비와 시스템 간의 데이터 교환을 위한 표준 인터페이스를 제공하여 상호운용성을 보장합니다.',
+        details: '국제 표준 AAS 기반의 데이터 교환 인터페이스를 제공하여, 기업보안 제조데이터의 글로벌 데이터 공유 생태계 연계 기반을 확보합니다.',
         sections: [
             {
                 label: '주요 역할',
                 type: 'list',
-                title: 'EDC 기반 기업간 데이터 교환 서비스 완성',
-                items: ['EDC 데이터 교환 플랫폼', '기업간 데이터 공유 프로토콜', 'Middleware v3.0']
+                title: '<strong>AAS 기반 데이터 교환 프레임워크 고도화 및 IDTA 사례 등록</strong>',
+                items: [
+                    'AAS 메타 데이터 모델',
+                    'AAS 기반 데이터 교환 프레임워크',
+                    'EDC 기반 데이터 커넥터 기술',
+                    'IDTA USE CASE'
+                ]
             },
             {
-                label: 'Tech Stack',
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['Middleware', 'Protocol Conversion', 'API Gateway']
+                items: ['AAS', 'EDC', 'Metadata', 'Data Space']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: 'API 연동율',     value: '85',   unit: '%',    color: '#2563EB' },
-                    { label: '데이터 교환 건수', value: '1,200', unit: '건/일', color: '#059669' }
+                    { label: 'AAS 메타데이터 모델', value: '3', unit: '종', color: '#2563EB' },
+                    { label: 'IDTA 사례등록', value: '1', unit: '건', color: '#059669' }
                 ]
             }
         ],
-        preview: { type: 'placeholder' },
+        preview: {
+            type: 'slideshow',
+            slides: [
+                {
+                    url: './images/nestfield_1.png',
+                    caption: '그림 1. 대표 이미지: AAS 기반 데이터 교환 프레임워크 구조 및 성과'
+                },
+                {
+                    url: './images/nestfield_2.png',
+                    caption: '그림 2. AAS 데이터 교환 프레임워크 대시보드 스크린샷'
+                },
+                {
+                    url: './images/nestfield_3.png',
+                    caption: '그림 3. 기업보유 데이터 변환 AI 서비스 스크린샷'
+                },
+                {
+                    url: './images/nestfield_4.png',
+                    caption: '그림 4. IDTA USE CASE 등록'
+                },
+                {
+                    url: './images/nestfield_5.png',
+                    caption: '그림 5. 글로벌 테스트베드 공동 전시, 탄소추적 시범사업 어플리케이션 스크린샷 및 전시회 참여 사진'
+                }
+            ]
+        },
         externalUrl: 'http://www.nestfield.co.kr/',
         results: {
-            title: 'EDC 기반 기업간 데이터 교환 서비스',
-            year3Goal: 'EDC 기반 기업간 데이터 교환 서비스 완성',
+            title: 'AAS 기반 데이터 교환 체계 구축',
+            year3Goal: 'AAS 기반 데이터 교환 프레임워크 고도화 및 IDTA 사례 등록',
             kpis: [
-                { label: 'API 연동율',     value: '85',   unit: '%',    target: '95',  achievement: 89.5, status: 'in-progress' },
-                { label: '데이터 교환 건수', value: '1,200', unit: '건/일', target: '1,500', achievement: 80.0, status: 'in-progress' }
+                { label: 'AAS 메타데이터 모델', value: '2', unit: '종', target: '3', achievement: 66.7, status: 'in-progress' },
+                { label: 'IDTA 사례등록', value: '1', unit: '건', target: '1', achievement: 100, status: 'achieved' }
             ],
-            deliverables: ['EDC 데이터 교환 플랫폼', '기업간 데이터 공유 프로토콜', 'Middleware v3.0'],
+            deliverables: ['AAS 메타 데이터 모델', 'AAS 기반 데이터 교환 프레임워크', 'EDC 기반 데이터 커넥터 기술', 'IDTA USE CASE'],
             screenshot: null
         }
     },
@@ -364,9 +384,13 @@ const companies = [
         ],
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: '<strong>품질 이상 검출과 설비 이상 사전 대응 및 작업자의 의사결정 지원 체계 구축</strong>',
+                title: '품질 이상 검출과 설비 이상 사전 대응 및 작업자의 의사결정 지원 체계 구축'
+            },
+            {
+                label: '대표 산출물',
+                type: 'list',
                 items: [
                     '비전 기반 불량 역추적 모델',
                     '시계열 기반 불량 예측 모델',
@@ -836,9 +860,13 @@ const companies = [
         details: '공장 소음, 마스크 착용, 현장 발화 습관 등 악조건에서도 높은 인식률을 갖는 한국어 STT 모델을 고도화합니다. SLM으로 발음 모호성을 교정하고, TTS로 불량 원인과 조치방법을 오퍼레이터에게 음성으로 안내하는 AI 기반 불량 역추적 서비스를 실증합니다.',
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: '<strong>잡음 환경에서도 CER을 최소화한 한국어 음성인식(STT) 모델을 고도화하고, SLM·TTS 기반 불량 역추적 음성 안내 서비스를 실증한다.</strong>',
+                title: '잡음 환경에서도 CER을 최소화한 한국어 음성인식(STT) 모델을 고도화하고, SLM·TTS 기반 불량 역추적 음성 안내 서비스를 실증한다.'
+            },
+            {
+                label: '대표 산출물',
+                type: 'list',
                 items: [
                     'STT 개발 보고서',
                     '공인시험 성적서',

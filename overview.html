@@ -167,6 +167,10 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .anim-up { animation: fadeUp 0.5s ease forwards; }
+        .wbs-table col:nth-child(1) { width: 15%; }
+        .wbs-table col:nth-child(2) { width: 15%; }
+        .wbs-table col:nth-child(3) { width: 35%; }
+        .wbs-table col:nth-child(4) { width: 35%; }
     </style>
 </head>
 <body class="h-screen flex flex-col">
@@ -206,14 +210,19 @@
                         <span class="section-sub">3차년도 기준</span>
                     </div>
                     <div class="wbs-wrap">
-                        <table class="wbs-table">
+                        <table class="wbs-table" style="table-layout: fixed;">
+                            <colgroup>
+                                <col>
+                                <col>
+                                <col>
+                                <col>
+                            </colgroup>
                             <thead>
                                 <tr>
-                                    <th style="width:120px">DAINOS 도메인</th>
-                                    <th style="width:240px">과제명</th>
-                                    <th style="width:200px">수행기관</th>
-                                    <th style="width:200px">3차년도 핵심 목표</th>
-                                    <th style="width:80px;text-align:center">상태</th>
+                                    <th>기관명</th>
+                                    <th>분야</th>
+                                    <th>3차년도 목표</th>
+                                    <th>성과지표</th>
                                 </tr>
                             </thead>
                             <tbody id="wbs-body"></tbody>
@@ -243,29 +252,6 @@
         const cardAccents = ['#4f8ef7', '#0d9488', '#7c3aed', '#ea580c'];
 
         /* ── WBS 주요 추진 현황 데이터 ── */
-        const wbsData = [
-            { domain:'Organizing', task:'PMBOK 기반 사업관리',       org:'경남TP',                  kpi:'네트워킹 <strong>5회</strong> 이상',                    status:'active' },
-            { domain:'Organizing', task:'SE 기반 기술개발 관리',     org:'KTL(산기시험원)',          kpi:'적합성검증 확인서 <strong>1건</strong>',                status:'verify' },
-            { domain:'Data',       task:'제조 데이터 수집·DB',       org:'마크베이스',               kpi:'초당 <strong>200만건</strong> 수집',                    status:'active' },
-            { domain:'Data',       task:'ERP 데이터 파이프라인',     org:'아미크',                   kpi:'학습 데이터셋 <strong>500만건</strong>',                status:'active' },
-            { domain:'Data',       task:'AAS 표준·보안',             org:'경남대학교',               kpi:'비식별화 환경 구축 <strong>1개소</strong>',             status:'active' },
-            { domain:'Data',       task:'AAS 데이터 교환체계',       org:'네스트필드',               kpi:'IDTA 사례등록 <strong>1건</strong>',                    status:'active' },
-            { domain:'AI',         task:'제조 특화 AI 모델 개발',    org:'KAIST',                    kpi:'정확도 <strong>+10%</strong> · 속도 <strong>+20%</strong>', status:'active' },
-            { domain:'AI',         task:'ESG 대응 sLM Agent',       org:'넥스트스튜디오',           kpi:'sLM Agent <strong>1종</strong> 개발',                  status:'active' },
-            { domain:'Infra',      task:'하이브리드 클라우드·EBC',   org:'메가존클라우드',           kpi:'EBC 구축 <strong>1개소</strong>',                      status:'active' },
-            { domain:'Network',    task:'차세대 통신망',             org:'라임씨에스아이',           kpi:'통합관제센터 <strong>1개소</strong> · 500Mbps',         status:'active' },
-            { domain:'Service',    task:'품질관리 서비스 실증',      org:'소르테크 · 에스디테크',    kpi:'비전검사 실증 <strong>3건</strong>',                    status:'verify' },
-            { domain:'Service',    task:'지능형 관제시스템',         org:'DX솔루션즈 · 메타아이스퀘어', kpi:'불량률 감소 <strong>18%</strong> · UPH <strong>+8%</strong>', status:'verify' },
-            { domain:'Data',       task:'AIoT · Edge Computing',    org:'KETI',                    kpi:'센서 모듈 <strong>6종</strong> · 실증 2건',             status:'active' }
-        ];
-
-        /* ── Status pill map ── */
-        const statusMap = {
-            active: '<span class="status-pill sp-active">진행중</span>',
-            verify: '<span class="status-pill sp-verify">검증중</span>',
-            done:   '<span class="status-pill sp-done">완료</span>'
-        };
-
         function renderPage() {
             /* ── Project name + period ── */
             document.getElementById('project-name').textContent = projectMeta.name;
@@ -325,15 +311,21 @@
 
             /* ── WBS Table ── */
             const tbody = document.getElementById('wbs-body');
-            wbsData.forEach(w => {
-                const d = domainStyle[w.domain];
+            const sortedCompanies = [...companies].sort((a, b) => a.type.localeCompare(b.type));
+
+            sortedCompanies.forEach(c => {
+                const field = c.type.charAt(0) + c.type.slice(1).toLowerCase();
+                const goal = c.role;
+                const kpi = c.results && c.results.kpis && c.results.kpis.length > 0
+                    ? `${c.results.kpis[0].label}: <strong>${c.results.kpis[0].value}${c.results.kpis[0].unit}</strong>`
+                    : 'N/A';
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><span class="td-domain"><span class="domain-dot" style="background:${d.color}"></span><span style="color:${d.color};font-size:11px;font-weight:500">${d.label}</span></span></td>
-                    <td style="font-size:12px">${w.task}</td>
-                    <td class="td-org">${w.org}</td>
-                    <td class="td-kpi">${w.kpi}</td>
-                    <td>${statusMap[w.status]}</td>
+                    <td class="td-org" style="font-weight:500; color:#374151;">${c.name}</td>
+                    <td style="font-size:12px; color:#6b7280;">${field}</td>
+                    <td style="font-size:12px;">${goal}</td>
+                    <td class="td-kpi">${kpi}</td>
                 `;
                 tbody.appendChild(tr);
             });

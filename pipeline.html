@@ -188,7 +188,7 @@
                 const kpiStatus = avgAchievement >= 100 ? 'achieved' : avgAchievement > 0 ? 'in-progress' : 'not-started';
                 const primaryKpi = item.results.kpis[0];
                 const kpiDisplay = primaryKpi
-                    ? `${primaryKpi.value}${primaryKpi.unit ? ' ' + primaryKpi.unit : ''}`
+                    ? `${primaryKpi.target}${primaryKpi.unit ? ' ' + primaryKpi.unit : ''}`
                     : '—';
 
                 const card = document.createElement('div');
@@ -206,7 +206,7 @@
                                 <span class="text-[10px] font-bold ${st.text}">${st.label}</span>
                             </div>
                         </div>
-                        <p class="text-[13px] text-gray-500 leading-snug line-clamp-2 mb-2">${item.results.title}</p>
+                        <p class="text-[13px] text-gray-500 leading-snug line-clamp-2 mb-2">${item.desc}</p>
                     </div>
                     <div class="pt-2.5 border-t border-gray-100 flex justify-between items-center">
                         <div>
