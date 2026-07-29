@@ -282,23 +282,23 @@ const companies = [
             type: 'slideshow',
             slides: [
                 {
-                    url: './images/nestfield_1.png',
+                    url: './images/nestfield_1.PNG',
                     caption: '그림 1. 대표 이미지: AAS 기반 데이터 교환 프레임워크 구조 및 성과'
                 },
                 {
-                    url: './images/nestfield_2.png',
+                    url: './images/nestfield_2.PNG',
                     caption: '그림 2. AAS 데이터 교환 프레임워크 대시보드 스크린샷'
                 },
                 {
-                    url: './images/nestfield_3.png',
+                    url: './images/nestfield_3.PNG',
                     caption: '그림 3. 기업보유 데이터 변환 AI 서비스 스크린샷'
                 },
                 {
-                    url: './images/nestfield_4.png',
+                    url: './images/nestfield_4.PNG',
                     caption: '그림 4. IDTA USE CASE 등록'
                 },
                 {
-                    url: './images/nestfield_5.png',
+                    url: './images/nestfield_5.PNG',
                     caption: '그림 5. 글로벌 테스트베드 공동 전시, 탄소추적 시범사업 어플리케이션 스크린샷 및 전시회 참여 사진'
                 }
             ]
