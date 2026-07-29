@@ -16,22 +16,24 @@
 </head>
 <body class="h-screen flex overflow-hidden bg-gray-50 text-slate-800">
 
-    <aside id="sidebar" class="w-56 flex flex-col bg-[#191F28] shadow-xl z-10 transition-all duration-300 shrink-0">
-        <div class="p-4 border-b border-white/10 flex items-center justify-between gap-2" id="sidebar-header">
-            <div class="flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity min-w-0" id="logo-and-title" onclick="loadFile(files[0])">
+    <!-- Sidebar (Default w-16 Collapsed for Mobile First) -->
+    <aside id="sidebar" class="w-16 flex flex-col bg-[#191F28] shadow-xl z-10 transition-all duration-300 shrink-0">
+        <div class="p-4 border-b border-white/10 flex items-center justify-center gap-2" id="sidebar-header">
+            <div class="flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity min-w-0 hidden" id="logo-and-title" onclick="loadFile(files[0])">
                 <div class="w-8 h-8 bg-white rounded-md flex items-center justify-center text-slate-900 font-extrabold text-sm shadow shrink-0">AI</div>
-                <div class="sidebar-label min-w-0">
+                <div class="sidebar-label min-w-0 hidden">
                     <h1 class="text-base font-bold text-white tracking-tight truncate">초거대제조AI</h1>
                     <p class="text-[10px] text-slate-400 tracking-tight truncate">Analytics Dashboard</p>
                 </div>
             </div>
             <button id="sidebar-toggle" class="text-slate-400 hover:text-white transition-colors p-1 shrink-0 rounded hover:bg-white/10" title="사이드바 토글">
-                <i class="fas fa-chevron-left text-xs transition-transform duration-300"></i>
+                <i class="fas fa-chevron-left text-xs transition-transform duration-300 rotate-180"></i>
             </button>
         </div>
         <nav id="file-list" class="flex-1 overflow-y-auto py-2 px-0 space-y-0.5"></nav>
     </aside>
 
+    <!-- Main Content -->
     <main class="flex-1 flex flex-col overflow-hidden">
         <iframe id="viewer" class="flex-1 w-full h-full border-none"></iframe>
     </main>
@@ -94,8 +96,8 @@
             a.className = 'flex items-center w-full px-5 py-3 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white rounded-none transition-all duration-200 group';
             
             a.innerHTML = `
-                <div class="sidebar-icon w-6 shrink-0 flex items-center justify-center hidden">${file.svg}</div>
-                <span class="sidebar-label truncate whitespace-nowrap">${file.name}</span>
+                <div class="sidebar-icon w-6 shrink-0 flex items-center justify-center">${file.svg}</div>
+                <span class="sidebar-label truncate whitespace-nowrap hidden">${file.name}</span>
             `;
             
             a.onclick = (e) => {
@@ -109,27 +111,49 @@
             loadFile(files[0]);
         }
 
-        sidebarToggle.addEventListener('click', () => {
-            const isCollapsing = sidebar.classList.contains('w-56');
+        function collapseSidebar() {
             const labels = document.querySelectorAll('.sidebar-label');
             const icons = document.querySelectorAll('.sidebar-icon');
 
-            if (isCollapsing) {
-                sidebar.classList.replace('w-56', 'w-16');
-                logoAndTitle.classList.add('hidden');
-                sidebarHeader.classList.replace('justify-between', 'justify-center');
-                labels.forEach(el => el.classList.add('hidden'));
-                icons.forEach(el => el.classList.remove('hidden'));
-                toggleIcon.classList.add('rotate-180');
+            sidebar.classList.remove('w-56');
+            sidebar.classList.add('w-16');
+            logoAndTitle.classList.add('hidden');
+            sidebarHeader.classList.remove('justify-between');
+            sidebarHeader.classList.add('justify-center');
+            labels.forEach(el => el.classList.add('hidden'));
+            icons.forEach(el => el.classList.remove('hidden'));
+            toggleIcon.classList.add('rotate-180');
+        }
+
+        function expandSidebar() {
+            const labels = document.querySelectorAll('.sidebar-label');
+            const icons = document.querySelectorAll('.sidebar-icon');
+
+            sidebar.classList.remove('w-16');
+            sidebar.classList.add('w-56');
+            logoAndTitle.classList.remove('hidden');
+            sidebarHeader.classList.remove('justify-center');
+            sidebarHeader.classList.add('justify-between');
+            labels.forEach(el => el.classList.remove('hidden'));
+            icons.forEach(el => el.classList.add('hidden'));
+            toggleIcon.classList.remove('rotate-180');
+        }
+
+        sidebarToggle.addEventListener('click', () => {
+            const isCollapsed = sidebar.classList.contains('w-16');
+            if (isCollapsed) {
+                expandSidebar();
             } else {
-                sidebar.classList.replace('w-16', 'w-56');
-                logoAndTitle.classList.remove('hidden');
-                sidebarHeader.classList.replace('justify-center', 'justify-between');
-                labels.forEach(el => el.classList.remove('hidden'));
-                icons.forEach(el => el.classList.add('hidden'));
-                toggleIcon.classList.remove('rotate-180');
+                collapseSidebar();
             }
         });
+
+        // PC 화면(768px 이상)일 때만 펼쳐진 상태(w-56)로 변경, 모바일은 기본 접힌 상태(w-16) 유지
+        if (window.innerWidth >= 768) {
+            expandSidebar();
+        } else {
+            collapseSidebar();
+        }
     </script>
 </body>
 </html>
