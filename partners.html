@@ -21,11 +21,6 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(8px);
             border-bottom: 1px solid #E2E8F0;
-            padding: 0 28px;
-            height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
         /* ── SaaS Card Design ── */
@@ -53,6 +48,16 @@
             border: 1px solid transparent;
             transition: all 0.2s;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (max-width: 639px) {
+            .tab-pill {
+                padding: 5px 10px;
+                min-width: 32px;
+                font-size: 11px;
+            }
         }
         .tab-pill:hover {
             background: #E2E8F0;
@@ -71,22 +76,36 @@
 <body class="min-h-screen flex flex-col overflow-x-hidden">
 
     <!-- Top Navigation Header -->
-    <div class="topbar shrink-0">
-        <div class="flex items-center gap-3">
+    <div class="topbar shrink-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 p-3 sm:px-7 sm:py-0 min-h-[56px] sm:h-14">
+        <div class="flex items-center gap-2.5 shrink-0">
             <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
             <span class="text-sm font-bold text-slate-900 tracking-tight">PARTNERS</span>
             <span class="text-xs text-slate-400 font-medium hidden sm:inline-block">| 총 15개 참여기관</span>
         </div>
 
         <!-- Filter Tabs -->
-        <div class="flex items-center gap-1.5 overflow-x-auto py-1">
-            <button class="tab-pill active" onclick="filterCards('ALL')" id="tab-ALL">ALL (15)</button>
-            <button class="tab-pill" onclick="filterCards('DATA')" id="tab-DATA">DATA</button>
-            <button class="tab-pill" onclick="filterCards('AI')" id="tab-AI">AI</button>
-            <button class="tab-pill" onclick="filterCards('INFRA')" id="tab-INFRA">INFRASTRUCTURE</button>
-            <button class="tab-pill" onclick="filterCards('NETWORK')" id="tab-NETWORK">NETWORK</button>
-            <button class="tab-pill" onclick="filterCards('ORG')" id="tab-ORG">ORGANIZING</button>
-            <button class="tab-pill" onclick="filterCards('SERVICE')" id="tab-SERVICE">SERVICE</button>
+        <div class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto py-0.5 no-scrollbar">
+            <button class="tab-pill active shrink-0" onclick="filterCards('ALL')" id="tab-ALL" title="ALL">
+                <span class="sm:hidden">A</span><span class="hidden sm:inline">ALL</span>
+            </button>
+            <button class="tab-pill shrink-0" onclick="filterCards('DATA')" id="tab-DATA" title="DATA">
+                <span class="sm:hidden">D</span><span class="hidden sm:inline">DATA</span>
+            </button>
+            <button class="tab-pill shrink-0" onclick="filterCards('AI')" id="tab-AI" title="AI">
+                <span class="sm:hidden">A</span><span class="hidden sm:inline">AI</span>
+            </button>
+            <button class="tab-pill shrink-0" onclick="filterCards('INFRA')" id="tab-INFRA" title="INFRASTRUCTURE">
+                <span class="sm:hidden">I</span><span class="hidden sm:inline">INFRASTRUCTURE</span>
+            </button>
+            <button class="tab-pill shrink-0" onclick="filterCards('NETWORK')" id="tab-NETWORK" title="NETWORK">
+                <span class="sm:hidden">N</span><span class="hidden sm:inline">NETWORK</span>
+            </button>
+            <button class="tab-pill shrink-0" onclick="filterCards('ORG')" id="tab-ORG" title="ORGANIZING">
+                <span class="sm:hidden">O</span><span class="hidden sm:inline">ORGANIZING</span>
+            </button>
+            <button class="tab-pill shrink-0" onclick="filterCards('SERVICE')" id="tab-SERVICE" title="SERVICE">
+                <span class="sm:hidden">S</span><span class="hidden sm:inline">SERVICE</span>
+            </button>
         </div>
     </div>
 
@@ -94,13 +113,20 @@
         <div class="max-w-7xl mx-auto space-y-6 pb-20">
 
             <!-- Sub Header Info Bar -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
-                <div class="flex flex-wrap items-center gap-1.5" id="chip-list-bar">
-                    <!-- Quick Jump Chips -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+                <div class="flex items-center justify-between p-3.5 px-4 cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleChipBar()" id="chip-bar-header">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-slate-800" id="chip-bar-title">참여기관 빠른 바로가기</span>
+                        <span id="display-count" class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">15개 기관</span>
+                    </div>
+                    <button class="text-slate-400 hover:text-slate-700 text-xs flex items-center justify-center p-1 rounded hover:bg-slate-100 transition-colors">
+                        <i id="chip-toggle-icon" class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
+                    </button>
                 </div>
-                <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
-                    <span class="text-xs text-slate-400 font-medium">표시 중:</span>
-                    <span id="display-count" class="text-sm font-bold text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">15개 기관</span>
+                <div class="p-4 pt-1 border-t border-slate-100 hidden transition-all" id="chip-list-wrapper">
+                    <div class="flex flex-wrap items-center gap-1.5" id="chip-list-bar">
+                        <!-- Quick Jump Chips -->
+                    </div>
                 </div>
             </div>
 
@@ -120,6 +146,22 @@
             const grid = document.getElementById('card-grid');
             const countEl = document.getElementById('display-count');
             const chipBar = document.getElementById('chip-list-bar');
+            const titleEl = document.getElementById('chip-bar-title');
+
+            // Update Header Title according to filter
+            if (titleEl) {
+                const titleMap = {
+                    ALL: '참여기관',
+                    DATA: 'DATA',
+                    AI: 'AI',
+                    INFRA: 'INFRASTRUCTURE',
+                    NETWORK: 'NETWORK',
+                    ORG: 'ORGANIZING',
+                    SERVICE: 'SERVICE'
+                };
+                const label = titleMap[filterType] || filterType;
+                titleEl.innerText = `${label} 빠른 바로가기`;
+            }
 
             // Update tab button styles
             document.querySelectorAll('.tab-pill').forEach(btn => {
@@ -218,10 +260,30 @@
             }
         }
 
+        function toggleChipBar() {
+            const wrapper = document.getElementById('chip-list-wrapper');
+            const icon = document.getElementById('chip-toggle-icon');
+            if (!wrapper) return;
+
+            const isHidden = wrapper.classList.contains('hidden');
+            if (isHidden) {
+                wrapper.classList.remove('hidden');
+                if (icon) icon.classList.add('rotate-180');
+            } else {
+                wrapper.classList.add('hidden');
+                if (icon) icon.classList.remove('rotate-180');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const initialType = urlParams.get('type') || 'ALL';
             filterCards(initialType);
+
+            // PC 화면(640px 이상)일 때는 기본으로 펼쳐짐
+            if (window.innerWidth >= 640) {
+                toggleChipBar();
+            }
         });
     </script>
 </body>

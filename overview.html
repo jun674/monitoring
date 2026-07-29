@@ -35,11 +35,6 @@
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(8px);
             border-bottom: 1px solid #E2E8F0;
-            padding: 0 28px;
-            height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
         /* ── KPI Progress Bar ── */
@@ -92,7 +87,7 @@
 <body class="min-h-screen flex flex-col">
 
     <!-- Topbar Header -->
-    <div class="topbar shrink-0">
+    <div class="topbar shrink-0 flex items-center justify-between p-3.5 sm:px-7 min-h-[56px] sm:h-14">
         <div class="flex items-center gap-3">
             <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
             <span class="text-sm font-bold text-slate-900 tracking-tight">OVERVIEW</span>
@@ -367,9 +362,9 @@
                             </span>
                         `).join('')}
                     </div>
-                    <div class="w-28 shrink-0 text-right">
+                    <div class="w-full md:w-28 shrink-0 text-left md:text-right pt-2.5 md:pt-0 border-t md:border-t-0 border-slate-200/60">
                         <div class="text-xs font-bold ${isCurrent ? 'text-blue-600' : 'text-emerald-600'}">진행률 ${t.progress}%</div>
-                        <div class="kpi-bar mt-1">
+                        <div class="kpi-bar mt-1.5">
                             <div class="kpi-bar-inner ${isCurrent ? 'bg-blue-600' : 'bg-emerald-500'}" style="width: ${t.progress}%"></div>
                         </div>
                     </div>

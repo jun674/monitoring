@@ -105,14 +105,14 @@ const popupHTML = `
 <div id="detail-modal" class="fixed inset-0 z-50 hidden"
      style="background:rgba(15,23,42,0.4); backdrop-filter:blur(8px); transition: opacity 0.2s; display: none;">
     <div id="modal-content" class="modal-enter bg-white rounded-2xl md:rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 m-2 md:m-0"
-         style="width:780px; height:820px; max-width:94vw; max-height:92vh;">
+         style="width:1120px; height:720px; max-width:96vw; max-height:92vh;">
         
         <!-- Header -->
-        <div class="flex items-center justify-between px-5 py-4 shrink-0 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center justify-between px-5 md:px-7 py-3.5 md:py-4 shrink-0 border-b border-slate-100 bg-slate-50/50">
             <div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2.5">
                     <h3 id="modal-title" class="font-extrabold text-slate-900 text-base md:text-lg">업체명</h3>
-                    <span id="modal-type" class="font-bold px-2 py-0.5 rounded-md text-[10px] uppercase border">TYPE</span>
+                    <span id="modal-type" class="font-bold px-2.5 py-0.5 rounded-md text-[10px] uppercase border">TYPE</span>
                 </div>
                 <p id="modal-role-en" class="text-slate-400 font-medium text-xs mt-0.5 truncate max-w-xs sm:max-w-md"></p>
             </div>
@@ -121,11 +121,11 @@ const popupHTML = `
             </button>
         </div>
 
-        <!-- Body Vertical Layout -->
-        <div class="flex flex-col flex-1 overflow-y-auto">
+        <!-- Body: Mobile flex-col, PC flex-row -->
+        <div class="flex flex-col md:flex-row flex-1 overflow-y-auto md:overflow-hidden">
 
-            <!-- Top Panel Info (Description, Pipeline, Sections) -->
-            <div class="w-full p-5 md:p-6 border-b border-slate-100 shrink-0" id="modal-left-panel">
+            <!-- Left Panel (PC: 380px fixed width, Mobile: full width) -->
+            <div class="border-b md:border-b-0 md:border-r border-slate-100 overflow-y-auto shrink-0 w-full md:w-[380px] p-5 md:p-6" id="modal-left-panel">
 
                 <!-- Description -->
                 <div class="mb-5">
@@ -144,14 +144,14 @@ const popupHTML = `
 
             </div>
 
-            <!-- Bottom Panel Preview (Preview & Demo) -->
-            <div class="w-full flex flex-col min-h-[380px] p-5 md:p-6 bg-slate-50/50 shrink-0">
-                <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-200/80">
+            <!-- Right Panel (PC: flex-1 width, Mobile: full width) -->
+            <div class="flex-1 flex flex-col min-h-[360px] md:min-h-0 overflow-hidden bg-slate-50/50">
+                <div class="flex items-center justify-between px-5 md:px-6 py-2.5 md:py-3 border-b border-slate-100 bg-white shrink-0">
                     <span class="text-xs font-bold text-slate-700">결과물 및 데모 미리보기</span>
                     <div id="modal-ext-link"></div>
                 </div>
-                <div class="flex-1 w-full h-full">
-                    <div id="modal-preview" class="w-full h-[320px] rounded-2xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center p-4">
+                <div class="flex-1 p-4 md:p-5 overflow-hidden">
+                    <div id="modal-preview" class="w-full h-full rounded-2xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center p-4">
                     </div>
                 </div>
             </div>
