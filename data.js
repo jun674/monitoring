@@ -115,7 +115,7 @@ const companies = [
         preview: {
             type: 'image',
             url: './images/kyungnam_v.mp4',
-            caption: '2025_10_23_단일처리 비식별화'
+            caption: '비식별화 프로그램 데모 영상'
         },
         externalUrl: 'https://www.kyungnam.ac.kr/',
         results: {
