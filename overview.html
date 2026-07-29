@@ -297,7 +297,8 @@
                     </div>
                 </div>
 
-                <div class="saas-card overflow-hidden">
+                <!-- Desktop Table View -->
+                <div class="saas-card overflow-hidden hidden md:block">
                     <div class="overflow-x-auto">
                         <table class="wbs-table">
                             <thead>
@@ -312,6 +313,10 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                <!-- Mobile Card List View -->
+                <div class="md:hidden space-y-3" id="wbs-mobile-cards">
                 </div>
             </section>
 
@@ -375,7 +380,9 @@
 
         function renderWBSTable() {
             const tbody = document.getElementById('wbs-tbody');
-            tbody.innerHTML = '';
+            const mobileCards = document.getElementById('wbs-mobile-cards');
+            if (tbody) tbody.innerHTML = '';
+            if (mobileCards) mobileCards.innerHTML = '';
 
             const domainTagMap = {
                 ORG: { label: 'ORGANIZING', cls: 'domain-tag-organizing' },
@@ -387,30 +394,54 @@
             };
 
             companies.forEach(c => {
-                const tr = document.createElement('tr');
-                tr.className = "cursor-pointer hover:bg-slate-50 transition-colors";
-                tr.onclick = () => showCompanyPopup(c);
-
                 const mainKpi = c.results && c.results.kpis && c.results.kpis.length > 0 ? c.results.kpis[0] : null;
                 const kpiText = mainKpi ? `${mainKpi.label}: <strong class="text-slate-900">${mainKpi.value}${mainKpi.unit || ''}</strong>` : '-';
                 const tagInfo = domainTagMap[c.type] || { label: c.type, cls: 'bg-slate-100 text-slate-600' };
 
-                tr.innerHTML = `
-                    <td class="font-bold text-slate-900">
-                        <span>${c.name}</span>
-                    </td>
-                    <td>
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded ${tagInfo.cls}">${tagInfo.label}</span>
-                    </td>
-                    <td class="text-slate-600">
-                        <div class="font-medium text-slate-800">${c.role}</div>
-                        <div class="text-xs text-slate-400 truncate max-w-md">${c.desc}</div>
-                    </td>
-                    <td class="text-xs text-slate-600">
-                        ${kpiText}
-                    </td>
-                `;
-                tbody.appendChild(tr);
+                // 1) Desktop Table Row
+                if (tbody) {
+                    const tr = document.createElement('tr');
+                    tr.className = "cursor-pointer hover:bg-slate-50 transition-colors";
+                    tr.onclick = () => showCompanyPopup(c);
+                    tr.innerHTML = `
+                        <td class="font-bold text-slate-900">
+                            <span>${c.name}</span>
+                        </td>
+                        <td>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded ${tagInfo.cls}">${tagInfo.label}</span>
+                        </td>
+                        <td class="text-slate-600">
+                            <div class="font-medium text-slate-800">${c.role}</div>
+                            <div class="text-xs text-slate-400 truncate max-w-md">${c.desc}</div>
+                        </td>
+                        <td class="text-xs text-slate-600">
+                            ${kpiText}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+
+                // 2) Mobile Responsive Card Item
+                if (mobileCards) {
+                    const card = document.createElement('div');
+                    card.className = "saas-card p-4 cursor-pointer hover:border-blue-300 transition-all space-y-2.5";
+                    card.onclick = () => showCompanyPopup(c);
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-slate-900 text-sm">${c.name}</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded ${tagInfo.cls}">${tagInfo.label}</span>
+                        </div>
+                        <div class="text-xs text-slate-600 bg-slate-50/80 p-2.5 rounded-xl border border-slate-100">
+                            <div class="font-bold text-slate-800 mb-0.5">${c.role}</div>
+                            <div class="text-[11px] text-slate-500 leading-snug">${c.desc}</div>
+                        </div>
+                        <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-100">
+                            <span class="text-[11px] text-slate-400 font-medium">주요 지표</span>
+                            <span class="text-xs text-slate-700">${kpiText}</span>
+                        </div>
+                    `;
+                    mobileCards.appendChild(card);
+                }
             });
         }
     </script>
