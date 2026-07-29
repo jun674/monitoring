@@ -3,304 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Partners</title>
+    <title>Partners - 초거대 제조 AI 참여기관</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
     <script src="popup.js"></script>
     <style>
         body { 
-            font-family: 'Pretendard', sans-serif;
-            background-color: #F5F6F8; /* 아주 연한 웜그레이 톤 */
-            color: #191F28;
-        }
-        .font-tech { font-family: 'Rajdhani', sans-serif; }
-
-        /* 스크롤바 숨김 (깔끔함 유지) */
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
-
-        /* Soft Card Design */
-        .soft-card {
-            background: #FFFFFF;
-            border-radius: 24px; /* 더 둥근 모서리 */
-            border: 1px solid rgba(0,0,0,0.02);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); /* 아주 부드러운 그림자 */
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .soft-card:hover {
-            transform: translateY(-8px);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: #F8FAFC;
+            color: #0F172A;
         }
 
-        /* ── TOPBAR ── */
+        /* ── Modern Topbar ── */
         .topbar {
-            position: sticky; top: 0; z-index: 50;
-            background: #fff;
-            border-bottom: 1px solid #e5e7eb;
+            position: sticky; top: 0; z-index: 40;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #E2E8F0;
             padding: 0 28px;
-            height: 52px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .topbar-left { display: flex; align-items: center; gap: 10px; }
-        .ai-badge {
-            width: 28px; height: 28px; border-radius: 8px;
-            background: linear-gradient(135deg, #191F28, #2d3748);
-            color: #fff; font-size: 11px; font-weight: 700;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-        .topbar-title { font-size: 15px; font-weight: 600; color: #191F28; }
-        .topbar-tabs {
-            display: flex; gap: 2px;
-            background: #f3f4f6;
-            border-radius: 24px;
-            padding: 3px;
-        }
-        .tab-btn {
-            padding: 5px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            color: #8b95a1;
-            transition: all 0.15s;
-            font-family: 'Pretendard', sans-serif;
-        }
-        .tab-btn:hover { background: #f3f4f6; color: #333D4B; }
-        .tab-btn.active { background: #191F28; color: #fff; }
 
-        /* Badge Styles */
-        .badge-soft {
-            border-radius: 8px;
-            padding: 4px 10px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        /* KPI Mini Progress Bar */
-        .kpi-mini-bar {
-            height: 6px;
-            border-radius: 3px;
-            background: #F2F4F6;
-            overflow: hidden;
-            position: relative;
-        }
-        .kpi-mini-bar .fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .kpi-mini-bar .fill.achieved    { background: linear-gradient(90deg, #34D399, #10B981); }
-        .kpi-mini-bar .fill.in-progress { background: linear-gradient(90deg, #FCD34D, #F59E0B); }
-        .kpi-mini-bar .fill.not-started { background: #D1D5DB; }
-
-        /* Category Badge */
-        .badge-category {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 6px;
-            letter-spacing: 0.3px;
-        }
-        .badge-category.lead    { background: #FEF3C7; color: #92400E; }
-        .badge-category.partner { background: #EFF6FF; color: #1E40AF; }
-
-        /* Animations */
-        @keyframes floatUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-enter {
-            animation: floatUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .card-highlight {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 3px rgba(59, 130, 246, 0.7);
-            transform: translateY(-8px);
-        }
-        
-        /* 선택된 카드 표시 효과 */
-        .card-selected {
-            border: 2px solid #3B82F6;
-            background: linear-gradient(to bottom, rgba(59, 130, 246, 0.02), transparent);
-        }
-        
-        /* 마우스 오버 시 선택 효과 제거 */
-        .soft-card:hover.card-selected {
-            border: 1px solid rgba(0,0,0,0.02);
+        /* ── SaaS Card Design ── */
+        .saas-card {
             background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        .saas-card:hover {
+            border-color: #CBD5E1;
+            box-shadow: 0 14px 32px -4px rgba(15, 23, 42, 0.14), 0 6px 12px -2px rgba(15, 23, 42, 0.06);
+            transform: translateY(-3px);
+        }
+
+        /* ── Filter Tab Buttons ── */
+        .tab-pill {
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748B;
+            background: #F1F5F9;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .tab-pill:hover {
+            background: #E2E8F0;
+            color: #0F172A;
+        }
+        .tab-pill.active {
+            background: #0F172A;
+            color: #FFFFFF;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background-color: transparent; }
     </style>
 </head>
-<body class="h-screen flex flex-col overflow-hidden">
+<body class="min-h-screen flex flex-col overflow-x-hidden">
 
-    <div class="topbar">
-        <div class="topbar-left">
-            <div class="ai-badge">AI</div>
-            <span class="topbar-title">Partners</span>
+    <!-- Top Navigation Header -->
+    <div class="topbar shrink-0">
+        <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+            <span class="text-sm font-bold text-slate-900 tracking-tight">PARTNERS</span>
+            <span class="text-xs text-slate-400 font-medium hidden sm:inline-block">| 총 15개 참여기관</span>
         </div>
-        <div class="topbar-tabs">
-            <button class="tab-btn active" onclick="filterCards('ALL')">ALL</button>
-            <button class="tab-btn" onclick="filterCards('DATA')">Data</button>
-            <button class="tab-btn" onclick="filterCards('AI')">AI</button>
-            <button class="tab-btn" onclick="filterCards('INFRA')">Infra</button>
-            <button class="tab-btn" onclick="filterCards('NETWORK')">Network</button>
-            <button class="tab-btn" onclick="filterCards('ORG')">Org</button>
-            <button class="tab-btn" onclick="filterCards('SERVICE')">Service</button>
+
+        <!-- Filter Tabs -->
+        <div class="flex items-center gap-1.5 overflow-x-auto py-1">
+            <button class="tab-pill active" onclick="filterCards('ALL')" id="tab-ALL">ALL (15)</button>
+            <button class="tab-pill" onclick="filterCards('DATA')" id="tab-DATA">DATA</button>
+            <button class="tab-pill" onclick="filterCards('AI')" id="tab-AI">AI</button>
+            <button class="tab-pill" onclick="filterCards('INFRA')" id="tab-INFRA">INFRASTRUCTURE</button>
+            <button class="tab-pill" onclick="filterCards('NETWORK')" id="tab-NETWORK">NETWORK</button>
+            <button class="tab-pill" onclick="filterCards('ORG')" id="tab-ORG">ORGANIZING</button>
+            <button class="tab-pill" onclick="filterCards('SERVICE')" id="tab-SERVICE">SERVICE</button>
         </div>
     </div>
 
-    <main class="flex-1 overflow-y-auto p-8 lg:p-12 relative">
-        <div class="max-w-[1600px] mx-auto pb-20 relative z-10">
-            
-            <div class="flex items-end justify-between mb-8 px-1">
-                 <div id="company-list" class="flex-1 flex flex-wrap gap-2"></div>
-                 <div class="flex flex-col items-end">
-                    <span class="text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">Total Services</span>
-                    <div class="font-tech flex items-baseline gap-2">
-                        <span id="count-display" class="text-4xl font-bold text-gray-900">15</span>
-                        <span class="text-lg text-gray-400 font-medium">ACTIVE</span>
-                    </div>
+    <main class="flex-1 p-6 md:p-10">
+        <div class="max-w-7xl mx-auto space-y-6 pb-20">
+
+            <!-- Sub Header Info Bar -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+                <div class="flex flex-wrap items-center gap-1.5" id="chip-list-bar">
+                    <!-- Quick Jump Chips -->
+                </div>
+                <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                    <span class="text-xs text-slate-400 font-medium">표시 중:</span>
+                    <span id="display-count" class="text-sm font-bold text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">15개 기관</span>
                 </div>
             </div>
 
-            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <!-- Card Grid -->
+            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             </div>
+
         </div>
     </main>
 
-        <script src="data.js"></script>
+    <script src="data.js"></script>
     <script>
-        // Soft Minimal Color Scheme (파스텔 톤 뱃지)
-        const typeStyles = {
-            'DATA': { bg: 'bg-blue-50', text: 'text-blue-600', icon: 'text-blue-500' },
-            'AI': { bg: 'bg-purple-50', text: 'text-purple-600', icon: 'text-purple-500' },
-            'INFRA': { bg: 'bg-gray-100', text: 'text-gray-600', icon: 'text-gray-500' },
-            'NETWORK': { bg: 'bg-emerald-50', text: 'text-emerald-600', icon: 'text-emerald-500' },
-            'ORG': { bg: 'bg-orange-50', text: 'text-orange-600', icon: 'text-orange-500' },
-            'SERVICE': { bg: 'bg-rose-50', text: 'text-rose-600', icon: 'text-rose-500' }
-        };
-
-        // 배열을 랜덤하게 섞는 함수
-        function shuffleArray(array) {
-            const shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
-        }
+        let currentFilter = 'ALL';
 
         function filterCards(filterType) {
+            currentFilter = filterType;
             const grid = document.getElementById('card-grid');
-            const listBar = document.getElementById('company-list');
-            const countDisplay = document.getElementById('count-display');
-            
-            let filtered = filterType === 'ALL' ? companies : companies.filter(c => c.type === filterType);
-            
-            // ALL 탭일 때만 랜덤 순서 적용
-            if (filterType === 'ALL') {
-                filtered = shuffleArray(filtered);
+            const countEl = document.getElementById('display-count');
+            const chipBar = document.getElementById('chip-list-bar');
+
+            // Update tab button styles
+            document.querySelectorAll('.tab-pill').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            const activeBtn = document.getElementById(`tab-${filterType}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
             }
-            
-            countDisplay.innerText = filtered.length;
 
-            // Tab Button State
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                const btnType = btn.innerText.toUpperCase();
-                if (btnType === filterType) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
+            // Get filtered list
+            let list = getCompaniesByDomain(filterType);
+            countEl.innerText = `${list.length}개 기관`;
+
+            // Quick Chips
+            chipBar.innerHTML = '';
+            list.forEach(c => {
+                const chip = document.createElement('button');
+                chip.className = "text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 transition-colors flex items-center gap-1.5";
+                chip.innerHTML = `${c.name}`;
+                chip.onclick = () => scrollToCard(c.id);
+                chipBar.appendChild(chip);
             });
 
-            // Top Chip List
-            listBar.innerHTML = '';
-            filtered.forEach(item => {
-                const style = typeStyles[item.type];
-                const chip = document.createElement('div');
-                chip.className = `px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-gray-100 text-gray-600 flex items-center gap-2 shadow-sm cursor-pointer hover:bg-gray-50 transition-colors`;
-                chip.innerHTML = `${item.name}`;
-                chip.onclick = () => scrollToCard(item.id);
-                listBar.appendChild(chip);
-            });
-
-            // Card Grid Render
+            // Render Card Grid
             grid.innerHTML = '';
-            filtered.forEach((item, index) => {
-                const style = typeStyles[item.type];
-                const companyIndex = companies.findIndex(c => c.id === item.id);
-
-                // 대표 KPI 계산 (첫 번째 숫자형 achievement)
-                const primaryKpi = item.results.kpis.find(k => typeof k.achievement === 'number');
-                const avgAchievement = item.results.kpis.filter(k => typeof k.achievement === 'number');
-                const avgVal = avgAchievement.length > 0
-                    ? Math.round(avgAchievement.reduce((s, k) => s + k.achievement, 0) / avgAchievement.length)
-                    : 0;
-                const kpiStatus = avgVal >= 100 ? 'achieved' : avgVal > 0 ? 'in-progress' : 'not-started';
-                const categoryBadge = item.category === '주관'
-                    ? '<span class="badge-category lead">주관</span>'
-                    : '<span class="badge-category partner">참여</span>';
-                
+            list.forEach(item => {
                 const card = document.createElement('div');
                 card.id = `card-${item.id}`;
-                card.className = "animate-enter";
-                card.style.animationDelay = `${index * 0.05}s`;
-                card.onclick = () => showCompanyPopup(companies[companyIndex]);
-                card.innerHTML = `
-                    <div class="soft-card h-full cursor-pointer flex flex-col p-7 group">
-                        <div class="flex justify-between items-start mb-5">
-                            <div class="flex items-center gap-1.5">
-                                <span class="badge-soft ${style.bg} ${style.text}">${item.type}</span>
-                            </div>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">${item.name}</h3>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">${item.role}</p>
-                        <p class="text-[13px] text-gray-500 leading-relaxed line-clamp-2 mb-4">${item.desc}</p>
+                card.className = `saas-card p-6 flex flex-col justify-between cursor-pointer group`;
+                card.onclick = () => showCompanyPopup(item);
 
-                        <div class="mt-auto pt-5 border-t border-gray-50 flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="text-[11px] font-bold text-gray-400 group-hover:text-gray-900 transition-colors">상세보기</span>
-                                <span class="text-[10px] text-gray-300">${item.results.deliverables.length}건 산출물</span>
+                // Domain Tag Colors & Labels
+                const domainTagMap = {
+                    ORG: { label: 'ORGANIZING', cls: 'bg-amber-100 text-amber-800 border-amber-200' },
+                    DATA: { label: 'DATA', cls: 'bg-teal-100 text-teal-800 border-teal-200' },
+                    AI: { label: 'AI', cls: 'bg-blue-100 text-blue-800 border-blue-200' },
+                    INFRA: { label: 'INFRASTRUCTURE', cls: 'bg-purple-100 text-purple-800 border-purple-200' },
+                    NETWORK: { label: 'NETWORK', cls: 'bg-orange-100 text-orange-800 border-orange-200' },
+                    SERVICE: { label: 'SERVICE', cls: 'bg-rose-100 text-rose-800 border-rose-200' }
+                };
+                const tagInfo = domainTagMap[item.type] || { label: item.type, cls: 'bg-slate-100 text-slate-700 border-slate-200' };
+
+                // First KPI value
+                const primaryKpi = item.results && item.results.kpis ? item.results.kpis[0] : null;
+
+                card.innerHTML = `
+                    <div>
+                        <!-- Header Badges -->
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${tagInfo.cls}">${tagInfo.label}</span>
+                            <span class="text-[10px] font-semibold text-slate-400">${item.category || '참여'}</span>
+                        </div>
+
+                        <!-- Company Name & Role -->
+                        <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug mb-0.5">${item.name}</h3>
+                        <p class="text-xs font-semibold text-slate-400 mb-3 truncate">${item.role}</p>
+
+                        <!-- Description -->
+                        <p class="text-xs text-slate-600 leading-relaxed line-clamp-3 mb-4 bg-slate-50/70 p-3 rounded-xl border border-slate-100">
+                            ${item.desc}
+                        </p>
+
+                        <!-- Key KPI Preview -->
+                        ${primaryKpi ? `
+                            <div class="mb-4 p-3 rounded-xl bg-white border border-slate-200/80">
+                                <div class="text-[10px] font-medium text-slate-400 truncate mb-1">${primaryKpi.label}</div>
+                                <div class="flex items-baseline justify-between">
+                                    <span class="text-sm font-extrabold text-slate-900">${primaryKpi.value} <span class="text-[10px] font-normal text-slate-500">${primaryKpi.unit || ''}</span></span>
+                                    ${primaryKpi.target ? `<span class="text-[10px] font-medium text-slate-400">목표: ${primaryKpi.target}${primaryKpi.unit||''}</span>` : ''}
+                                </div>
                             </div>
-                            <div class="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-black group-hover:text-white transition-all">
-                                <i class="fas fa-arrow-right text-[10px] transform -rotate-45 group-hover:rotate-0 transition-transform"></i>
-                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-[11px] font-medium text-slate-400">산출물 ${item.results ? item.results.deliverables.length : 0}건</span>
+                        <div class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 group-hover:bg-slate-900 group-hover:text-white flex items-center justify-center transition-all">
+                            <i class="fas fa-arrow-right text-[10px]"></i>
                         </div>
                     </div>
                 `;
+
                 grid.appendChild(card);
             });
         }
 
-        function scrollToCard(companyId) {
-            const card = document.getElementById(`card-${companyId}`);
+        function scrollToCard(id) {
+            const card = document.getElementById(`card-${id}`);
             if (card) {
-                // 기존에 선택된 카드가 있으면 제거
-                document.querySelectorAll('.card-selected').forEach(el => {
-                    el.classList.remove('card-selected');
-                });
-                
                 card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                // 카드 내부의 soft-card에 선택 효과 추가
-                const softCard = card.querySelector('.soft-card');
-                if (softCard) {
-                    softCard.classList.add('card-selected');
-                }
+                card.classList.add('ring-2', 'ring-blue-600');
+                setTimeout(() => card.classList.remove('ring-2', 'ring-blue-600'), 2000);
             }
         }
 
-        // Init
         document.addEventListener('DOMContentLoaded', () => {
-            filterCards('ALL');
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialType = urlParams.get('type') || 'ALL';
+            filterCards(initialType);
         });
     </script>
 </body>

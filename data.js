@@ -74,6 +74,7 @@ const companies = [
         id: 'kyungnam',
         type: 'DATA',
         category: '참여',
+        isRealData: true,
         name: '경남대학교',
         role: '데이터 표준화 / 인력양성',
         roleEn: 'Data Standardization / Capacity Building',
@@ -182,6 +183,7 @@ const companies = [
         id: 'amiqu',
         type: 'DATA',
         category: '참여',
+        isRealData: true,
         name: '아미크',
         role: 'IT 데이터 파이프라인',
         roleEn: 'IT Data Pipeline',
@@ -243,6 +245,7 @@ const companies = [
         type: 'DATA',
         category: '참여',
         ca: 'CA3',
+        isRealData: true,
         name: '네스트필드',
         role: '데이터 교환',
         roleEn: 'Data Exchange',
@@ -308,8 +311,8 @@ const companies = [
             title: 'AAS 기반 데이터 교환 체계 구축',
             year3Goal: 'AAS 기반 데이터 교환 프레임워크 고도화 및 IDTA 사례 등록',
             kpis: [
-                { label: 'AAS 메타데이터 모델', value: '2', unit: '종', target: '3', achievement: 66.7, status: 'in-progress' },
-                { label: 'IDTA 사례등록', value: '1', unit: '건', target: '1', achievement: 100, status: 'achieved' }
+                { label: 'AAS 메타데이터 모델', value: '3', unit: '종', target: '3', achievement: 100.0, status: 'achieved' },
+                { label: 'IDTA 사례등록', value: '1', unit: '건', target: '1', achievement: 100.0, status: 'achieved' }
             ],
             deliverables: ['AAS 메타 데이터 모델', 'AAS 기반 데이터 교환 프레임워크', 'EDC 기반 데이터 커넥터 기술', 'IDTA USE CASE'],
             screenshot: null
@@ -370,6 +373,7 @@ const companies = [
         type: 'AI',
         category: '참여',
         ca: 'CA2',
+        isRealData: true,
         name: 'KAIST',
         role: '제조 특화 AI 모델 개발',
         roleEn: 'Manufacturing AI',
@@ -849,6 +853,7 @@ const companies = [
         type: 'SERVICE',
         category: '참여',
         ca: 'CA3',
+        isRealData: true,
         name: '메타아이스퀘어',
         role: '한국어 음성인식',
         roleEn: 'Korean Speech Recognition (STT)',
@@ -931,7 +936,12 @@ const statusColors = {
 
 function getCompaniesByDomain(domain) {
     if (!domain || domain === 'ALL') return companies;
+    if (domain === 'REAL') return companies.filter(c => c.isRealData);
     return companies.filter(c => c.type === domain);
+}
+
+function getRealDataCompanies() {
+    return companies.filter(c => c.isRealData);
 }
 
 function getCompaniesByStage(stageId) {

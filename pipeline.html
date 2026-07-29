@@ -3,283 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pipeline</title>
+    <title>Pipeline - 서비스 플로우</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
     <script src="popup.js"></script>
     <style>
         body { 
-            font-family: 'Pretendard', sans-serif; 
-            background-color: #F5F6F8;
-            color: #191F28;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; 
+            background-color: #F8FAFC;
+            color: #0F172A;
             overflow: hidden;
         }
-        .font-tech { font-family: 'Rajdhani', sans-serif; }
-        .soft-card {
-            background: #FFFFFF;
-            border-radius: 24px;
-            border: 1px solid rgba(0,0,0,0.02);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .soft-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.07);
-        }
-        ::-webkit-scrollbar { display: none; }
 
-        /* KPI Mini Progress */
-        .kpi-pipe-bar {
-            height: 5px;
-            border-radius: 3px;
-            background: #F2F4F6;
-            overflow: hidden;
-        }
-        .kpi-pipe-bar .fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .kpi-pipe-bar .fill.achieved    { background: linear-gradient(90deg, #34D399, #10B981); }
-        .kpi-pipe-bar .fill.in-progress { background: linear-gradient(90deg, #FCD34D, #F59E0B); }
-        .kpi-pipe-bar .fill.not-started { background: #D1D5DB; }
-        /* ── TOPBAR ── */
+        /* ── Modern Topbar ── */
         .topbar {
-            position: sticky; top: 0; z-index: 50;
-            background: #fff;
-            border-bottom: 1px solid #e5e7eb;
+            position: sticky; top: 0; z-index: 40;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #E2E8F0;
             padding: 0 28px;
-            height: 52px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .topbar-left { display: flex; align-items: center; gap: 10px; }
-        .ai-badge {
-            width: 28px; height: 28px; border-radius: 8px;
-            background: linear-gradient(135deg, #191F28, #2d3748);
-            color: #fff; font-size: 11px; font-weight: 700;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
+
+        /* ── SaaS Pipeline Card ── */
+        .saas-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 18px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .topbar-title { font-size: 15px; font-weight: 600; color: #191F28; }
-        .topbar-tabs {
-            display: flex; gap: 2px;
-            background: #f3f4f6;
-            border-radius: 24px;
-            padding: 3px;
+        .saas-card:hover {
+            border-color: #CBD5E1;
+            box-shadow: 0 14px 32px -4px rgba(15, 23, 42, 0.14), 0 6px 12px -2px rgba(15, 23, 42, 0.06);
+            transform: translateY(-2px);
         }
+
         .tab-btn {
-            padding: 5px 14px;
-            border-radius: 20px;
+            padding: 6px 14px;
+            border-radius: 12px;
             font-size: 12px;
-            font-weight: 500;
+            font-weight: 600;
+            color: #64748B;
+            background: #F1F5F9;
+            transition: all 0.2s;
             cursor: pointer;
             border: none;
-            background: transparent;
-            color: #8b95a1;
-            transition: all 0.15s;
-            font-family: 'Pretendard', sans-serif;
         }
-        .tab-btn:hover { background: #f3f4f6; color: #333D4B; }
-        .tab-btn.active { background: #191F28; color: #fff; }
+        .tab-btn:hover { background: #E2E8F0; color: #0F172A; }
+        .tab-btn.active { background: #0F172A; color: #FFFFFF; }
+
+        ::-webkit-scrollbar { height: 8px; width: 6px; }
+        ::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background-color: #F1F5F9; }
     </style>
 </head>
-<body>
-    <div class="topbar">
-        <div class="topbar-left">
-            <div class="ai-badge">AI</div>
-            <span class="topbar-title">Pipeline</span>
+<body class="h-screen flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <div class="topbar shrink-0">
+        <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+            <span class="text-sm font-bold text-slate-900 tracking-tight">PIPELINE</span>
+            <span class="text-xs text-slate-400 font-medium hidden sm:inline-block">| 데이터 수집부터 활용까지 6단계 체계</span>
         </div>
-        <div class="topbar-tabs">
-            <button class="tab-btn active" onclick="scrollToSection('stage-1')" id="nav-stage-1">Data</button>
-            <button class="tab-btn" onclick="scrollToSection('stage-2')" id="nav-stage-2">Transfer</button>
-            <button class="tab-btn" onclick="scrollToSection('stage-3')" id="nav-stage-3">Platform</button>
-            <button class="tab-btn" onclick="scrollToSection('stage-4')" id="nav-stage-4">AI</button>
-            <button class="tab-btn" onclick="scrollToSection('stage-5')" id="nav-stage-5">App</button>
-            <button class="tab-btn" onclick="scrollToSection('stage-6')" id="nav-stage-6">Mgmt</button>
+        <div class="topbar-tabs flex items-center gap-1.5 overflow-x-auto">
+            <button class="tab-btn active" id="tab-stage-1" onclick="scrollToSection('stage-1')">01. Data</button>
+            <button class="tab-btn" id="tab-stage-2" onclick="scrollToSection('stage-2')">02. Transfer</button>
+            <button class="tab-btn" id="tab-stage-3" onclick="scrollToSection('stage-3')">03. Platform</button>
+            <button class="tab-btn" id="tab-stage-4" onclick="scrollToSection('stage-4')">04. AI</button>
+            <button class="tab-btn" id="tab-stage-5" onclick="scrollToSection('stage-5')">05. App</button>
+            <button class="tab-btn" id="tab-stage-6" onclick="scrollToSection('stage-6')">06. Mgmt</button>
         </div>
     </div>
 
-    <main class="flex overflow-x-auto overflow-y-hidden h-full items-center gap-14 px-8" id="main-scroll">
-        <section id="stage-1" class="stage-section relative min-w-[320px] flex flex-col gap-4 py-8">
-            <div class="flex items-center gap-3 mb-2">
-                <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">01</span>
+    <!-- Main Horizontal Pipeline Scroll -->
+    <main class="flex-1 flex overflow-x-auto overflow-y-hidden items-start gap-8 p-8" id="main-scroll">
+
+        <!-- Stage 1 -->
+        <section id="stage-1" class="stage-section min-w-[340px] flex flex-col gap-4">
+            <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+                <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">01</span>
                 <div>
-                    <h2 class="text-xl font-bold text-gray-800">Data Collection</h2>
-                    <p class="text-xs text-gray-500 font-medium">OT/IT 데이터 수집</p>
+                    <h2 class="text-sm font-bold text-slate-900">Data Collection</h2>
+                    <p class="text-[11px] text-slate-500 font-medium">OT / IT 데이터 수집</p>
                 </div>
             </div>
-            <div class="flex flex-col gap-5" id="container-1"></div>
+            <div class="flex flex-col gap-4" id="container-1"></div>
         </section>
-        <section id="stage-2" class="stage-section relative min-w-[320px] flex flex-col gap-4 py-8">
-            <div class="flex items-center gap-3 mb-2">
-                <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">02</span>
+
+        <!-- Stage 2 -->
+        <section id="stage-2" class="stage-section min-w-[340px] flex flex-col gap-4">
+            <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+                <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">02</span>
                 <div>
-                    <h2 class="text-xl font-bold text-gray-800">Transfer (5G)</h2>
-                    <p class="text-xs text-gray-500 font-medium">초고속 네트워크</p>
+                    <h2 class="text-sm font-bold text-slate-900">Transfer (5G)</h2>
+                    <p class="text-[11px] text-slate-500 font-medium">초고속 특화망 전송</p>
                 </div>
             </div>
-            <div class="flex flex-col gap-5" id="container-2"></div>
+            <div class="flex flex-col gap-4" id="container-2"></div>
         </section>
-        <section id="stage-3" class="stage-section relative min-w-[320px] flex flex-col gap-4 py-8">
-            <div class="flex items-center gap-3 mb-2">
-                <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">03</span>
+
+        <!-- Stage 3 -->
+        <section id="stage-3" class="stage-section min-w-[340px] flex flex-col gap-4">
+            <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+                <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">03</span>
                 <div>
-                    <h2 class="text-xl font-bold text-gray-800">Platform & AAS</h2>
-                    <p class="text-xs text-gray-500 font-medium">인프라 및 표준화</p>
+                    <h2 class="text-sm font-bold text-slate-900">Platform & AAS</h2>
+                    <p class="text-[11px] text-slate-500 font-medium">인프라 및 국제 표준화</p>
                 </div>
             </div>
-            <div class="flex flex-col gap-5" id="container-3"></div>
+            <div class="flex flex-col gap-4" id="container-3"></div>
         </section>
-        <section id="stage-4" class="stage-section relative min-w-[320px] flex flex-col gap-4 py-8">
-            <div class="flex items-center gap-3 mb-2">
-                <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">04</span>
+
+        <!-- Stage 4 -->
+        <section id="stage-4" class="stage-section min-w-[340px] flex flex-col gap-4">
+            <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+                <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">04</span>
                 <div>
-                    <h2 class="text-xl font-bold text-gray-800">AI Analysis</h2>
-                    <p class="text-xs text-gray-500 font-medium">분석 및 모델링</p>
+                    <h2 class="text-sm font-bold text-slate-900">AI Analysis</h2>
+                    <p class="text-[11px] text-slate-500 font-medium">제조 특화 AI 모델링</p>
                 </div>
             </div>
-            <div class="flex flex-col gap-5" id="container-4"></div>
+            <div class="flex flex-col gap-4" id="container-4"></div>
         </section>
-        <section id="stage-5" class="stage-section relative min-w-[320px] flex flex-col gap-4 py-8">
-            <div class="flex items-center gap-3 mb-2">
-                <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">05</span>
+
+        <!-- Stage 5 -->
+        <section id="stage-5" class="stage-section min-w-[340px] flex flex-col gap-4">
+            <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+                <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">05</span>
                 <div>
-                    <h2 class="text-xl font-bold text-gray-800">Application</h2>
-                    <p class="text-xs text-gray-500 font-medium">응용 서비스</p>
+                    <h2 class="text-sm font-bold text-slate-900">Application</h2>
+                    <p class="text-[11px] text-slate-500 font-medium">현장 응용 서비스 실증</p>
                 </div>
             </div>
-            <div class="flex flex-col gap-5" id="container-5"></div>
+            <div class="flex flex-col gap-4" id="container-5"></div>
         </section>
-        <section id="stage-6" class="stage-section relative min-w-[320px] flex flex-col gap-4 py-8">
-            <div class="flex items-center gap-3 mb-2">
-                <span class="w-8 h-8 rounded-lg bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-sm">06</span>
+
+        <!-- Stage 6 -->
+        <section id="stage-6" class="stage-section min-w-[340px] flex flex-col gap-4">
+            <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+                <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">06</span>
                 <div>
-                    <h2 class="text-xl font-bold text-gray-800">Management</h2>
-                    <p class="text-xs text-gray-500 font-medium">총괄 및 검증</p>
+                    <h2 class="text-sm font-bold text-slate-900">Management</h2>
+                    <p class="text-[11px] text-slate-500 font-medium">총괄 및 품질 검증</p>
                 </div>
             </div>
-            <div class="flex flex-col gap-5" id="container-6"></div>
+            <div class="flex flex-col gap-4" id="container-6"></div>
         </section>
 
     </main>
 
-        <script src="data.js"></script>
+    <script src="data.js"></script>
     <script>
-        const statusConfig = {
-            normal: { text: 'text-emerald-600', bg: 'bg-emerald-50', dot: 'bg-emerald-500', label: '정상' },
-            warning: { text: 'text-amber-600', bg: 'bg-amber-50', dot: 'bg-amber-500', label: '점검' },
-            danger: { text: 'text-rose-600', bg: 'bg-rose-50', dot: 'bg-rose-500', label: '장애' }
-        };
+        function renderPipeline() {
+            const domainTagMap = {
+                ORG: { label: 'ORGANIZING', cls: 'bg-amber-100 text-amber-800 border-amber-200' },
+                DATA: { label: 'DATA', cls: 'bg-teal-100 text-teal-800 border-teal-200' },
+                AI: { label: 'AI', cls: 'bg-blue-100 text-blue-800 border-blue-200' },
+                INFRA: { label: 'INFRASTRUCTURE', cls: 'bg-purple-100 text-purple-800 border-purple-200' },
+                NETWORK: { label: 'NETWORK', cls: 'bg-orange-100 text-orange-800 border-orange-200' },
+                SERVICE: { label: 'SERVICE', cls: 'bg-rose-100 text-rose-800 border-rose-200' }
+            };
 
-        function renderDashboard() {
-            companies.forEach((item, index) => {
+            companies.forEach((item) => {
                 const container = document.getElementById(`container-${item.stage}`);
                 if (!container) return;
-                const st = statusConfig[item.status];
-
-                // KPI 계산
-                const numericKpis = item.results.kpis.filter(k => typeof k.achievement === 'number');
-                const avgAchievement = numericKpis.length > 0
-                    ? Math.round(numericKpis.reduce((s, k) => s + k.achievement, 0) / numericKpis.length)
-                    : 0;
-                const kpiStatus = avgAchievement >= 100 ? 'achieved' : avgAchievement > 0 ? 'in-progress' : 'not-started';
-                const primaryKpi = item.results.kpis[0];
-                const kpiDisplay = primaryKpi
-                    ? `${primaryKpi.target}${primaryKpi.unit ? ' ' + primaryKpi.unit : ''}`
-                    : '—';
 
                 const card = document.createElement('div');
-                card.className = `soft-card p-5 cursor-pointer flex flex-col justify-between group h-[180px] w-full`;
-                card.onclick = () => showCompanyPopup(companies[index]);
+                card.className = `saas-card p-5 cursor-pointer flex flex-col justify-between group hover:border-blue-300 transition-all min-h-[170px]`;
+                card.onclick = () => showCompanyPopup(item);
+
+                const primaryKpi = item.results && item.results.kpis ? item.results.kpis[0] : null;
+                const tagInfo = domainTagMap[item.type] || { label: item.type, cls: 'bg-slate-100 text-slate-600 border-slate-200' };
+
                 card.innerHTML = `
                     <div>
-                        <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-start justify-between mb-2">
                             <div>
-                                <h3 class="font-bold text-gray-800 text-[15px]">${item.name}</h3>
-                                <p class="text-[11px] text-gray-400 font-medium">${item.role}</p>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${tagInfo.cls}">${tagInfo.label}</span>
+                                <h3 class="font-bold text-slate-900 text-sm mt-1 group-hover:text-blue-600 transition-colors">${item.name}</h3>
+                                <p class="text-[11px] font-medium text-slate-400 truncate">${item.role}</p>
                             </div>
-                            <div class="px-2.5 py-1 rounded-full ${st.bg} flex items-center gap-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full ${st.dot}"></span>
-                                <span class="text-[10px] font-bold ${st.text}">${st.label}</span>
+                            <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-all shrink-0">
+                                <i class="fas fa-arrow-right text-[9px]"></i>
                             </div>
                         </div>
-                        <p class="text-[13px] text-gray-500 leading-snug line-clamp-2 mb-2">${item.desc}</p>
+                        <p class="text-xs text-slate-500 leading-snug line-clamp-2 mb-3 bg-slate-50 p-2 rounded-lg border border-slate-100">${item.desc}</p>
                     </div>
-                    <div class="pt-2.5 border-t border-gray-100 flex justify-between items-center">
-                        <div>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Target</p>
-                            <p class="font-tech text-sm font-bold text-gray-700">${kpiDisplay}</p>
-                        </div>
-                        <div class="w-7 h-7 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center transition-all duration-300 group-hover:bg-gray-800 group-hover:text-white">
-                            <i class="fas fa-arrow-right text-[10px]"></i>
-                        </div>
+
+                    <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <span class="text-[10px] font-medium text-slate-400">목표: ${primaryKpi ? `${primaryKpi.value}${primaryKpi.unit||''}` : '—'}</span>
+                        <span class="text-[11px] font-semibold text-blue-600">상세보기</span>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
-        
+
         const scrollContainer = document.getElementById('main-scroll');
         scrollContainer.addEventListener('wheel', (evt) => {
             evt.preventDefault();
             scrollContainer.scrollLeft += evt.deltaY;
         });
 
-        scrollContainer.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('.stage-section');
-            const tabBtns = document.querySelectorAll('.topbar-tabs .tab-btn');
-            let current = '';
-            const centerPos = scrollContainer.scrollLeft + (window.innerWidth / 2);
-
-            sections.forEach(section => {
-                const offsetLeft = section.offsetLeft;
-                if (centerPos >= offsetLeft && centerPos < offsetLeft + section.offsetWidth + 96) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            // stage → tab 1:1 mapping
-            const stageToIdx = { 'stage-1': 0, 'stage-2': 1, 'stage-3': 2, 'stage-4': 3, 'stage-5': 4, 'stage-6': 5 };
-            const tabIdx = stageToIdx[current] ?? 0;
-
-            tabBtns.forEach((btn, i) => {
-                btn.classList.toggle('active', i === tabIdx);
-            });
-        });
+        function setActiveTab(stageId) {
+            document.querySelectorAll('.topbar-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`tab-${stageId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+        }
 
         function scrollToSection(id) {
-            const element = document.getElementById(id);
-            if(element) {
-                const scrollLeft = element.offsetLeft - (window.innerWidth / 2) + (element.offsetWidth / 2);
+            const el = document.getElementById(id);
+            if (el) {
+                setActiveTab(id);
+                const scrollLeft = el.offsetLeft - 32;
                 scrollContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
             }
         }
 
-        function addStageArrows() {
+        let isAutoScrolling = false;
+        scrollContainer.addEventListener('scroll', () => {
             const sections = document.querySelectorAll('.stage-section');
-            sections.forEach((section, index) => {
-                if (index < sections.length - 1) {
-                    const nextStageId = `stage-${index + 2}`;
-                    const arrow = document.createElement('div');
-                    arrow.className = 'absolute top-1/2 -right-[30px] transform -translate-y-1/2 text-gray-300 hover:text-gray-500 cursor-pointer transition-colors';
-                    arrow.innerHTML = `<i class="fas fa-chevron-right text-2xl"></i>`;
-                    arrow.onclick = () => scrollToSection(nextStageId);
-                    section.appendChild(arrow);
+            let currentStage = 'stage-1';
+            sections.forEach(section => {
+                const sectionLeft = section.offsetLeft - scrollContainer.offsetLeft;
+                if (scrollContainer.scrollLeft >= sectionLeft - 100) {
+                    currentStage = section.id;
                 }
             });
-        }
+            setActiveTab(currentStage);
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderDashboard();
-            addStageArrows();
-            // Set initial active tab
-            setTimeout(() => {
-                document.querySelectorAll('.tab-btn')[0].classList.add('active');
-                scrollToSection('stage-1');
-            }, 100);
+            renderPipeline();
         });
     </script>
 </body>
