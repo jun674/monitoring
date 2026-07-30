@@ -257,9 +257,13 @@ const companies = [
         details: '국제 표준 AAS 기반의 데이터 교환 인터페이스를 제공하여, 기업보안 제조데이터의 글로벌 데이터 공유 생태계 연계 기반을 확보합니다.',
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: '<strong>AAS 기반 데이터 교환 프레임워크 고도화 및 IDTA 사례 등록</strong>',
+                title: 'AAS 기반 데이터 교환 프레임워크 고도화 및 IDTA 사례 등록'
+            },
+            {
+                label: '대표 산출물',
+                type: 'list',
                 items: [
                     'AAS 메타 데이터 모델',
                     'AAS 기반 데이터 교환 프레임워크',
@@ -509,47 +513,87 @@ const companies = [
         type: 'INFRA',
         category: '참여',
         ca: 'CA2',
+        isRealData: true,
         name: '메가존클라우드',
-        role: '클라우드 인프라',
-        roleEn: 'Cloud Infra',
-        desc: '하이브리드 AI 클라우드 센터(EBC) 구축',
+        role: '인프라스트럭처',
+        roleEn: 'Infrastructure',
+        desc: '초거대제조 AI 연구를 위한 EBC 구축 및 구글-EBC 하이브리드환경 구축',
         icon: 'fas fa-cloud',
         color: 'gray',
         status: 'normal',
         stage: 3,
-        details: 'AI 모델 학습 및 서비스 운영을 위한 하이브리드 클라우드 인프라(EBC)를 구축하고 안정적으로 운영합니다.',
+        details: [
+            '초거대제조 AI 연구를 위한 AI 데이터센터 구축 (경남대에 시설공사 및 장비도입)하고 클라우드 환경과 EBC(온프렘)의 하이브리드 환경을 통합된 관점에서 관리할 수 있는 MLOps(AIOps) 플랫폼을 구축합니다.',
+            'AI Asset 기술 활용으로는 데이터의 검색 재활용성을 용이하게 하는 데이터카탈로그를 제공합니다.'
+        ],
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: 'On-premise + GCP 하이브리드 클라우드 MLOps 자동화 완성',
-                items: ['하이브리드 클라우드 v3.0', 'MLOps 파이프라인', 'AI DevOps 자동화 도구']
+                title: '추가 GPU 2식을 도입하여 GPU 클러스터를 완성하고 방화벽을 도입하여 보안을 강화합니다. 아울러 GCP 기반으로 개발된 AIOps와 Datahub를 EBC에 적용하는 개발을 완료합니다.'
             },
             {
-                label: 'Tech Stack',
+                label: '대표 산출물',
+                type: 'list',
+                items: [
+                    'EBC 서버실 (GPU 3식, 스토리지, 네트워크 스위치, 방화벽)',
+                    'EBC 준비실 모니터링 장비',
+                    '클라우드 환경 (gnaix 구글 메일 계정 40개 이상)',
+                    'MLOps/AIOps (Aiops.gnaix 사용자 및 관리자 프로그램)',
+                    'AI Asset (Datahub.gnaix 사용자 프로그램 및 샘플 데이터)'
+                ]
+            },
+            {
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['Hybrid Cloud', 'Kubernetes', 'MLOps', 'GCP']
+                items: ['데이터센터', 'GPU 장비', 'AIOps', '데이터카탈로그']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '클라우드 가동률',  value: '99.98', unit: '%', color: '#2563EB' },
-                    { label: 'MLOps 자동화율', value: '85',    unit: '%', color: '#059669' }
+                    { label: 'GPU 장비도입', value: '1', unit: '식', color: '#2563EB', target: '3' },
+                    { label: '보안장비도입', value: '0', unit: '식', color: '#059669', target: '2' },
+                    { label: 'AIOps 온프렘 확대적용', value: '1', unit: '식', color: '#7C3AED', target: '2' },
+                    { label: 'Datahub 온프렘 확대적용', value: '1', unit: '식', color: '#f59e0b', target: '2' }
                 ]
             }
         ],
-        preview: { type: 'placeholder' },
+        preview: {
+            type: 'slideshow',
+            slides: [
+                {
+                    url: './images/mzc_1.png',
+                    caption: '일반사용자 EBC 인스턴스 생성 후 쥬피터노트북 환경'
+                },
+                {
+                    url: './images/mzc_2.png',
+                    caption: '관리자 모니터링 화면'
+                },
+                {
+                    url: './images/mzc_3.png',
+                    caption: 'AI Asset-데이터 카탈로그 화면'
+                }
+            ]
+        },
         externalUrl: 'https://www.megazone.com/',
         results: {
-            title: '하이브리드 클라우드 MLOps 파이프라인 완성',
-            year3Goal: 'On-premise + GCP 하이브리드 클라우드 MLOps 자동화 완성',
+            title: 'EBC 및 구글-EBC 하이브리드 MLOps/Datahub 구축',
+            year3Goal: '추가 GPU 2식을 도입하여 GPU 클러스터를 완성하고 방화벽을 도입하여 보안을 강화합니다. 아울러 GCP 기반으로 개발된 AIOps와 Datahub를 EBC에 적용하는 개발을 완료합니다.',
             kpis: [
-                { label: '클라우드 가동률',  value: '99.98', unit: '%', target: '99.9', achievement: 100.1, status: 'achieved' },
-                { label: 'MLOps 자동화율', value: '85',    unit: '%', target: '80',   achievement: 106.3, status: 'achieved' }
+                { label: 'GPU 장비도입', value: '1', unit: '식', target: '3', achievement: 33.3, status: 'in-progress' },
+                { label: '보안장비도입', value: '0', unit: '식', target: '2', achievement: 0.0, status: 'in-progress' },
+                { label: 'AIOps 온프렘 확대적용', value: '1', unit: '식', target: '2', achievement: 50.0, status: 'in-progress' },
+                { label: 'Datahub 온프렘 확대적용', value: '1', unit: '식', target: '2', achievement: 50.0, status: 'in-progress' }
             ],
-            deliverables: ['하이브리드 클라우드 v3.0', 'MLOps 파이프라인', 'AI DevOps 자동화 도구'],
-            screenshot: null
+            deliverables: [
+                'EBC 서버실 (GPU 3식, 스토리지, 네트워크 스위치, 방화벽)',
+                'EBC 준비실 모니터링 장비',
+                '클라우드 환경 (gnaix 구글 메일 계정 40개 이상)',
+                'MLOps/AIOps (Aiops.gnaix 사용자 및 관리자 프로그램)',
+                'AI Asset (Datahub.gnaix 사용자 프로그램 및 샘플 데이터)'
+            ],
+            screenshot: './images/mzc_2.png'
         }
     },
 

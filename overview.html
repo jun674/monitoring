@@ -132,7 +132,7 @@
 
                     <div class="saas-card p-5">
                         <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">성과지표 목표</div>
-                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight">총 13 <span class="text-sm font-semibold text-slate-500">개</span></div>
+                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight">총 <span id="kpi-target-count">17</span> <span class="text-sm font-semibold text-slate-500">개</span></div>
                         <p class="text-[11px] text-slate-400 mt-2">핵심 산출물 정량 목표 수치</p>
                     </div>
 
@@ -326,9 +326,22 @@
     <script src="data.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            renderKpiTotalCount();
             renderTimeline();
             renderWBSTable();
         });
+
+        function renderKpiTotalCount() {
+            const el = document.getElementById('kpi-target-count');
+            if (el && typeof companies !== 'undefined') {
+                const totalKpis = companies
+                    .filter(c => c.isRealData)
+                    .reduce((acc, c) => acc + (c.results && c.results.kpis ? c.results.kpis.length : 0), 0);
+                if (totalKpis > 0) {
+                    el.textContent = totalKpis;
+                }
+            }
+        }
 
         function goToPartnersDomain(domainType) {
             try {
