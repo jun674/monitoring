@@ -327,46 +327,82 @@ const companies = [
         type: 'DATA',
         category: '참여',
         ca: 'CA2',
-        name: 'KETI',
-        role: 'AIoT 엣지',
-        roleEn: 'AIoT Edge',
-        desc: '현장 설비 부착형 지능형 엣지 개발',
+        isRealData: true,
+        name: '한국전자기술연구원',
+        role: 'AIoT 및 Edge 컴퓨팅 기술 개발',
+        roleEn: 'Development of AIoT & Edge computing',
+        desc: '현장의 작업자/품질 데이터를 실시간 수집·분석하는 지능형 엣지 AI 기술',
         icon: 'fas fa-microchip',
         color: 'blue',
         status: 'normal',
         stage: 1,
-        details: '데이터가 발생하는 현장에 AIoT 엣지 디바이스를 설치하여 비전, 음향 등 비정형 데이터를 1차적으로 처리하고 분석합니다.',
+        details: [
+            '제조 현장의 센서·이미지·영상 데이터를 가까운 엣지 장치에서 실시간으로 수집하고 분석하는 AIoT 기술을 개발합니다.',
+            '작업자 행동 인식·분석, 제품 품질 분석 AI를 엣지 환경에서 실행하고, 실제 실증 현장에 적용할 수 있는 엣지 AI 모듈과 통합 시스템을 구축합니다.'
+        ],
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: 'AIoT 엣지 컴퓨팅 실증 및 클라우드-엣지 연동 완성',
-                items: ['AIoT 엣지 디바이스 v3.0', '클라우드-엣지 연동 모듈', '실시간 이상감지 엔진']
+                title: 'AI 모델이 탑재된 엣지 모듈을 개발하고, AI를 엣지 환경에 최적화하여 제조 현장에 적용 가능한 AIoT·엣지 통합 시스템 구축'
             },
             {
-                label: 'Tech Stack',
+                label: '대표 산출물',
+                type: 'list',
+                items: [
+                    '작업자 행동/제품 품질 분석용 엣지 AI 연산 모듈',
+                    '제조 현장 AIoT 데이터 수집 모듈',
+                    '엣지 환경에 최적화된 작업자 행동/제품 품질 분석 AI 소프트웨어',
+                    '현장 실증용 AIoT·엣지 통합 시스템'
+                ]
+            },
+            {
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['Edge Computing', 'AIoT', 'Embedded AI']
+                items: ['Edge AI', 'AIoT', 'Edge Computing']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '배포 디바이스 수',  value: '24', unit: 'Devices', color: '#2563EB' },
-                    { label: '엣지 추론 지연시간', value: '12', unit: 'ms',      color: '#059669' }
+                    { label: '배포 디바이스 수', value: '12', unit: '개', color: '#2563EB', target: '5' },
+                    { label: '영상 처리 성능', value: '18', unit: 'FPS', color: '#059669', target: '15' },
+                    { label: 'AI 추론 지연', value: '90', unit: 'ms', color: '#7C3AED', target: '100' }
                 ]
             }
         ],
-        preview: { type: 'placeholder' },
+        preview: {
+            type: 'dual-video',
+            videos: [
+                {
+                    url: './images/keti_v.mp4',
+                    label: '작업자 행동 분석',
+                    subLabel: 'Edge AI 실증',
+                    caption: 'KETI_신성실증.mp4'
+                },
+                {
+                    url: './images/keti_k.mp4',
+                    label: '품질 분석',
+                    subLabel: 'Edge AI 실증',
+                    caption: 'KETI_KGM실증.mp4'
+                }
+            ]
+        },
         externalUrl: 'https://www.keti.re.kr/',
         results: {
-            title: 'AIoT 엣지 컴퓨팅 실증',
-            year3Goal: 'AIoT 엣지 컴퓨팅 실증 및 클라우드-엣지 연동 완성',
+            title: 'AIoT 및 Edge 컴퓨팅 기술 개발',
+            year3Goal: 'AI 모델이 탑재된 엣지 모듈을 개발하고, AI를 엣지 환경에 최적화하여 제조 현장에 적용 가능한 AIoT·엣지 통합 시스템 구축',
             kpis: [
-                { label: '배포 디바이스 수',  value: '24', unit: 'Devices', target: '20', achievement: 120.0, status: 'achieved' },
-                { label: '엣지 추론 지연시간', value: '12', unit: 'ms',      target: '20', achievement: 140.0, status: 'achieved' }
+                { label: '배포 디바이스 수', value: '12', unit: '개', target: '5', achievement: 240.0, status: 'achieved' },
+                { label: '영상 처리 성능', value: '18', unit: 'FPS', target: '15', achievement: 120.0, status: 'achieved' },
+                { label: 'AI 추론 지연', value: '90', unit: 'ms', target: '100', achievement: 111.1, status: 'achieved' }
             ],
-            deliverables: ['AIoT 엣지 디바이스 v3.0', '클라우드-엣지 연동 모듈', '실시간 이상감지 엔진'],
+            deliverables: [
+                '작업자 행동/제품 품질 분석용 엣지 AI 연산 모듈',
+                '제조 현장 AIoT 데이터 수집 모듈',
+                '엣지 환경에 최적화된 작업자 행동/제품 품질 분석 AI 소프트웨어',
+                '현장 실증용 AIoT·엣지 통합 시스템'
+            ],
             screenshot: null
         }
     },
@@ -463,47 +499,86 @@ const companies = [
         type: 'AI',
         category: '참여',
         ca: 'CA3',
+        isRealData: true,
         name: '넥스트스튜디오',
-        role: 'ESG AI / UX',
-        roleEn: 'ESG AI',
-        desc: '탄소 배출량 예측 및 저감 관리 모델',
+        role: '제조 데이터 ESG 대응 AI 모델 개발',
+        roleEn: 'Manufacturing ESG Regulatory Compliance AI Development',
+        desc: '경남 주요 제조 수출품을 위한 글로벌 ESG 규제 기반 질의응답 AI',
         icon: 'fas fa-leaf',
         color: 'purple',
         status: 'normal',
         stage: 4,
-        details: '제조 공정에서 발생하는 탄소 배출량을 예측하고, 생산 계획에 따른 저감 방안을 시뮬레이션하는 ESG 특화 AI 모델을 개발합니다.',
+        details: '넥스트스튜디오는 제조기업이 주요 수출국의 ESG 규제와 공급망 준수 요구사항을 빠르게 찾고 이해할 수 있도록 온프레미스 환경에서 운영 가능한 웹 기반 제조 ESG 규제 대응 AI를 개발합니다. 사용자의 질문과 관련된 공식 규제문서를 검색해 문서명과 근거 페이지를 함께 제시하며, 국가별 규제 대응 검토를 지원합니다. 도메인 특화 학습과 RAG 구조를 적용하고 RAGAS 지표로 응답 성능을 평가합니다.',
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: '탄소 배출량 예측 모델 고도화 및 통합 프론트엔드 완성',
-                items: ['ESG AI 모델 v2.0', '탄소 시뮬레이션 대시보드', '통합 UX/UI 프레임워크']
+                title: '글로벌 제조 공급망의 ESG 준수 요구사항을 분석하고 규제 대응 프로세스를 정립하여, 온프레미스 환경에서 운영 가능한 웹 기반 제조 ESG 규제 대응용 sLM Agent를 개발·연동하고 성능평가를 완료합니다.'
             },
             {
-                label: 'Tech Stack',
+                label: '대표 산출물',
+                type: 'list',
+                items: [
+                    '글로벌 제조 공급망 ESG 준수 요구사항 분석서',
+                    '제조 ESG 규제 대응용 sLM Agent 1종',
+                    '성능평가 결과보고서 1건'
+                ]
+            },
+            {
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['예측 모델링', '시뮬레이션', 'ESG Analytics', 'UX/UI']
+                items: ['ESG 규제 대응', 'sLM Agent', '온프레미스', '도메인 특화 학습', 'RAGAS']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: 'CO₂ 예측 정확도', value: '88.5', unit: '%', color: '#2563EB' },
-                    { label: 'CO₂ 저감률',      value: '-7.5', unit: '%', color: '#059669' }
+                    { label: 'Faithfulness (근거 충실도)', value: '0.934', unit: '점', color: '#2563EB', target: '0.738 이상' },
+                    { label: 'Answer Relevancy (질문 적합도)', value: '0.751', unit: '점', color: '#059669', target: '0.720 이상' },
+                    { label: 'Context Precision (검색 유용성)', value: '0.838', unit: '점', color: '#7C3AED', target: '0.765 이상' }
                 ]
             }
         ],
-        preview: { type: 'placeholder' },
-        externalUrl: 'http://www.next-studio.co.kr/',
+        preview: {
+            type: 'slideshow',
+            slides: [
+                {
+                    url: './images/nextstud_1.png',
+                    caption: '<strong>01. 공식 문서 근거 기반 ESG 질의응답</strong><br><span class="text-slate-500">설명: 사용자의 질문과 답변, 관련 공식 문서, 근거 페이지를 한 화면에서 확인하도록 구성한 대표 질의응답 화면입니다.</span><br><span class="text-slate-600 font-medium">캡션: 캐나다 온실가스 보고 고시를 기반으로 보고연도별 제출기한을 요약하고, 공식 문서명과 근거 페이지를 함께 제시하는 제조 ESG 규제 질의응답 화면</span>'
+                },
+                {
+                    url: './images/nextstud_2.png',
+                    caption: '<strong>02. 10개 관할권 공식 문서 자동 수집</strong><br><span class="text-slate-500">설명: 자동수집 작업자 상태, 검토 기반 업데이트 흐름, 공식 출처별 신규·무변경·검토 대기 현황을 한 화면에서 보여줍니다.</span><br><span class="text-slate-600 font-medium">캡션: 10개 관할권의 공식 출처를 주기적으로 확인해 신규 문서와 변경 후보를 발견하고, 검토 대기열에 안전하게 등록하는 자동 업데이트 화면</span>'
+                },
+                {
+                    url: './images/nextstud_3.png',
+                    caption: '<strong>03. 스마트 문서 버전관리</strong><br><span class="text-slate-500">설명: 수집된 후보 문서의 관계, 국가·관할권, 공식 출처, AI 검토 요약과 권고안을 확인하고 기존 문서 연결, 신규 문서 승인·거부를 결정하는 관리자 검토 화면입니다.</span><br><span class="text-slate-600 font-medium">캡션: 신규·변경 후보 문서의 메타데이터와 AI 검토 결과를 확인하고, 관리자 승인 후 최신 판본을 검색에 반영하는 문서 검토·승인 화면</span>'
+                },
+                {
+                    url: './images/nextstud_4.png',
+                    caption: '<strong>04. 옴부즈만 공개 질의와 관리자 사용량 집계</strong><br><span class="text-slate-500">설명: 왼쪽에는 별도 인증 없는 옴부즈만 바로 입장 영역, 오른쪽에는 질문·세션·사용자·피드백·옴부즈만 질문의 일별 사용량을 배치한 화면입니다.</span><br><span class="text-slate-600 font-medium">캡션: 별도 인증 없는 옴부즈만 질의 진입과 옴부즈만 채널 사용량을 관리자 화면에서 분리해 확인하는 운영 화면</span>'
+                },
+                {
+                    url: './images/nextstud_5.png',
+                    caption: '<strong>05. ESG AI 통합 운영 구조</strong><br><span class="text-slate-500">설명: 공식 출처 확인부터 변경 탐지, 판본 판정, 승인, 현행 지식베이스 반영, RAG 근거 검색과 출처 포함 답변까지의 흐름입니다.</span><br><span class="text-slate-600 font-medium">캡션: 공식 규제문서의 수집·판정·승인과 현행 지식베이스 갱신, 일반 사용자·옴부즈만 질의, 근거 기반 답변 및 관리자 운영지표의 연결 구조</span>'
+                }
+            ]
+        },
+        externalUrl: 'https://nextstud.io/',
         results: {
-            title: '탄소 배출량 예측 모델 + 통합 UX/UI',
-            year3Goal: '탄소 배출량 예측 모델 고도화 및 통합 프론트엔드 완성',
+            title: '제조 데이터 ESG 대응 AI 모델 개발',
+            year3Goal: '글로벌 제조 공급망의 ESG 준수 요구사항을 분석하고 규제 대응 프로세스를 정립하여, 온프레미스 환경에서 운영 가능한 웹 기반 제조 ESG 규제 대응용 sLM Agent를 개발·연동하고 성능평가를 완료합니다.',
             kpis: [
-                { label: 'CO₂ 예측 정확도', value: '88.5', unit: '%', target: '85', achievement: 104.1, status: 'achieved' },
-                { label: 'CO₂ 저감률',      value: '-7.5', unit: '%', target: '-5', achievement: 150.0, status: 'achieved' }
+                { label: 'Faithfulness (근거 충실도)', value: '0.934', unit: '점', target: '0.738', achievement: 126.6, status: 'achieved' },
+                { label: 'Answer Relevancy (질문 적합도)', value: '0.751', unit: '점', target: '0.720', achievement: 104.3, status: 'achieved' },
+                { label: 'Context Precision (검색 유용성)', value: '0.838', unit: '점', target: '0.765', achievement: 109.5, status: 'achieved' }
             ],
-            deliverables: ['ESG AI 모델 v2.0', '탄소 시뮬레이션 대시보드', '통합 UX/UI 프레임워크'],
-            screenshot: null
+            deliverables: [
+                '글로벌 제조 공급망 ESG 준수 요구사항 분석서',
+                '제조 ESG 규제 대응용 sLM Agent 1종',
+                '성능평가 결과보고서 1건'
+            ],
+            screenshot: './images/nextstud_1.png'
         }
     },
 

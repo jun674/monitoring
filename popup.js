@@ -318,10 +318,15 @@ function _renderPreview(preview, name, externalUrl) {
 
             const renderSlide = () => {
                 const slide = slides[currentIndex];
+                const isVideo = slide.url && slide.url.toLowerCase().endsWith('.mp4');
+                const mediaHtml = isVideo
+                    ? `<video src="${slide.url}" controls autoplay muted loop class="max-w-full max-h-[85%] rounded-xl shadow-sm object-contain"></video>`
+                    : `<img src="${slide.url}" alt="Slide ${currentIndex + 1}" />`;
+
                 container.innerHTML = `
                     <div class="slideshow-container">
                         <div class="slideshow-viewer">
-                            <img src="${slide.url}" alt="Slide ${currentIndex + 1}" />
+                            ${mediaHtml}
                         </div>
                         <div class="slideshow-caption">${slide.caption || ''}</div>
                         <div class="slideshow-indicators">
@@ -352,6 +357,35 @@ function _renderPreview(preview, name, externalUrl) {
 
             renderSlide();
             startAutoPlay();
+            break;
+        }
+
+        case 'dual-video':
+        case 'videos': {
+            const videos = preview.videos || [];
+            if (videos.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400">비디오 데이터가 없습니다.</p>`;
+                break;
+            }
+
+            container.innerHTML = `
+                <div class="w-full h-full flex flex-col justify-center gap-3 p-1.5 overflow-y-auto">
+                    ${videos.map(v => `
+                        <div class="flex items-center gap-3 w-full bg-slate-50/80 p-3 rounded-2xl border border-slate-200/80 shadow-2xs">
+                            <div class="shrink-0 w-28 h-28 rounded-full border border-slate-200 bg-white flex flex-col items-center justify-center text-center p-2 shadow-2xs">
+                                <span class="text-xs font-bold text-slate-800 leading-snug">${v.label || ''}</span>
+                                <span class="text-[11px] font-semibold text-slate-500 mt-1">${v.subLabel || ''}</span>
+                            </div>
+                            <div class="flex-1 min-w-0 flex items-center justify-center">
+                                <div class="w-full aspect-video rounded-xl overflow-hidden bg-slate-900 shadow-xs" style="aspect-ratio: 16/9;">
+                                    <video src="${v.url}" controls autoplay muted loop class="w-full h-full object-cover rounded-xl">
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
             break;
         }
     }
