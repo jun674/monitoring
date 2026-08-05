@@ -924,46 +924,55 @@ const companies = [
         type: 'SERVICE',
         category: '참여',
         ca: 'CA3',
+        isRealData: true,
         name: '에스디테크',
-        role: 'IIoT 센싱',
-        roleEn: 'Sensing',
-        desc: '설비 진동/온도 실시간 데이터 수집',
+        role: '공정품질 데이터 수집·정합성 확보',
+        roleEn: 'Process-Quality Data Collection & Consistency',
+        desc: 'IIoT 기반 데이터 수집 실증',
         icon: 'fas fa-wave-square',
         color: 'rose',
         status: 'normal',
-        stage: 5,
-        details: '설비의 진동, 온도 등 IIoT 센서 데이터를 실시간으로 수집하고 분석하여 공정 품질을 안정적으로 유지하고 관리합니다.',
+        stage: 1,
+        details: '엔진 조립 가공공정에 IIoT 센서를 구축해 설비의 물리 데이터를 실시간으로 수집하고, IT/OT 이기종 데이터의 정합성을 확보해 참여기관 간 공유 가능한 체계로 실증',
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: 'IIoT 센서 데이터 수집 고도화 및 공정 품질 관리 자동화',
-                items: ['IIoT 센서 모듈 v3.0', '실시간 데이터 수집기', '공정 품질 모니터링 시스템']
+                title: 'IIoT 기반 공정품질 데이터 정합성 확보 및 공유 체계 실증'
             },
             {
-                label: 'Tech Stack',
+                label: '대표 산출물',
+                type: 'list',
+                items: [
+                    '공정품질 데이터 정합성 확보 및 공유 체계 실증(기술문서 2건)'
+                ]
+            },
+            {
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['IIoT', 'Sensor Analytics', 'Predictive Maintenance']
+                items: ['IIoT', '공정데이터 정합성', '엣지컴퓨팅', '데이터 표준화']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '데이터 수집률', value: '99.7', unit: '%',      color: '#2563EB' },
-                    { label: '센서 배치 수',  value: '48',   unit: 'Sensors', color: '#059669' }
+                    { label: 'IIoT기반 공정품질 데이터 수집 시스템 구축', value: '1', unit: '건', color: '#2563EB', target: '1 (2025년 구축 완료)' },
+                    { label: '공구불량 감소율', value: '-', unit: '%', color: '#059669', target: '10' }
                 ]
             }
         ],
         preview: { type: 'placeholder' },
-        externalUrl: null,
+        externalUrl: 'http://www.sd-tech.kr/',
         results: {
-            title: 'IIoT 데이터 수집 고도화',
-            year3Goal: 'IIoT 센서 데이터 수집 고도화 및 공정 품질 관리 자동화',
+            title: '공정품질 데이터 수집·정합성 확보',
+            year3Goal: 'IIoT 기반 공정품질 데이터 정합성 확보 및 공유 체계 실증',
             kpis: [
-                { label: '데이터 수집률', value: '99.7', unit: '%',       target: '99', achievement: 100.7, status: 'achieved' },
-                { label: '센서 배치 수',  value: '48',   unit: 'Sensors', target: '40', achievement: 120.0, status: 'achieved' }
+                { label: 'IIoT기반 공정품질 데이터 수집 시스템 구축', value: '1', unit: '건', target: '1', achievement: 100.0, status: 'achieved' },
+                { label: '공구불량 감소율', value: '-', unit: '%', target: '10', achievement: 0.0, status: 'in-progress' }
             ],
-            deliverables: ['IIoT 센서 모듈 v3.0', '실시간 데이터 수집기', '공정 품질 모니터링 시스템'],
+            deliverables: [
+                '공정품질 데이터 정합성 확보 및 공유 체계 실증(기술문서 2건)'
+            ],
             screenshot: null
         }
     },

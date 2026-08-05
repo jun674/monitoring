@@ -132,8 +132,8 @@
 
                     <div class="saas-card p-5">
                         <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">성과지표 목표</div>
-                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight">총 <span id="kpi-target-count">23</span> <span class="text-sm font-semibold text-slate-500">개</span></div>
-                        <p class="text-[11px] text-slate-400 mt-2">핵심 산출물 정량 목표 수치</p>
+                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight">총 <span id="kpi-target-count">25</span> <span class="text-sm font-semibold text-slate-500">개</span></div>
+                        <p class="text-[11px] text-slate-400 mt-2" id="kpi-status-count">핵심 산출물 정량 목표 수치</p>
                     </div>
 
                     <div class="saas-card p-5">
@@ -333,14 +333,34 @@
 
         function renderKpiTotalCount() {
             const el = document.getElementById('kpi-target-count');
+            const statusEl = document.getElementById('kpi-status-count');
             if (el && typeof companies !== 'undefined') {
-                const totalKpis = companies
-                    .filter(c => c.isRealData)
-                    .reduce((acc, c) => acc + (c.results && c.results.kpis ? c.results.kpis.length : 0), 0);
+                const realCompanies = companies.filter(c => c.isRealData);
+                const allKpis = realCompanies.flatMap(c => (c.results && c.results.kpis) ? c.results.kpis : []);
+                const totalKpis = allKpis.length;
+                const achievedKpis = allKpis.filter(k => k.status === 'achieved' || k.achievement >= 100).length;
+
                 if (totalKpis > 0) {
-                    el.textContent = totalKpis;
+                    animateCounter(el, totalKpis);
+                    if (statusEl) {
+                        statusEl.innerHTML = `달성 <span class="font-bold text-emerald-600">${achievedKpis}</span>개 / 전체 <span class="font-bold text-slate-600">${totalKpis}</span>개 지표`;
+                    }
                 }
             }
+        }
+
+        function animateCounter(element, target, duration = 800) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(start);
+                }
+            }, 16);
         }
 
         function goToPartnersDomain(domainType) {
