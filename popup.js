@@ -293,7 +293,7 @@ function _renderPreview(preview, name, externalUrl) {
             if (isVideo) {
                 container.innerHTML = `
                     <div class="w-full h-full flex flex-col items-center justify-center gap-3">
-                        <video src="${preview.url}" controls autoplay muted loop class="max-w-full max-h-[88%] rounded-xl shadow-sm">
+                        <video src="${preview.url}" controls muted loop class="max-w-full max-h-[88%] rounded-xl shadow-sm">
                         </video>
                         ${preview.caption ? `<p class="text-xs text-slate-500 font-medium">${preview.caption}</p>` : ''}
                     </div>`;
@@ -320,7 +320,7 @@ function _renderPreview(preview, name, externalUrl) {
                 const slide = slides[currentIndex];
                 const isVideo = slide.url && slide.url.toLowerCase().endsWith('.mp4');
                 const mediaHtml = isVideo
-                    ? `<video src="${slide.url}" controls autoplay muted loop class="max-w-full max-h-[85%] rounded-xl shadow-sm object-contain"></video>`
+                    ? `<video src="${slide.url}" controls muted loop class="max-w-full max-h-[85%] rounded-xl shadow-sm object-contain"></video>`
                     : `<img src="${slide.url}" alt="Slide ${currentIndex + 1}" />`;
 
                 container.innerHTML = `
@@ -378,7 +378,7 @@ function _renderPreview(preview, name, externalUrl) {
                             </div>
                             <div class="flex-1 min-w-0 flex items-center justify-center">
                                 <div class="w-full aspect-video rounded-xl overflow-hidden bg-slate-900 shadow-xs" style="aspect-ratio: 16/9;">
-                                    <video src="${v.url}" controls autoplay muted loop class="w-full h-full object-cover rounded-xl">
+                                    <video src="${v.url}" controls muted loop class="w-full h-full object-cover rounded-xl">
                                     </video>
                                 </div>
                             </div>

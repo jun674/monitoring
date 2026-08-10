@@ -828,46 +828,73 @@ const companies = [
         type: 'SERVICE',
         category: '참여',
         ca: 'CA3',
+        isRealData: true,
         name: '소르테크',
-        role: 'QMS / Vision AI',
-        roleEn: 'Vision AI',
-        desc: '육안 검사 대비 속도 2배 향상 불량 검출',
+        role: '품질 관리(Quality Control, QC)',
+        roleEn: 'Quality Control (QC)',
+        desc: '엔진 조립 공정 품질 검사 자동화 서비스',
         icon: 'fas fa-camera-retro',
         color: 'rose',
-        status: 'danger',
+        status: 'normal',
         stage: 5,
-        details: 'AI 비전 기술을 활용하여 생산 라인의 제품 불량을 실시간으로 검출합니다. sLM Agent 기반 QMS로 품질관리 자동화 및 ESG 규제 대응을 수행합니다.',
+        details: [
+            '엔진 조립 공정 품질 검사 자동화 서비스 제공.',
+            '품질검사시스템(QC다이나모) 현장 적용 및 실증.',
+            '비전검사시스템 현장 적용, 공정반영 결과 분석 및 실증 (① Finger Follower, ② 엔진블록정보 매핑, ③ Sealant 도포).',
+            'AI 기반 통합관리 대시보드 실증.'
+        ],
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: 'RAG 기반 sLM Agent QMS 완성 및 ESG 규제대응 자동화',
-                items: ['sLM Agent QMS v2.0', 'RAG 기반 Q&A 시스템', 'ESG 규제대응 모듈']
+                title: '품질검사시스템, 비전검사시스템, 광학문자인식 / 사무자동화, 전자문서 플랫폼, AI기반 통합관리 대시보드 실증'
             },
             {
-                label: 'Tech Stack',
+                label: '대표 산출물',
+                type: 'list',
+                items: [
+                    '품질관리시스템 실증 결과 보고서',
+                    '비전검사시스템(Finger Follower, 블록매핑, 실런트) 실증 보고서',
+                    '광학문자인식/사무자동화 실증 보고서',
+                    'AI 기반 통합관리 대시보드 실증 보고서'
+                ]
+            },
+            {
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['Computer Vision', 'sLM Agent', 'RAG', 'QMS']
+                items: ['품질관리', '비전검사', '광학문자인식', '사무자동화', 'AI 대시보드']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '불량 검출 속도',    value: '15', unit: 'Defects/h', color: '#2563EB' },
-                    { label: 'sLM Agent 정확도', value: '87', unit: '%',         color: '#059669' }
+                    { label: '생산성(P) 향상', value: '5', unit: '%', color: '#2563EB' },
+                    { label: '불량률(Q) 감소', value: '5', unit: '%', color: '#059669' },
+                    { label: '비용(C) 절감', value: '5', unit: '%', color: '#7C3AED' },
+                    { label: '리드타임(D) 감소', value: '20', unit: '%', color: '#f59e0b' }
                 ]
             }
         ],
-        preview: { type: 'placeholder' },
+        preview: {
+            type: 'image',
+            url: './images/sortech_v.mp4'
+        },
         externalUrl: 'http://www.sortech.co.kr/',
         results: {
-            title: 'sLM Agent 기반 QMS + ESG 규제대응',
-            year3Goal: 'RAG 기반 sLM Agent QMS 완성 및 ESG 규제대응 자동화',
+            title: '엔진 조립 공정 품질 검사 자동화 서비스',
+            year3Goal: '품질검사시스템, 비전검사시스템, 광학문자인식 / 사무자동화, 전자문서 플랫폼, AI기반 통합관리 대시보드 실증',
             kpis: [
-                { label: '불량 검출 속도',    value: '15', unit: 'Defects/h', target: '20', achievement: 75.0,  status: 'in-progress' },
-                { label: 'sLM Agent 정확도', value: '87', unit: '%',         target: '85', achievement: 102.4, status: 'achieved' }
+                { label: '생산성(P) 향상', value: '5', unit: '%', target: '5', achievement: 100.0, status: 'achieved' },
+                { label: '불량률(Q) 감소', value: '5', unit: '%', target: '5', achievement: 100.0, status: 'achieved' },
+                { label: '비용(C) 절감', value: '5', unit: '%', target: '5', achievement: 100.0, status: 'achieved' },
+                { label: '리드타임(D) 감소', value: '20', unit: '%', target: '20', achievement: 100.0, status: 'achieved' }
             ],
-            deliverables: ['sLM Agent QMS v2.0', 'RAG 기반 Q&A 시스템', 'ESG 규제대응 모듈'],
+            deliverables: [
+                '품질관리시스템 실증 결과 보고서',
+                '비전검사시스템(Finger Follower, 블록매핑, 실런트) 실증 보고서',
+                '광학문자인식/사무자동화 실증 보고서',
+                'AI 기반 통합관리 대시보드 실증 보고서'
+            ],
             screenshot: null
         }
     },
