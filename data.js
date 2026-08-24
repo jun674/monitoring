@@ -1061,6 +1061,101 @@ const companies = [
             deliverables: ['STT 개발 보고서', '공인시험 성적서', 'AI 기반 불량 역추적 서비스'],
             screenshot: './images/metaisquare_1.png'
         }
+    },
+    {
+        id: 'sysnova',
+        type: 'SERVICE',
+        category: '참여',
+        ca: 'CA3',
+        isRealData: true,
+        name: '시스노바',
+        role: 'AI 도입지원 큐레이터 서비스 개발',
+        roleEn: 'AI Adoption Support Curator Service Development',
+        desc: 'RAG 기반 맞춤형 큐레이션으로 제조기업의 효율적인 AI 도입을 지원',
+        icon: 'fas fa-robot',
+        color: 'rose',
+        status: 'normal',
+        stage: 5,
+        details: 'AI 도입에 어려움을 겪는 제조기업을 위해 기업의 규모와 상황에 맞는 맞춤형 AI 솔루션을 추천하고 진단해 주는 서비스입니다. 복잡한 전문 지식이 없어도 쉬운 웹 화면과 AI 상담을 통해 현장에 필요한 AI 도입 방향부터 구체적인 가이드까지 한눈에 안내받을 수 있습니다. 진단 결과를 바탕으로 컨설팅과 실증 사업 등 실제 AI 구축까지 연계해 기업의 성공적인 디지털 전환을 돕습니다.',
+        sections: [
+            {
+                label: '3차년도 목표',
+                type: 'list',
+                title: '제조기업 AI 도입 지원 큐레이터 서비스 개발'
+            },
+            {
+                label: '대표 산출물',
+                type: 'list',
+                items: [
+                    '정책 정의서',
+                    '화면 설계서',
+                    'RAG 연계 아키텍처 설계서',
+                    '큐레이터 Web Agent',
+                    '기업별 AI 도입 진단·추천 리포트'
+                ]
+            },
+            {
+                label: '기술 키워드',
+                type: 'tags',
+                items: ['LLM', 'RAG', 'AI 에이전트', '지식베이스 & 메타데이터', '세그먼트 룰 엔진']
+            },
+            {
+                label: '성과 지표',
+                type: 'kpi-static',
+                items: [
+                    { label: '큐레이터 서비스 기능 구축률', value: '75', unit: '%', color: '#2563EB', target: '100' },
+                    { label: '큐레이터 기반 AI 도입 진단·추천 리포트 발행 건수', value: '0', unit: '건', color: '#059669', target: '30' },
+                    { label: '큐레이터 서비스 만족도', value: '0', unit: '%', color: '#7C3AED', target: '85' }
+                ]
+            }
+        ],
+        preview: {
+            type: 'slideshow',
+            slides: [
+                {
+                    url: './images/sysnova_1.png',
+                    caption: '① AI 상담 화면 — 업종·현장 고민을 입력하면 맞춤형 AI 도입 방향을 안내'
+                },
+                {
+                    url: './images/sysnova_2.png',
+                    caption: '② 제조 AI 우수사례 — 공식 출처 기반 사례를 업종·AI유형별로 큐레이션'
+                },
+                {
+                    url: './images/sysnova_3.png',
+                    caption: '③ AI 도입 로드맵 — 단계별 활동·체크리스트로 실행 경로 제시'
+                },
+                {
+                    url: './images/sysnova_4.png',
+                    caption: '④ 도입 계획서 — 상담 결과 기반 내부 보고용 도입 계획서 자동 생성'
+                },
+                {
+                    url: './images/sysnova_5.png',
+                    caption: '⑤ 관리자 콘솔 대시보드 — 상담·회원·산출물 현황을 한눈에 모니터링'
+                },
+                {
+                    url: './images/sysnova_6.png',
+                    caption: '⑥ 로그인 / 회원가입 — 제조기업 담당자 계정 기반 서비스 접속'
+                }
+            ]
+        },
+        externalUrl: 'http://www.sysnova.com/',
+        results: {
+            title: 'AI 도입지원 큐레이터 서비스 개발',
+            year3Goal: '제조기업 AI 도입 지원 큐레이터 서비스 개발',
+            kpis: [
+                { label: '큐레이터 서비스 기능 구축률', value: '75', unit: '%', target: '100', achievement: 75.0, status: 'in-progress' },
+                { label: '큐레이터 기반 AI 도입 진단·추천 리포트 발행 건수', value: '0', unit: '건', target: '30', achievement: 0.0, status: 'in-progress' },
+                { label: '큐레이터 서비스 만족도', value: '0', unit: '%', target: '85', achievement: 0.0, status: 'in-progress' }
+            ],
+            deliverables: [
+                '정책 정의서',
+                '화면 설계서',
+                'RAG 연계 아키텍처 설계서',
+                '큐레이터 Web Agent',
+                '기업별 AI 도입 진단·추천 리포트'
+            ],
+            screenshot: './images/sysnova_1.png'
+        }
     }
 ];
 
