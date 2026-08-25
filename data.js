@@ -11,7 +11,7 @@ const projectMeta = {
     summary: {
         totalBudget: '229.4억원',
         year3Budget: '97.35억원',
-        totalOrgs: 15,
+        totalOrgs: 16,
         demandOrgs: 2,
         framework: 'DAINOS'
     },
@@ -46,7 +46,7 @@ const stageConfig = [
 ];
 
 // ═══════════════════════════════════════════════════════════════
-// 🏢 참여기관 데이터 (15개)
+// 🏢 참여기관 데이터 (16개)
 //
 // [팝업 구조 설명]
 //
