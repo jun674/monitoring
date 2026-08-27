@@ -76,6 +76,12 @@
             updateActiveLink(path);
         };
 
+        window.addEventListener('message', function(e) {
+            if (e.data && e.data.type === 'navigateToPage') {
+                navigateToPage(e.data.path, e.data.filterType);
+            }
+        });
+
         function updateActiveLink(path) {
             const links = fileList.querySelectorAll('a');
             links.forEach(link => {

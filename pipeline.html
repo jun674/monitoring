@@ -70,7 +70,7 @@
 <body class="h-screen flex flex-col">
 
     <!-- Top Navigation Header -->
-    <div class="topbar shrink-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 p-3 sm:px-7 sm:py-0 min-h-[56px] sm:h-14">
+    <div class="topbar shrink-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 p-3.5 sm:px-7 sm:py-0 min-h-[56px] sm:h-14">
         <div class="flex items-center gap-2.5 shrink-0">
             <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
             <span class="text-sm font-bold text-slate-900 tracking-tight">PIPELINE</span>
@@ -99,80 +99,84 @@
     </div>
 
     <!-- Main Horizontal Pipeline Scroll -->
-    <main class="flex-1 flex overflow-x-auto overflow-y-hidden items-start gap-4 sm:gap-8 p-4 sm:p-8 snap-x snap-mandatory" id="main-scroll">
+    <main class="flex-1 p-6 md:p-10 overflow-x-auto overflow-y-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex overflow-x-auto overflow-y-hidden items-start gap-6 pb-6 snap-x snap-mandatory" id="main-scroll">
 
-        <!-- Stage 1 -->
-        <section id="stage-1" class="stage-section w-[calc(100vw-5.5rem)] sm:w-auto min-w-[calc(100vw-5.5rem)] sm:min-w-[340px] max-w-full sm:max-w-none flex flex-col gap-4 snap-start shrink-0">
-            <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
-                <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">01</span>
-                <div>
-                    <h2 class="text-sm font-bold text-slate-900">Data Collection</h2>
-                    <p class="text-[11px] text-slate-500 font-medium">OT / IT 데이터 수집</p>
-                </div>
+                <!-- Stage 1 -->
+                <section id="stage-1" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
+                    <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+                        <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">01</span>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900">Data Collection</h2>
+                            <p class="text-[11px] text-slate-500 font-medium">OT / IT 데이터 수집</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4" id="container-1"></div>
+                </section>
+
+                <!-- Stage 2 -->
+                <section id="stage-2" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
+                    <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+                        <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">02</span>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900">Transfer (5G)</h2>
+                            <p class="text-[11px] text-slate-500 font-medium">초고속 특화망 전송</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4" id="container-2"></div>
+                </section>
+
+                <!-- Stage 3 -->
+                <section id="stage-3" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
+                    <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+                        <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">03</span>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900">Platform & AAS</h2>
+                            <p class="text-[11px] text-slate-500 font-medium">인프라 및 국제 표준화</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4" id="container-3"></div>
+                </section>
+
+                <!-- Stage 4 -->
+                <section id="stage-4" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
+                    <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+                        <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">04</span>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900">AI Analysis</h2>
+                            <p class="text-[11px] text-slate-500 font-medium">제조 특화 AI 모델링</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4" id="container-4"></div>
+                </section>
+
+                <!-- Stage 5 -->
+                <section id="stage-5" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
+                    <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+                        <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">05</span>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900">Application</h2>
+                            <p class="text-[11px] text-slate-500 font-medium">현장 응용 서비스 실증</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4" id="container-5"></div>
+                </section>
+
+                <!-- Stage 6 -->
+                <section id="stage-6" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
+                    <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
+                        <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">06</span>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900">Management</h2>
+                            <p class="text-[11px] text-slate-500 font-medium">총괄 및 품질 검증</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4" id="container-6"></div>
+                </section>
+
             </div>
-            <div class="flex flex-col gap-4" id="container-1"></div>
-        </section>
-
-        <!-- Stage 2 -->
-        <section id="stage-2" class="stage-section w-[calc(100vw-5.5rem)] sm:w-auto min-w-[calc(100vw-5.5rem)] sm:min-w-[340px] max-w-full sm:max-w-none flex flex-col gap-4 snap-start shrink-0">
-            <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
-                <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">02</span>
-                <div>
-                    <h2 class="text-sm font-bold text-slate-900">Transfer (5G)</h2>
-                    <p class="text-[11px] text-slate-500 font-medium">초고속 특화망 전송</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-4" id="container-2"></div>
-        </section>
-
-        <!-- Stage 3 -->
-        <section id="stage-3" class="stage-section w-[calc(100vw-5.5rem)] sm:w-auto min-w-[calc(100vw-5.5rem)] sm:min-w-[340px] max-w-full sm:max-w-none flex flex-col gap-4 snap-start shrink-0">
-            <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
-                <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">03</span>
-                <div>
-                    <h2 class="text-sm font-bold text-slate-900">Platform & AAS</h2>
-                    <p class="text-[11px] text-slate-500 font-medium">인프라 및 국제 표준화</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-4" id="container-3"></div>
-        </section>
-
-        <!-- Stage 4 -->
-        <section id="stage-4" class="stage-section w-[calc(100vw-5.5rem)] sm:w-auto min-w-[calc(100vw-5.5rem)] sm:min-w-[340px] max-w-full sm:max-w-none flex flex-col gap-4 snap-start shrink-0">
-            <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
-                <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">04</span>
-                <div>
-                    <h2 class="text-sm font-bold text-slate-900">AI Analysis</h2>
-                    <p class="text-[11px] text-slate-500 font-medium">제조 특화 AI 모델링</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-4" id="container-4"></div>
-        </section>
-
-        <!-- Stage 5 -->
-        <section id="stage-5" class="stage-section w-[calc(100vw-5.5rem)] sm:w-auto min-w-[calc(100vw-5.5rem)] sm:min-w-[340px] max-w-full sm:max-w-none flex flex-col gap-4 snap-start shrink-0">
-            <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
-                <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">05</span>
-                <div>
-                    <h2 class="text-sm font-bold text-slate-900">Application</h2>
-                    <p class="text-[11px] text-slate-500 font-medium">현장 응용 서비스 실증</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-4" id="container-5"></div>
-        </section>
-
-        <!-- Stage 6 -->
-        <section id="stage-6" class="stage-section w-[calc(100vw-5.5rem)] sm:w-auto min-w-[calc(100vw-5.5rem)] sm:min-w-[340px] max-w-full sm:max-w-none flex flex-col gap-4 snap-start shrink-0">
-            <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
-                <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">06</span>
-                <div>
-                    <h2 class="text-sm font-bold text-slate-900">Management</h2>
-                    <p class="text-[11px] text-slate-500 font-medium">총괄 및 품질 검증</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-4" id="container-6"></div>
-        </section>
-
+        </div>
     </main>
 
     <script src="data.js"></script>

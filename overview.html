@@ -366,8 +366,8 @@
 
         function goToPartnersDomain(domainType) {
             try {
-                if (window.parent && window.parent !== window && typeof window.parent.navigateToPage === 'function') {
-                    window.parent.navigateToPage('partners.html', domainType);
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({ type: 'navigateToPage', path: 'partners.html', filterType: domainType }, '*');
                     return;
                 }
             } catch (e) {
