@@ -992,7 +992,7 @@ const companies = [
         icon: 'fas fa-wave-square',
         color: 'rose',
         status: 'normal',
-        stage: 1,
+        stage: 5,
         details: '엔진 조립 가공공정에 IIoT 센서를 구축해 설비의 물리 데이터를 실시간으로 수집하고, IT/OT 이기종 데이터의 정합성을 확보해 참여기관 간 공유 가능한 체계로 실증',
         sections: [
             {

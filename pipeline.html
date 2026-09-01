@@ -65,6 +65,9 @@
         ::-webkit-scrollbar { height: 8px; width: 6px; }
         ::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 10px; }
         ::-webkit-scrollbar-track { background-color: #F1F5F9; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; height: 0; width: 0; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="h-screen flex flex-col">
@@ -99,9 +102,9 @@
     </div>
 
     <!-- Main Horizontal Pipeline Scroll -->
-    <main class="flex-1 p-6 md:p-10 overflow-x-auto overflow-y-hidden">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex overflow-x-auto overflow-y-hidden items-start gap-6 pb-6 snap-x snap-mandatory" id="main-scroll">
+    <main class="flex-1 p-6 md:p-8 overflow-hidden flex flex-col">
+        <div class="w-full flex-1 overflow-x-auto overflow-y-hidden no-scrollbar" id="main-scroll">
+            <div class="flex items-start gap-6 pb-4 snap-x snap-mandatory min-w-max">
 
                 <!-- Stage 1 -->
                 <section id="stage-1" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
