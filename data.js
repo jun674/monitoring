@@ -137,46 +137,79 @@ const companies = [
         id: 'markbase',
         type: 'DATA',
         category: '참여',
+        ca: 'CA2',
+        isRealData: true,
         name: '마크베이스',
-        role: '시계열 DB',
+        role: '시계열DB',
         roleEn: 'High-Speed DB',
-        desc: '초당 100만 건 데이터 처리 성능 확보',
+        desc: '초고속·대용량 시계열 데이터 처리 기술 자체 보유',
         status: 'normal',
         stage: 1,
-        details: '설비의 PLC, 센서 등 OT(운영 기술) 환경에서 발생하는 대용량 시계열 데이터를 초당 100만 건 이상 처리할 수 있는 고성능 데이터베이스를 제공합니다.',
+        details: '설비의 PLC, 센서 등 OT(운영 기술) 환경에서 발생하는 대용량 시계열 데이터를 초당 200만 건 이상 처리할 수 있는 고성능 데이터베이스를 제공합니다.',
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: '200만건/초 데이터 처리 성능 달성 및 에지컴퓨팅 연동',
+                title: '초당 200만 건 이상 데이터 수집 성능 확보 및 수집 설비 태그 수 3000개 이상 달성'
+            },
+            {
+                label: '대표 산출물',
+                type: 'list',
                 items: [
-                    '시계열 DB v3.0',
-                    'Edge-DB 연동 모듈',
-                    '실시간 데이터 수집기'
+                    'OPC-UA 방식 PLC 데이터 직접수집/저장 및 분석 설명서',
+                    '설비 데이터 LLM 자연어 질의 및 리포트 생성 기능 설명서',
+                    '데이터 수집 성능 시험 성적서',
+                    '설비 태그 명세서'
                 ]
             },
             {
-                label: 'Tech Stack',
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['시계열 DB', 'Real-time Processing', 'Big Data']
+                items: ['Time-Series DBMS', 'OPC-UA', '초고속 데이터처리', 'Real-time Processing']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: 'DB 처리속도',      value: '1.21M', unit: 'rec/s', color: '#2563EB' },
-                    { label: '데이터 수집 안정성', value: '99.8', unit: '%',     color: '#059669' }
+                    { label: '데이터 수집 성능', value: '167만', unit: '건/초', color: '#2563EB', target: '200만' },
+                    { label: '수집 태그 수', value: '2,884', unit: '개', color: '#059669', target: '3,000' }
                 ]
             }
         ],
-        preview: { type: 'placeholder' },
+        preview: {
+            type: 'dual-youtube',
+            videos: [
+                {
+                    videoId: 'BgrEGzDoQLU',
+                    url: 'https://youtu.be/BgrEGzDoQLU?si=7AeJQI4QGmoXCDHk',
+                    label: '01. 데이터 수집',
+                    subLabel: 'OPC-UA 서버 연동',
+                    caption: 'OPC-UA 서버 연결 및 데이터 수집'
+                },
+                {
+                    videoId: 'fVrC9ji5Q5M',
+                    url: 'https://youtu.be/fVrC9ji5Q5M?si=HUSfE1liPz8K0l7',
+                    label: '02. LLM 질의·리포트',
+                    subLabel: 'MCP 연동',
+                    caption: 'MCP 연동을 통한 LLM 자연어 질의 및 리포트 생성'
+                }
+            ]
+        },
         externalUrl: 'https://www.machbase.com/',
         results: {
+            title: '초고속·대용량 시계열 데이터 처리 기술',
+            year3Goal: '초당 200만 건 이상 데이터 수집 성능 확보 및 수집 설비 태그 수 3000개 이상 달성',
             kpis: [
-                { label: 'DB 처리속도',       value: '1.21M', unit: 'rec/s',    target: '2.0M', achievement: 60.5 },
-                { label: '데이터 수집 안정성', value: '99.8',  unit: '%',        target: '99.5', achievement: 100.3 }
+                { label: '데이터 수집 성능', value: '167만', unit: '건/초', target: '200만', achievement: 83.5, status: 'in-progress' },
+                { label: '수집 태그 수', value: '2,884', unit: '개', target: '3,000', achievement: 96.1, status: 'in-progress' }
             ],
-            deliverables: ['시계열 DB v3.0', 'Edge-DB 연동 모듈', '실시간 데이터 수집기']
+            deliverables: [
+                'OPC-UA 방식 PLC 데이터 직접수집/저장 및 분석 설명서',
+                '설비 데이터 LLM 자연어 질의 및 리포트 생성 기능 설명서',
+                '데이터 수집 성능 시험 성적서',
+                '설비 태그 명세서'
+            ],
+            screenshot: null
         }
     },
     {

@@ -288,6 +288,53 @@ function _renderPreview(preview, name, externalUrl) {
     }
 
     switch (preview.type) {
+        case 'youtube': {
+            const videoId = preview.videoId || (preview.url && (preview.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/) || [])[1]);
+            const caption = preview.caption || '';
+            const youtubeUrl = preview.url || `https://www.youtube.com/watch?v=${videoId}`;
+            if (videoId) {
+                container.innerHTML = `
+                    <div class="w-full h-full flex flex-col items-center justify-between gap-2.5 p-1">
+                        <div class="w-full flex-1 rounded-xl overflow-hidden shadow-xs bg-black border border-slate-200 relative">
+                            <iframe src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0"
+                                    title="${caption || name}"
+                                    class="w-full h-full border-0"
+                                    referrerpolicy="no-referrer"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                        <div class="w-full flex items-center justify-between px-1 shrink-0 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 gap-3">
+                            <div class="flex items-center gap-2 truncate flex-1">
+                                <i class="fab fa-youtube text-red-600 text-lg shrink-0"></i>
+                                ${caption ? `<span class="text-xs text-slate-700 font-semibold truncate">${caption}</span>` : '<span class="text-xs text-slate-500 font-medium">유튜브 동영상</span>'}
+                            </div>
+                            <a href="${youtubeUrl}" target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-2xs transition-colors shrink-0">
+                                <span>YouTube에서 보기</span>
+                                <i class="fas fa-external-link-alt text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>`;
+            } else {
+                container.innerHTML = `<p class="text-xs text-slate-400">유튜브 영상 ID를 찾을 수 없습니다.</p>`;
+            }
+            break;
+        }
+
+        case 'iframe': {
+            const url = preview.url;
+            const caption = preview.caption || '';
+            if (url) {
+                container.innerHTML = `
+                    <div class="w-full h-full flex flex-col items-center justify-center gap-3">
+                        <iframe src="${url}" title="${name}" class="w-full flex-1 rounded-xl shadow-sm border border-slate-200"></iframe>
+                        ${caption ? `<p class="text-xs text-slate-500 font-medium">${caption}</p>` : ''}
+                    </div>`;
+            }
+            break;
+        }
+
         case 'image': {
             const isVideo = preview.url && preview.url.toLowerCase().endsWith('.mp4');
             if (isVideo) {
@@ -360,6 +407,7 @@ function _renderPreview(preview, name, externalUrl) {
             break;
         }
 
+        case 'dual-youtube':
         case 'dual-video':
         case 'videos': {
             const videos = preview.videos || [];
@@ -369,21 +417,54 @@ function _renderPreview(preview, name, externalUrl) {
             }
 
             container.innerHTML = `
-                <div class="w-full h-full flex flex-col justify-center gap-3 p-1.5 overflow-y-auto">
-                    ${videos.map(v => `
-                        <div class="flex items-center gap-3 w-full bg-slate-50/80 p-3 rounded-2xl border border-slate-200/80 shadow-2xs">
-                            <div class="shrink-0 w-28 h-28 rounded-full border border-slate-200 bg-white flex flex-col items-center justify-center text-center p-2 shadow-2xs">
-                                <span class="text-xs font-bold text-slate-800 leading-snug">${v.label || ''}</span>
-                                <span class="text-[11px] font-semibold text-slate-500 mt-1">${v.subLabel || ''}</span>
-                            </div>
-                            <div class="flex-1 min-w-0 flex items-center justify-center">
-                                <div class="w-full aspect-video rounded-xl overflow-hidden bg-slate-900 shadow-xs" style="aspect-ratio: 16/9;">
-                                    <video src="${v.url}" controls muted loop class="w-full h-full object-cover rounded-xl">
-                                    </video>
+                <div class="w-full h-full flex flex-col justify-start gap-3.5 p-1 overflow-y-auto">
+                    ${videos.map((v, idx) => {
+                        const videoId = v.videoId || (v.url && (v.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/) || [])[1]);
+                        const isYoutube = !!videoId || (v.type === 'youtube');
+                        const youtubeUrl = v.url || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : '#');
+
+                        if (isYoutube && videoId) {
+                            return `
+                                <div class="flex flex-col items-stretch gap-2 w-full bg-slate-50 p-3 rounded-2xl border border-slate-200/80 shadow-2xs shrink-0">
+                                    <div class="w-full aspect-video rounded-xl overflow-hidden bg-black shadow-xs relative" style="aspect-ratio: 16/9;">
+                                        <iframe src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0"
+                                                title="${v.caption || v.label || ''}"
+                                                class="w-full h-full border-0"
+                                                referrerpolicy="no-referrer"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                allowfullscreen>
+                                        </iframe>
+                                    </div>
+                                    <div class="flex items-center justify-between gap-2 px-1">
+                                        <p class="text-xs text-slate-700 font-bold truncate flex-1">${v.caption || ''}</p>
+                                        <a href="${youtubeUrl}" target="_blank" rel="noopener noreferrer"
+                                           class="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-2xs transition-colors shrink-0">
+                                            <i class="fab fa-youtube"></i>
+                                            <span>YouTube에서 보기</span>
+                                            <i class="fas fa-external-link-alt text-[9px]"></i>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    `).join('')}
+                            `;
+                        } else {
+                            return `
+                                <div class="flex items-center gap-3 w-full bg-slate-50/80 p-3 rounded-2xl border border-slate-200/80 shadow-2xs shrink-0">
+                                    ${(v.label || v.subLabel) ? `
+                                        <div class="shrink-0 w-28 h-28 rounded-full border border-slate-200 bg-white flex flex-col items-center justify-center text-center p-2 shadow-2xs">
+                                            <span class="text-xs font-bold text-slate-800 leading-snug">${v.label || ''}</span>
+                                            <span class="text-[11px] font-semibold text-slate-500 mt-1">${v.subLabel || ''}</span>
+                                        </div>
+                                    ` : ''}
+                                    <div class="flex-1 min-w-0 flex items-center justify-center">
+                                        <div class="w-full aspect-video rounded-xl overflow-hidden bg-slate-900 shadow-xs" style="aspect-ratio: 16/9;">
+                                            <video src="${v.url}" controls muted loop class="w-full h-full object-cover rounded-xl">
+                                            </video>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }).join('')}
                 </div>
             `;
             break;
