@@ -711,47 +711,66 @@ const companies = [
         type: 'NETWORK',
         category: '참여',
         ca: 'CA2',
+        isRealData: true,
         name: '라임씨에스아이',
-        role: '5G/WiFi 7 특화망',
-        roleEn: '5G Network',
-        desc: '공장 내 음영 구역 없는 5G 특화망 구축',
+        role: '차세대 통신망 구축 및 NMS 관제',
+        roleEn: 'Next-Generation Network & Integrated Monitoring',
+        desc: 'WiFi7·전용회선·NMS 기반 제조 통신환경 구축',
         icon: 'fas fa-wifi',
         color: 'emerald',
         status: 'normal',
         stage: 2,
-        details: '공장 내 데이터 통신 음영 구역을 해소하고, 대용량 데이터를 초저지연으로 전송하기 위한 5G 특화망 인프라를 구축합니다.',
+        details: '신성델타테크와 KG 모빌리티의 산업용 WiFi7 무선망을 기반으로, 각 수요기업과 경남대학교 EBC 간 광대역 전용회선을 구축합니다. 또한 NMS 기반 통합관제 환경을 구성하여 네트워크 상태, 장애 및 트래픽·Throughput 등 성능 정보를 통합 모니터링하고 안정적인 제조 데이터 전송을 지원합니다.',
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: 'WiFi 7 인프라 구축 및 5G 특화망 NMS 통합 관리 완성',
-                items: ['WiFi 7 AP 설치 완료', '5G 특화망 인프라', 'NMS 통합 관리 시스템']
+                title: '기 구축된 2개 수요처의 WiFi7 무선망을 기반으로 수요기업-EBC 간 광대역 전용회선 2회선과 통합관제(NMS) 시스템 1식을 구축하고, 무선통신 Throughput 890 Mbps 이상을 확보하여 안정적인 제조 데이터 전송 및 네트워크 운영체계를 완성합니다.'
             },
             {
-                label: 'Tech Stack',
+                label: '대표 산출물',
+                type: 'list',
+                items: [
+                    '수요기업-EBC 간 광대역 전용 유선통신망 2회선',
+                    '통합관제(NMS) 시스템 및 관제센터 1식',
+                    '네트워크 통합관제 시스템 1식'
+                ]
+            },
+            {
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['5G', 'WiFi 7', 'Network Slicing', 'NMS']
+                items: ['WiFi7', '광대역 전용회선', 'NMS', '통합관제', '산업용 네트워크']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '네트워크 지연시간', value: '1.5', unit: 'ms', color: '#2563EB' },
-                    { label: '커버리지 달성률',  value: '98',  unit: '%',  color: '#059669' }
+                    { label: '무선통신 Throughput', value: '885', unit: 'Mbps', color: '#2563EB', target: '890 이상' },
+                    { label: '통합관제센터 구축', value: '0', unit: '건', color: '#059669', target: '1' },
+                    { label: '수요처-EBC 데이터 회선', value: '0', unit: '회선', color: '#7C3AED', target: '2' }
                 ]
             }
         ],
-        preview: { type: 'placeholder' },
+        preview: {
+            type: 'image',
+            url: './images/csi_1.png',
+            caption: '신성델타테크·KG 모빌리티의 WiFi7 무선망과 경남대학교 EBC를 전용회선으로 연결하고, NMS에서 네트워크 상태와 장애·성능 정보를 통합 관제하는 제조 통신환경'
+        },
         externalUrl: 'http://www.limecsi.com/',
         results: {
-            title: 'WiFi 7 + 5G 특화망 NMS 통합',
-            year3Goal: 'WiFi 7 인프라 구축 및 5G 특화망 NMS 통합 관리 완성',
+            title: '차세대 통신망 구축 및 NMS 관제',
+            year3Goal: '기 구축된 2개 수요처의 WiFi7 무선망을 기반으로 수요기업-EBC 간 광대역 전용회선 2회선과 통합관제(NMS) 시스템 1식을 구축하고, 무선통신 Throughput 890 Mbps 이상을 확보하여 안정적인 제조 데이터 전송 및 네트워크 운영체계를 완성합니다.',
             kpis: [
-                { label: '네트워크 지연시간', value: '1.5', unit: 'ms', target: '3',  achievement: 150.0, status: 'achieved' },
-                { label: '커버리지 달성률',  value: '98',  unit: '%',  target: '95', achievement: 103.2, status: 'achieved' }
+                { label: '무선통신 Throughput', value: '885', unit: 'Mbps', target: '890', achievement: 99.4, status: 'in-progress' },
+                { label: '통합관제센터 구축', value: '0', unit: '건', target: '1', achievement: 0.0, status: 'in-progress' },
+                { label: '수요처-EBC 데이터 회선', value: '0', unit: '회선', target: '2', achievement: 0.0, status: 'in-progress' }
             ],
-            deliverables: ['WiFi 7 AP 설치 완료', '5G 특화망 인프라', 'NMS 통합 관리 시스템'],
-            screenshot: null
+            deliverables: [
+                '수요기업-EBC 간 광대역 전용 유선통신망 2회선',
+                '통합관제(NMS) 시스템 및 관제센터 1식',
+                '네트워크 통합관제 시스템 1식'
+            ],
+            screenshot: './images/csi_1.png'
         }
     },
 
