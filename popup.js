@@ -292,31 +292,21 @@ function _renderPreview(preview, name, externalUrl) {
             const videoId = preview.videoId || (preview.url && (preview.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/) || [])[1]);
             const caption = preview.caption || '';
             const youtubeUrl = preview.url || `https://www.youtube.com/watch?v=${videoId}`;
-            const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
 
             if (videoId) {
                 container.innerHTML = `
                     <div class="w-full h-full flex flex-col items-center justify-between gap-2.5 p-1">
-                        <a href="${youtubeUrl}" target="_blank" rel="noopener noreferrer"
-                           class="w-full flex-1 rounded-xl overflow-hidden bg-slate-900 shadow-xs relative group block">
-                            <img src="${thumbUrl}" alt="${caption || name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90 group-hover:opacity-100" />
-                            <div class="absolute inset-0 flex items-center justify-center bg-black/25 group-hover:bg-black/15 transition-colors">
-                                <div class="w-16 h-11 bg-red-600 group-hover:bg-red-700 text-white rounded-2xl flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-all">
-                                    <i class="fas fa-play text-xl ml-0.5"></i>
-                                </div>
-                            </div>
-                            <div class="absolute top-3 right-3 px-2.5 py-1 bg-black/70 backdrop-blur-xs text-white text-[11px] font-bold rounded-md flex items-center gap-1.5 shadow-xs">
-                                <i class="fab fa-youtube text-red-500"></i> YouTube
-                            </div>
-                        </a>
+                        <div class="w-full flex-1 rounded-xl overflow-hidden bg-slate-900 shadow-xs relative block">
+                            <iframe class="w-full h-full border-0" src="https://www.youtube.com/embed/${videoId}" title="${caption || name}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
                         <div class="w-full flex items-center justify-between px-1 shrink-0 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 gap-3">
                             <div class="flex items-center gap-2 truncate flex-1">
                                 <i class="fab fa-youtube text-red-600 text-lg shrink-0"></i>
                                 ${caption ? `<span class="text-xs text-slate-700 font-bold truncate">${caption}</span>` : '<span class="text-xs text-slate-500 font-medium">유튜브 동영상</span>'}
                             </div>
                             <a href="${youtubeUrl}" target="_blank" rel="noopener noreferrer"
-                               class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-2xs transition-colors shrink-0">
-                                <span>동영상 보기</span>
+                               class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 rounded-lg shadow-2xs transition-colors shrink-0">
+                                <span>YouTube에서 열기</span>
                                 <i class="fas fa-external-link-alt text-[10px]"></i>
                             </a>
                         </div>
@@ -427,30 +417,22 @@ function _renderPreview(preview, name, externalUrl) {
                         const videoId = v.videoId || (v.url && (v.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/) || [])[1]);
                         const isYoutube = !!videoId || (v.type === 'youtube');
                         const youtubeUrl = v.url || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : '#');
-                        const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
 
                         if (isYoutube && videoId) {
                             return `
                                 <div class="flex flex-col items-stretch gap-2.5 w-full bg-slate-50 p-3 rounded-2xl border border-slate-200/80 shadow-2xs shrink-0">
-                                    <a href="${youtubeUrl}" target="_blank" rel="noopener noreferrer"
-                                       class="w-full aspect-video rounded-xl overflow-hidden bg-slate-900 shadow-xs relative group block" style="aspect-ratio: 16/9;">
-                                        <img src="${thumbUrl}" alt="${v.caption || ''}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90 group-hover:opacity-100" />
-                                        <div class="absolute inset-0 flex items-center justify-center bg-black/25 group-hover:bg-black/15 transition-colors">
-                                            <div class="w-14 h-10 bg-red-600 group-hover:bg-red-700 text-white rounded-2xl flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-all">
-                                                <i class="fas fa-play text-lg ml-0.5"></i>
-                                            </div>
-                                        </div>
-                                        <div class="absolute top-2.5 right-2.5 px-2.5 py-1 bg-black/70 backdrop-blur-xs text-white text-[10px] font-bold rounded-md flex items-center gap-1 shadow-xs">
-                                            <i class="fab fa-youtube text-red-500"></i> YouTube
-                                        </div>
-                                    </a>
+                                    <div class="w-full aspect-video rounded-xl overflow-hidden bg-slate-900 shadow-xs relative block" style="aspect-ratio: 16/9;">
+                                        <iframe class="w-full h-full border-0" src="https://www.youtube.com/embed/${videoId}" title="${v.caption || v.label || ''}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                    </div>
                                     <div class="flex items-center justify-between gap-2 px-1">
-                                        <p class="text-xs text-slate-800 font-bold truncate flex-1">${v.caption || ''}</p>
+                                        <div class="flex items-center gap-2 truncate flex-1">
+                                            <i class="fab fa-youtube text-red-600 text-base shrink-0"></i>
+                                            <p class="text-xs text-slate-800 font-bold truncate">${v.caption || v.label || ''}</p>
+                                        </div>
                                         <a href="${youtubeUrl}" target="_blank" rel="noopener noreferrer"
-                                           class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-2xs transition-colors shrink-0">
-                                            <i class="fab fa-youtube"></i>
-                                            <span>동영상 보기</span>
-                                            <i class="fas fa-external-link-alt text-[10px]"></i>
+                                           class="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-bold text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors shrink-0">
+                                            <span>YouTube</span>
+                                            <i class="fas fa-external-link-alt text-[9px]"></i>
                                         </a>
                                     </div>
                                 </div>
