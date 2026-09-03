@@ -960,7 +960,7 @@ const companies = [
         category: '참여',
         ca: 'CA3',
         isRealData: true,
-        name: '(주)디엑스솔루션즈',
+        name: '디엑스솔루션즈',
         role: '웨어러블 및 제조 AI 현장 서비스',
         roleEn: 'Wearable & Manufacturing AI Field Service',
         desc: '웨어러블과 제조 AI를 연계한 현장 대응 서비스 구현',
