@@ -1009,21 +1009,21 @@ const companies = [
                     label: '01. 타임체크',
                     subLabel: 'v1.4',
                     caption: 'DXS 초거대제조AI 웨어러블 타임체크 서비스',
-                    url: './images/dxs_v1.mp4'
+                    url: 'https://media.githubusercontent.com/media/jun674/monitoring/master/images/dxs_v1.mp4'
                 },
                 {
                     id: 'tab2',
                     label: '02. 무작업관리',
                     subLabel: 'v1.2',
                     caption: 'DXS 초거대제조AI 웨어러블 무작업관리 서비스',
-                    url: './images/dxs_v2.mp4'
+                    url: 'https://media.githubusercontent.com/media/jun674/monitoring/master/images/dxs_v2.mp4'
                 },
                 {
                     id: 'tab3',
                     label: '03. 불량역추적',
                     subLabel: 'v1.0',
                     caption: 'DXS 초거대제조AI 웨어러블 불량역추적 서비스',
-                    url: './images/dxs_v3.mp4'
+                    url: 'https://media.githubusercontent.com/media/jun674/monitoring/master/images/dxs_v3.mp4'
                 }
             ]
         },
