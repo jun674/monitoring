@@ -460,6 +460,115 @@ function _renderPreview(preview, name, externalUrl) {
             `;
             break;
         }
+
+        case 'tab-video':
+        case 'tab-youtube':
+        case 'tabs': {
+            const tabs = preview.tabs || preview.videos || [];
+            if (tabs.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400">탭 비디오 데이터가 없습니다.</p>`;
+                break;
+            }
+
+            let currentTabIndex = 0;
+
+            const renderTabPreview = () => {
+                const currentTab = tabs[currentTabIndex];
+                const videoId = currentTab.videoId || (currentTab.url && (currentTab.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/) || [])[1]);
+                const isYoutube = !!videoId || (currentTab.type === 'youtube');
+                const youtubeUrl = currentTab.url || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : '#');
+                const videoUrl = currentTab.url || currentTab.videoUrl || '';
+                const caption = currentTab.caption || currentTab.label || '';
+
+                const tabBarHtml = `
+                    <div class="w-full flex items-end gap-1.5 px-0 pt-0 bg-transparent shrink-0 overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none] [-ms-overflow-style:none] relative z-20">
+                        ${tabs.map((tab, idx) => {
+                            const isActive = idx === currentTabIndex;
+                            return isActive ? `
+                                <button type="button"
+                                        onclick="window.switchPreviewTab(${idx})"
+                                        class="py-2.5 px-4 rounded-t-xl text-xs font-extrabold bg-white text-slate-900 border-t border-x border-slate-300 -mb-[1px] relative z-30 cursor-pointer shadow-2xs flex items-center gap-1.5">
+                                    <span class="truncate">${tab.label || `영상 ${idx + 1}`}</span>
+                                </button>
+                            ` : `
+                                <button type="button"
+                                        onclick="window.switchPreviewTab(${idx})"
+                                        class="py-2.5 px-4 rounded-t-xl text-xs font-bold bg-[#334155] hover:bg-[#475569] text-white transition-colors cursor-pointer shadow-2xs flex items-center gap-1.5 relative z-10 mb-0">
+                                    <span class="truncate">${tab.label || `영상 ${idx + 1}`}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+
+                if (isYoutube && videoId) {
+                    container.innerHTML = `
+                        <div class="w-full h-full flex flex-col bg-transparent p-0 border-0">
+                            <!-- Tab Bar -->
+                            ${tabBarHtml}
+
+                            <!-- Content Box seamlessly connected to active tab -->
+                            <div class="w-full flex-1 bg-white border border-slate-200 rounded-b-2xl rounded-tr-2xl p-3 flex flex-col gap-2.5 overflow-hidden relative z-10 -mt-[1px]">
+                                <!-- YouTube Viewer -->
+                                <div class="w-full flex-1 flex items-center justify-center min-h-0 bg-slate-900 rounded-xl overflow-hidden shadow-xs relative">
+                                    <iframe class="w-full h-full border-0" src="https://www.youtube.com/embed/${videoId}?autoplay=1" title="${caption}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                </div>
+
+                                <!-- Bottom Bar with YouTube Link -->
+                                <div class="w-full flex items-center justify-between px-3 py-2 shrink-0 bg-slate-50 rounded-xl border border-slate-200/80 gap-2">
+                                    <div class="flex items-center gap-2 truncate flex-1 min-w-0">
+                                        <i class="fab fa-youtube text-red-600 text-base shrink-0"></i>
+                                        <span class="text-xs text-slate-800 font-bold truncate">${caption}</span>
+                                        ${currentTab.subLabel ? `<span class="text-[11px] font-semibold text-slate-500 shrink-0">(${currentTab.subLabel})</span>` : ''}
+                                    </div>
+                                    <a href="${youtubeUrl}" target="_blank" rel="noopener noreferrer"
+                                       class="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-bold text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 rounded-lg shadow-2xs transition-colors shrink-0">
+                                        <span>YouTube에서 열기</span>
+                                        <i class="fas fa-external-link-alt text-[9px]"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="w-full h-full flex flex-col bg-transparent p-0 border-0">
+                            <!-- Tab Bar -->
+                            ${tabBarHtml}
+
+                            <!-- Content Box seamlessly connected to active tab -->
+                            <div class="w-full flex-1 bg-white border border-slate-200 rounded-b-2xl rounded-tr-2xl p-3 flex flex-col gap-2.5 overflow-hidden relative z-10 -mt-[1px]">
+                                <!-- Video View -->
+                                <div class="w-full flex-1 flex items-center justify-center min-h-0 bg-slate-900 rounded-xl overflow-hidden shadow-xs relative">
+                                    <video id="tab-preview-video" src="${videoUrl}" controls muted loop class="w-full h-full object-contain">
+                                    </video>
+                                </div>
+
+                                <!-- Caption -->
+                                <div class="w-full flex items-center justify-between px-3 py-2 shrink-0 bg-slate-50 rounded-xl border border-slate-200/80 gap-2">
+                                    <span class="text-xs text-slate-700 font-medium truncate">
+                                        <i class="fas fa-play-circle text-[#334155] mr-1.5"></i>${caption}
+                                    </span>
+                                    ${currentTab.subLabel ? `<span class="text-[11px] font-semibold text-slate-400 shrink-0">${currentTab.subLabel}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            };
+
+            window.switchPreviewTab = (idx) => {
+                currentTabIndex = idx;
+                renderTabPreview();
+                const videoEl = document.getElementById('tab-preview-video');
+                if (videoEl) {
+                    videoEl.play().catch(() => {});
+                }
+            };
+
+            renderTabPreview();
+            break;
+        }
     }
 }
 

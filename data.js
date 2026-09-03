@@ -177,21 +177,23 @@ const companies = [
             }
         ],
         preview: {
-            type: 'dual-youtube',
-            videos: [
+            type: 'tab-video',
+            tabs: [
                 {
-                    videoId: 'BgrEGzDoQLU',
-                    url: 'https://youtu.be/BgrEGzDoQLU?si=7AeJQI4QGmoXCDHk',
+                    id: 'tab1',
                     label: '01. 데이터 수집',
                     subLabel: 'OPC-UA 서버 연동',
-                    caption: 'OPC-UA 서버 연결 및 데이터 수집'
+                    caption: 'OPC-UA 서버 연결 및 데이터 수집',
+                    videoId: 'BgrEGzDoQLU',
+                    url: 'https://youtu.be/BgrEGzDoQLU?si=7AeJQI4QGmoXCDHk'
                 },
                 {
-                    videoId: 'fVrC9ji5Q5M',
-                    url: 'https://youtu.be/fVrC9ji5Q5M?si=HUSfE1liPz8K0l7',
+                    id: 'tab2',
                     label: '02. LLM 질의·리포트',
                     subLabel: 'MCP 연동',
-                    caption: 'MCP 연동을 통한 LLM 자연어 질의 및 리포트 생성'
+                    caption: 'MCP 연동을 통한 LLM 자연어 질의 및 리포트 생성',
+                    videoId: 'fVrC9ji5Q5M',
+                    url: 'https://youtu.be/fVrC9ji5Q5M?si=HUSfE1liPz8K0l7'
                 }
             ]
         },
@@ -405,19 +407,21 @@ const companies = [
             }
         ],
         preview: {
-            type: 'dual-video',
-            videos: [
+            type: 'tab-video',
+            tabs: [
                 {
-                    url: './images/keti_v.mp4',
-                    label: '작업자 행동 분석',
-                    subLabel: 'Edge AI 실증',
-                    caption: 'KETI_신성실증.mp4'
+                    id: 'tab1',
+                    label: '01. 작업자 행동 분석',
+                    subLabel: 'Edge AI 신성 실증',
+                    caption: 'KETI 신성델타테크 현장 실증 - 작업자 행동 분석',
+                    url: './images/keti_v.mp4'
                 },
                 {
-                    url: './images/keti_k.mp4',
-                    label: '품질 분석',
-                    subLabel: 'Edge AI 실증',
-                    caption: 'KETI_KGM실증.mp4'
+                    id: 'tab2',
+                    label: '02. 품질 분석',
+                    subLabel: 'Edge AI KGM 실증',
+                    caption: 'KETI KG모빌리티 현장 실증 - 제품 품질 분석',
+                    url: './images/keti_k.mp4'
                 }
             ]
         },
@@ -955,46 +959,90 @@ const companies = [
         type: 'SERVICE',
         category: '참여',
         ca: 'CA3',
-        name: 'DX솔루션즈',
-        role: '불량 역추적',
-        roleEn: 'Traceability',
-        desc: '불량 발생 원인 자동 역추적 시스템',
-        icon: 'fas fa-search-location',
+        isRealData: true,
+        name: '(주)디엑스솔루션즈',
+        role: '웨어러블 및 제조 AI 현장 서비스',
+        roleEn: 'Wearable & Manufacturing AI Field Service',
+        desc: '웨어러블과 제조 AI를 연계한 현장 대응 서비스 구현',
+        icon: 'fas fa-glasses',
         color: 'rose',
         status: 'normal',
         stage: 5,
-        details: '제품 불량 발생 시, 해당 제품의 생산 이력과 데이터를 역추적하여 어떤 공정에서 어떤 원인으로 문제가 발생했는지 자동으로 분석합니다.',
+        details: '디엑스솔루션즈는 신성델타테크 D/T라인을 대상으로 웨어러블 디바이스와 제조 AI를 연계한 현장 서비스의 개발 및 실증을 수행합니다. 타임체크, 무작업관리, 불량역추적 서비스를 통해 현장 점검·이상 대응·불량 조치 과정을 AI 기반으로 지원하고, 작업 결과를 대시보드와 이력 데이터로 통합 관리합니다.',
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: '불량 역추적 시스템 고도화 및 MES 연동 완성',
-                items: ['불량 역추적 시스템 v3.0', 'MES 연동 모듈', '원인 분석 대시보드']
+                title: '웨어러블·제조데이터·AI 모델을 연계한 현장 서비스 및 지능형 관제 체계를 구축하고, 신성델타테크 D/T라인에서 통합 실증을 완료'
             },
             {
-                label: 'Tech Stack',
+                label: '대표 산출물',
+                type: 'list',
+                items: [
+                    'AI 불량역추적 서비스',
+                    '무작업관리 서비스',
+                    '타임체크 서비스',
+                    '웨어러블 현장지원 애플리케이션',
+                    '초거대 제조 AI 통합 관제 대시보드'
+                ]
+            },
+            {
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['Data Tracking', 'AI Analytics', 'Root Cause Analysis', 'MES']
+                items: ['Wearable AI', 'Vision AI', 'sLLM', 'STT/TTS', 'Manufacturing AI']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '역추적 소요시간', value: '3.2', unit: 'min/case', color: '#2563EB' },
-                    { label: '역추적 정확도',   value: '94',  unit: '%',       color: '#059669' }
+                    { label: '라인 비가동 시간 감소율', value: '실증진행중', unit: '%', color: '#2563EB', target: '15' },
+                    { label: '공정 불량률 감소율', value: '실증진행중', unit: '%', color: '#059669', target: '18' },
+                    { label: '현장 작업자 작업공수 절감율', value: '실증진행중', unit: '%', color: '#7C3AED', target: '15' }
                 ]
             }
         ],
-        preview: { type: 'placeholder' },
+        preview: {
+            type: 'tab-video',
+            tabs: [
+                {
+                    id: 'tab1',
+                    label: '01. 타임체크',
+                    subLabel: 'v1.4',
+                    caption: 'DXS 초거대제조AI 웨어러블 타임체크 서비스',
+                    url: './images/dxs_v1.mp4'
+                },
+                {
+                    id: 'tab2',
+                    label: '02. 무작업관리',
+                    subLabel: 'v1.2',
+                    caption: 'DXS 초거대제조AI 웨어러블 무작업관리 서비스',
+                    url: './images/dxs_v2.mp4'
+                },
+                {
+                    id: 'tab3',
+                    label: '03. 불량역추적',
+                    subLabel: 'v1.0',
+                    caption: 'DXS 초거대제조AI 웨어러블 불량역추적 서비스',
+                    url: './images/dxs_v3.mp4'
+                }
+            ]
+        },
         externalUrl: 'http://www.dxsolutions.co.kr/',
         results: {
-            title: 'AI 기반 불량 역추적 시스템 + MES 연동',
-            year3Goal: '불량 역추적 시스템 고도화 및 MES 연동 완성',
+            title: '웨어러블과 제조 AI를 연계한 현장 대응 서비스 구현',
+            year3Goal: '웨어러블·제조데이터·AI 모델을 연계한 현장 서비스 및 지능형 관제 체계를 구축하고, 신성델타테크 D/T라인에서 통합 실증을 완료',
             kpis: [
-                { label: '역추적 소요시간', value: '3.2', unit: 'min/case', target: '5',  achievement: 136.0, status: 'achieved' },
-                { label: '역추적 정확도',   value: '94',  unit: '%',       target: '90', achievement: 104.4, status: 'achieved' }
+                { label: '라인 비가동 시간 감소율', value: '실증진행중', unit: '%', target: '15', achievement: 0, status: 'in-progress' },
+                { label: '공정 불량률 감소율', value: '실증진행중', unit: '%', target: '18', achievement: 0, status: 'in-progress' },
+                { label: '현장 작업자 작업공수 절감율', value: '실증진행중', unit: '%', target: '15', achievement: 0, status: 'in-progress' }
             ],
-            deliverables: ['불량 역추적 시스템 v3.0', 'MES 연동 모듈', '원인 분석 대시보드'],
+            deliverables: [
+                'AI 불량역추적 서비스',
+                '무작업관리 서비스',
+                '타임체크 서비스',
+                '웨어러블 현장지원 애플리케이션',
+                '초거대 제조 AI 통합 관제 대시보드'
+            ],
             screenshot: null
         }
     },
