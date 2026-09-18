@@ -834,46 +834,61 @@ const companies = [
         type: 'ORG',
         category: '참여',
         ca: 'CA3',
-        name: 'KTL',
-        role: '품질/시험인증',
-        roleEn: 'Verification',
-        desc: 'AI 모델 및 데이터 품질 신뢰성 검증',
+        isRealData: true,
+        name: '한국산업기술시험원',
+        role: '조직 지원',
+        roleEn: 'Organization',
+        desc: '시스템엔지니어링 기반 기술개발 지원 및 기술문서 작성',
         icon: 'fas fa-check-double',
         color: 'orange',
         status: 'normal',
         stage: 6,
-        details: '개발된 AI 모델과 데이터의 품질, 신뢰성을 검증하는 역할을 수행합니다. 객관적인 평가 지표를 통해 솔루션의 완성도를 높입니다.',
+        details: [
+            '시스템엔지니어링 적용 컨설팅',
+            '기술관리 및 산출물 작성 지원',
+            '기술검토회의 개최 및 운영'
+        ],
         sections: [
             {
-                label: '주요 역할',
+                label: '3차년도 목표',
                 type: 'list',
-                title: 'AI 모델/데이터 품질 검증 완료 및 시험인증 AI 서비스 구축',
-                items: ['품질 검증 보고서', '시험인증 AI 서비스', '신뢰성 평가 리포트']
+                title: '초거대 제조 AI 서비스 적합성 확인'
             },
             {
-                label: 'Tech Stack',
+                label: '대표 산출물',
+                type: 'list',
+                items: [
+                    '시스템엔지니어링 관리 품질문서',
+                    '적합성 확인서'
+                ]
+            },
+            {
+                label: '기술 키워드',
                 type: 'tags',
-                items: ['시스템 엔지니어링', '품질 보증', 'Testing', '시험인증']
+                items: ['시스템엔지니어링', '기술문서', '적합성 확인']
             },
             {
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '검증 완료',        value: 'Pass', unit: '',  color: '#059669' },
-                    { label: '시험인증 AI 정확도', value: '91',   unit: '%', color: '#2563EB' }
+                    { label: '품질문서 개정', value: '2', unit: '건', color: '#2563EB', target: '3' },
+                    { label: '적합성 확인', value: '0', unit: '건', color: '#059669', target: '1' }
                 ]
             }
         ],
         preview: { type: 'placeholder' },
         externalUrl: 'https://www.ktl.re.kr/',
         results: {
-            title: '시험인증 AI 서비스 및 품질 검증',
-            year3Goal: 'AI 모델/데이터 품질 검증 완료 및 시험인증 AI 서비스 구축',
+            title: '시스템엔지니어링 기반 기술개발 지원 및 기술문서 작성',
+            year3Goal: '초거대 제조 AI 서비스 적합성 확인',
             kpis: [
-                { label: '검증 완료',        value: 'Pass', unit: '', target: 'Pass', achievement: 100.0, status: 'achieved' },
-                { label: '시험인증 AI 정확도', value: '91',   unit: '%', target: '88',   achievement: 103.4, status: 'achieved' }
+                { label: '품질문서 개정', value: '2', unit: '건', target: '3', achievement: 66.7, status: 'in-progress' },
+                { label: '적합성 확인', value: '0', unit: '건', target: '1', achievement: 0.0, status: 'in-progress' }
             ],
-            deliverables: ['품질 검증 보고서', '시험인증 AI 서비스', '신뢰성 평가 리포트'],
+            deliverables: [
+                '시스템엔지니어링 관리 품질문서',
+                '적합성 확인서'
+            ],
             screenshot: null
         }
     },

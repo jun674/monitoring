@@ -272,18 +272,60 @@ function _stopSlideshowTimer() {
     }
 }
 
-function _renderPreview(preview, name, externalUrl) {
+function _renderPlaceholderPreview(item) {
+    const container = document.getElementById('modal-preview');
+    if (!container) return;
+
+    const name = item.name || '';
+    const role = item.role || '';
+    const desc = item.desc || '';
+    const extUrl = item.externalUrl || '#';
+    const techKeywords = (item.sections?.find(s => s.type === 'tags')?.items) || ['시스템엔지니어링', '실증기술', 'AI플랫폼'];
+
+    container.innerHTML = `
+        <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-[#0B0F19] via-[#0F172A] to-[#030712] rounded-2xl text-white relative overflow-hidden shadow-inner border border-slate-800/60">
+            <!-- Background Ambient Glow (Subtle Navy / Dark Slate) -->
+            <div class="absolute -top-14 -right-14 w-52 h-52 bg-slate-700/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-14 -left-14 w-52 h-52 bg-blue-950/40 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-slate-800/15 rounded-full blur-2xl pointer-events-none"></div>
+
+            <!-- Glass Icon Box -->
+            <div class="w-16 h-16 rounded-2xl bg-white/[0.06] border border-white/[0.12] backdrop-blur-md flex items-center justify-center text-3xl text-slate-200 mb-3 shadow-lg">
+                <i class="${item.icon || 'fas fa-shield-alt'}"></i>
+            </div>
+
+            <!-- Participation Badge -->
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-slate-800/80 text-slate-300 border border-slate-700/70 mb-2.5 shadow-2xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                DAINOS 초거대 제조 AI 참여기관
+            </div>
+
+            <!-- Company Name & Role -->
+            <h3 class="text-xl font-extrabold text-white tracking-tight mb-1.5">${name}</h3>
+            <p class="text-xs text-slate-400 max-w-sm mb-4 font-medium leading-relaxed">${desc || role}</p>
+
+            <!-- Tech Tags -->
+            <div class="flex items-center justify-center gap-1.5 flex-wrap max-w-xs mb-6">
+                ${techKeywords.map(t => `<span class="text-[10px] px-2.5 py-1 rounded-lg bg-slate-800/60 text-slate-300 border border-slate-700/50 font-medium">${t}</span>`).join('')}
+            </div>
+
+            <!-- Action Button -->
+            ${extUrl && extUrl !== '#' ? `
+            <a href="${extUrl}" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-900 bg-slate-100 hover:bg-white rounded-xl shadow-lg transition-all hover:scale-105 active:scale-95 border border-slate-300/50">
+                <span>공식 홈페이지 방문</span>
+                <i class="fas fa-external-link-alt text-[10px] text-slate-600"></i>
+            </a>` : ''}
+        </div>
+    `;
+}
+
+function _renderPreview(preview, name, externalUrl, item) {
     _stopSlideshowTimer();
     const container = document.getElementById('modal-preview');
 
     if (!preview || preview.type === 'placeholder') {
-        container.innerHTML = `
-            <div class="text-center space-y-2 p-6">
-                <div class="text-4xl">🖥️</div>
-                <div class="text-xs text-slate-500">
-                    <b class="text-slate-800">${name}</b> 데모 또는 연동 준비 중입니다.
-                </div>
-            </div>`;
+        _renderPlaceholderPreview(item || { name, externalUrl });
         return;
     }
 
@@ -574,6 +616,7 @@ function _renderPreview(preview, name, externalUrl) {
 
 function showCompanyPopup(item) {
     if (!modal) return;
+    window._currentModalCompany = item;
 
     const name = item.name || '';
     const role = item.role || '';
@@ -625,7 +668,7 @@ function showCompanyPopup(item) {
         extLinkEl.innerHTML = '';
     }
 
-    _renderPreview(preview, name, externalUrl);
+    _renderPreview(preview, name, externalUrl, item);
 
     modal.style.display = 'flex';
     modal.style.alignItems = 'center';
