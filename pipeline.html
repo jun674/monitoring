@@ -9,11 +9,10 @@
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
     <script src="popup.js"></script>
     <style>
-        body { 
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; 
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
             background-color: #F8FAFC;
             color: #0F172A;
-            overflow: hidden;
         }
 
         /* ── Modern Topbar ── */
@@ -24,247 +23,253 @@
             border-bottom: 1px solid #E2E8F0;
         }
 
-        /* ── SaaS Pipeline Card ── */
-        .saas-card {
-            background: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            border-radius: 18px;
-            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .saas-card:hover {
-            border-color: #CBD5E1;
-            box-shadow: 0 14px 32px -4px rgba(15, 23, 42, 0.14), 0 6px 12px -2px rgba(15, 23, 42, 0.06);
-            transform: translateY(-2px);
-        }
-
+        /* ── Header Tabs (밑줄형, 페이지명과 한 줄) ── */
         .tab-btn {
-            padding: 6px 14px;
-            border-radius: 12px;
-            font-size: 12px;
+            position: relative;
+            padding: 12px 2px;
+            font-size: 13px;
             font-weight: 600;
             color: #64748B;
-            background: #F1F5F9;
-            transition: all 0.2s;
-            cursor: pointer;
+            background: none;
             border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color 0.2s;
         }
-        @media (max-width: 639px) {
-            .tab-btn {
-                padding: 5px 10px;
-                min-width: 32px;
-                font-size: 11px;
-            }
+        @media (min-width: 768px) { .tab-btn { padding: 19px 2px; } }
+        .tab-btn::after {
+            content: '';
+            position: absolute; left: 0; right: 0; bottom: 0;
+            height: 2px; border-radius: 2px;
+            background: transparent;
+            transition: background 0.2s;
         }
-        .tab-btn:hover { background: #E2E8F0; color: #0F172A; }
-        .tab-btn.active { background: #0F172A; color: #FFFFFF; }
+        .tab-btn:hover { color: #191F28; }
+        .tab-btn:hover::after { background: #CBD5E1; }
+        .tab-btn.active { color: #191F28; }
+        .tab-btn.active::after { background: #191F28; }
 
-        ::-webkit-scrollbar { height: 8px; width: 6px; }
+        /* ── Photo Hero ── */
+        .page-hero {
+            background:
+                linear-gradient(100deg, rgba(25, 31, 40, 0.94) 0%, rgba(25, 31, 40, 0.80) 45%, rgba(25, 31, 40, 0.50) 100%),
+                url('images/bg_network.jpg') center / cover no-repeat;
+        }
+        .page-body { background: #F1F5F9; padding-top: 1px; }
+
+        /* ── Stage Band ── */
+        .stage-section { scroll-margin-top: 112px; }
+        .layer-band {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+        }
+
+        /* ── Partner Node ── */
+        .node {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .node.clickable { cursor: pointer; }
+        .node.clickable:hover {
+            background: #FFFFFF;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 1px #3B82F6, 0 14px 28px -10px rgba(37, 99, 235, 0.4);
+            transform: translateY(-3px);
+        }
+        .node .node-name, .node .node-arrow { transition: color 0.2s, transform 0.2s; }
+        .node.clickable:hover .node-name { color: #2563EB; }
+        .node.clickable:hover .node-arrow { color: #2563EB; opacity: 1; transform: translateX(3px); }
+
+        /* ── Flow Connector ── */
+        .flow {
+            position: relative;
+            padding-left: 52px;
+        }
+        .flow::before {
+            content: '';
+            position: absolute;
+            left: 31px; top: 0; bottom: 0;
+            border-left: 2px dashed #CBD5E1;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 10px; }
-        ::-webkit-scrollbar-track { background-color: #F1F5F9; }
+        ::-webkit-scrollbar-track { background-color: transparent; }
 
         .no-scrollbar::-webkit-scrollbar { display: none; height: 0; width: 0; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="h-screen flex flex-col">
+<body class="min-h-screen flex flex-col">
 
-    <!-- Top Navigation Header -->
-    <div class="topbar shrink-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 p-3.5 sm:px-7 sm:py-0 min-h-[56px] sm:h-14">
-        <div class="flex items-center gap-2.5 shrink-0">
-            <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-            <span class="text-sm font-bold text-slate-900 tracking-tight">PIPELINE</span>
-            <span class="text-xs text-slate-400 font-medium hidden sm:inline-block">| 데이터 수집부터 활용까지 6단계 체계</span>
-        </div>
-        <div class="topbar-tabs flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto py-0.5 no-scrollbar">
-            <button class="tab-btn active shrink-0" id="tab-stage-1" onclick="scrollToSection('stage-1')" title="01. Data Collection">
-                <span class="sm:hidden">1</span><span class="hidden sm:inline">01. Data</span>
-            </button>
-            <button class="tab-btn shrink-0" id="tab-stage-2" onclick="scrollToSection('stage-2')" title="02. Transfer">
-                <span class="sm:hidden">2</span><span class="hidden sm:inline">02. Transfer</span>
-            </button>
-            <button class="tab-btn shrink-0" id="tab-stage-3" onclick="scrollToSection('stage-3')" title="03. Platform & AAS">
-                <span class="sm:hidden">3</span><span class="hidden sm:inline">03. Platform</span>
-            </button>
-            <button class="tab-btn shrink-0" id="tab-stage-4" onclick="scrollToSection('stage-4')" title="04. AI Analysis">
-                <span class="sm:hidden">4</span><span class="hidden sm:inline">04. AI</span>
-            </button>
-            <button class="tab-btn shrink-0" id="tab-stage-5" onclick="scrollToSection('stage-5')" title="05. Application">
-                <span class="sm:hidden">5</span><span class="hidden sm:inline">05. App</span>
-            </button>
-            <button class="tab-btn shrink-0" id="tab-stage-6" onclick="scrollToSection('stage-6')" title="06. Management">
-                <span class="sm:hidden">6</span><span class="hidden sm:inline">06. Mgmt</span>
-            </button>
+    <!-- Top Navigation Header (페이지명 + 탭 한 줄) -->
+    <div class="topbar shrink-0">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 flex flex-col md:flex-row md:items-center md:justify-between md:gap-8 md:h-14">
+            <div class="flex items-center gap-2.5 h-12 md:h-auto shrink-0">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                <span class="text-sm font-bold text-slate-900 tracking-tight">PIPELINE</span>
+                
+            </div>
+            <nav class="flex items-center gap-5 md:gap-6 overflow-x-auto no-scrollbar topbar-tabs" id="stage-tabs"></nav>
         </div>
     </div>
 
-    <!-- Main Horizontal Pipeline Scroll -->
-    <main class="flex-1 p-6 md:p-8 overflow-hidden flex flex-col">
-        <div class="w-full flex-1 overflow-x-auto overflow-y-hidden no-scrollbar" id="main-scroll">
-            <div class="flex items-start gap-6 pb-4 snap-x snap-mandatory min-w-max">
+    <!-- Photo Hero -->
+    <div class="page-hero">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 pt-9 md:pt-11 pb-9 md:pb-11">
+            <div class="inline-flex items-center px-2.5 py-1 rounded-md bg-white/10 border border-white/20 text-white/80 text-[11px] font-bold uppercase tracking-wider mb-4">Pipeline</div>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight break-keep">EBC 중심 기관 간 연계 구조</h1>
+            <p class="text-xs md:text-sm font-medium text-slate-300 mt-3 break-keep">수요기업 현장 데이터가 수집 · 전송 · 표준화 · AI 분석을 거쳐 현장 서비스로 돌아오는 흐름입니다. 기관명을 누르면 상세 성과를 볼 수 있습니다.</p>
+        </div>
+    </div>
 
-                <!-- Stage 1 -->
-                <section id="stage-1" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
-                    <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
-                        <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">01</span>
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900">Data Collection</h2>
-                            <p class="text-[11px] text-slate-500 font-medium">OT / IT 데이터 수집</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-4" id="container-1"></div>
-                </section>
+    <main class="flex-1 page-body">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 pt-8 md:pt-10 pb-16">
 
-                <!-- Stage 2 -->
-                <section id="stage-2" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
-                    <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
-                        <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">02</span>
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900">Transfer (5G)</h2>
-                            <p class="text-[11px] text-slate-500 font-medium">초고속 특화망 전송</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-4" id="container-2"></div>
-                </section>
+            <div id="layer-container"></div>
 
-                <!-- Stage 3 -->
-                <section id="stage-3" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
-                    <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
-                        <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">03</span>
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900">Platform & AAS</h2>
-                            <p class="text-[11px] text-slate-500 font-medium">인프라 및 국제 표준화</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-4" id="container-3"></div>
-                </section>
-
-                <!-- Stage 4 -->
-                <section id="stage-4" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
-                    <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
-                        <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">04</span>
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900">AI Analysis</h2>
-                            <p class="text-[11px] text-slate-500 font-medium">제조 특화 AI 모델링</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-4" id="container-4"></div>
-                </section>
-
-                <!-- Stage 5 -->
-                <section id="stage-5" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
-                    <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
-                        <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">05</span>
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900">Application</h2>
-                            <p class="text-[11px] text-slate-500 font-medium">현장 응용 서비스 실증</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-4" id="container-5"></div>
-                </section>
-
-                <!-- Stage 6 -->
-                <section id="stage-6" class="stage-section w-[330px] min-w-[330px] max-w-[330px] flex flex-col gap-4 snap-start shrink-0">
-                    <div class="flex items-center gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs">
-                        <span class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0">06</span>
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900">Management</h2>
-                            <p class="text-[11px] text-slate-500 font-medium">총괄 및 품질 검증</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-4" id="container-6"></div>
-                </section>
-
-            </div>
+            <!-- Management band -->
+            <section id="stage-6" class="stage-section mt-8 layer-band p-4 sm:p-5 border-dashed"></section>
         </div>
     </main>
 
     <script src="data.js"></script>
     <script>
-        function renderPipeline() {
-            const domainTagMap = {
-                ORG: { label: 'ORGANIZING', cls: 'bg-amber-100 text-amber-800 border-amber-200' },
-                DATA: { label: 'DATA', cls: 'bg-teal-100 text-teal-800 border-teal-200' },
-                AI: { label: 'AI', cls: 'bg-blue-100 text-blue-800 border-blue-200' },
-                INFRA: { label: 'INFRASTRUCTURE', cls: 'bg-purple-100 text-purple-800 border-purple-200' },
-                NETWORK: { label: 'NETWORK', cls: 'bg-orange-100 text-orange-800 border-orange-200' },
-                SERVICE: { label: 'SERVICE', cls: 'bg-rose-100 text-rose-800 border-rose-200' }
-            };
+        const stageMeta = [
+            { id: 0, tab: '00. Field',    title: '수요기업 현장',   sub: 'Field Sites' },
+            { id: 1, tab: '01. Data',     title: '데이터 수집',     sub: 'Data Collection · OT / IT 데이터 수집' },
+            { id: 2, tab: '02. Transfer', title: '데이터 전송',     sub: 'Transfer · 초고속 특화망' },
+            { id: 3, tab: '03. Platform', title: 'Platform & AAS', sub: 'EBC 통합 운영환경 · 국제 표준화', hub: true },
+            { id: 4, tab: '04. AI',       title: 'AI 분석',         sub: 'AI Analysis · 제조 특화 AI 모델링' },
+            { id: 5, tab: '05. App',      title: '응용 서비스',     sub: 'Application · 현장 응용 서비스 실증' },
+            { id: 6, tab: '06. Mgmt',     title: '전 과정 관리 · 품질 검증', sub: 'Management' }
+        ];
 
-            companies.forEach((item) => {
-                const container = document.getElementById(`container-${item.stage}`);
-                if (!container) return;
-
-                const card = document.createElement('div');
-                card.className = `saas-card p-5 cursor-pointer flex flex-col justify-between group hover:border-blue-300 transition-all min-h-[170px]`;
-                card.onclick = () => showCompanyPopup(item);
-
-                const primaryKpi = item.results && item.results.kpis ? item.results.kpis[0] : null;
-                const tagInfo = domainTagMap[item.type] || { label: item.type, cls: 'bg-slate-100 text-slate-600 border-slate-200' };
-
-                card.innerHTML = `
-                    <div>
-                        <div class="flex items-start justify-between mb-2">
-                            <div>
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${tagInfo.cls}">${tagInfo.label}</span>
-                                <h3 class="font-bold text-slate-900 text-sm mt-1 group-hover:text-blue-600 transition-colors">${item.name}</h3>
-                                <p class="text-[11px] font-medium text-slate-400 truncate">${item.role}</p>
-                            </div>
-                            <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-all shrink-0">
-                                <i class="fas fa-arrow-right text-[9px]"></i>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-500 leading-snug line-clamp-2 mb-3 bg-slate-50 p-2 rounded-lg border border-slate-100">${item.desc}</p>
+        function nodeHtml(node) {
+            const company = node.id ? getCompanyById(node.id) : null;
+            const name = company ? company.name : node.name;
+            const text = company ? (pipelineFlow.nodeText[node.id] || company.desc) : node.text;
+            const isHub = company && pipelineFlow.hubIds.includes(node.id);
+            return `
+                <div class="node p-3.5 ${company ? 'clickable' : ''}"
+                     ${company ? `onclick="showCompanyPopup(getCompanyById('${node.id}'))"` : ''}>
+                    <div class="flex items-center justify-between gap-2 mb-1">
+                        <span class="node-name text-sm font-bold">${name}</span>
+                        ${company
+                            ? `<span class="flex items-center gap-2">
+                                   ${isHub ? '<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 border border-blue-100">EBC</span>' : ''}
+                                   <i class="node-arrow fas fa-arrow-right text-[10px] opacity-40"></i>
+                               </span>`
+                            : '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100">수요기업</span>'}
                     </div>
-
-                    <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
-                        <span class="text-[10px] font-medium text-slate-400">목표: ${primaryKpi ? `${primaryKpi.value}${primaryKpi.unit||''}` : '—'}</span>
-                        <span class="text-[11px] font-semibold text-blue-600">상세보기</span>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+                    <p class="text-[11px] leading-snug opacity-70">${text}</p>
+                </div>
+            `;
         }
 
-        const scrollContainer = document.getElementById('main-scroll');
-        scrollContainer.addEventListener('wheel', (evt) => {
-            evt.preventDefault();
-            scrollContainer.scrollLeft += evt.deltaY;
-        });
+        function gridCols(count) {
+            return count >= 4 ? 'sm:grid-cols-2 lg:grid-cols-3'
+                 : count === 3 ? 'sm:grid-cols-3'
+                 : count === 2 ? 'sm:grid-cols-2' : '';
+        }
+
+        function flowHtml(text, loop) {
+            return `
+                <div class="flow py-4">
+                    <span class="text-xs font-semibold break-keep ${loop ? 'text-blue-700' : 'text-slate-700'}">
+                        <i class="fas ${loop ? 'fa-rotate-left text-blue-600' : 'fa-arrow-down text-slate-400'} mr-1.5"></i>${text}
+                    </span>
+                </div>
+            `;
+        }
+
+        function renderPipeline() {
+            const container = document.getElementById('layer-container');
+            const flowStages = stageMeta.filter(s => s.id <= 5);
+
+            container.innerHTML = flowStages.map(stage => {
+                const nodes = stage.id === 0
+                    ? pipelineFlow.fieldSites
+                    : getCompaniesByStage(stage.id).map(c => ({ id: c.id }));
+                const next = pipelineFlow.links[`${stage.id}-${stage.id + 1}`];
+
+                return `
+                    <section id="stage-${stage.id}" class="stage-section layer-band p-4 sm:p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="w-8 h-8 rounded-xl ${stage.id === 0 ? 'bg-blue-500 text-white' : 'bg-slate-900 text-white'} font-bold text-xs flex items-center justify-center shrink-0">
+                                ${stage.id === 0 ? '<i class="fas fa-industry"></i>' : String(stage.id).padStart(2, '0')}
+                            </span>
+                            <div>
+                                <h2 class="text-sm font-bold">${stage.title}</h2>
+                                <p class="text-[11px] text-slate-500 font-medium">${stage.sub}</p>
+                            </div>
+                            ${stage.hub ? '<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 border border-blue-100">HUB</span>' : ''}
+                        </div>
+                        <div class="grid grid-cols-1 ${gridCols(nodes.length)} gap-3">
+                            ${nodes.map(nodeHtml).join('')}
+                        </div>
+                    </section>
+                    ${next ? flowHtml(next, false) : ''}
+                `;
+            }).join('');
+
+            // 응용 서비스 → 다시 수요기업 현장으로 순환
+            container.insertAdjacentHTML('beforeend', `
+                ${flowHtml('수요기업 현장 실증', true)}
+                <div class="layer-band p-4 flex items-center gap-3 bg-blue-50/50 border-blue-100">
+                    <i class="fas fa-industry text-blue-600"></i>
+                    <span class="text-xs font-semibold text-slate-700">${pipelineFlow.fieldLoop}</span>
+                </div>
+            `);
+
+            const mgmt = stageMeta[6];
+            document.getElementById('stage-6').innerHTML = `
+                <div class="flex items-center gap-2 mb-3">
+                    <i class="fas fa-clipboard-check text-blue-600 text-sm"></i>
+                    <h2 class="text-sm font-bold text-slate-900">${mgmt.title}</h2>
+                    <span class="text-[11px] text-slate-400">모든 단계에 걸쳐</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    ${getCompaniesByStage(6).map(c => nodeHtml({ id: c.id })).join('')}
+                </div>
+            `;
+        }
+
+        function renderTabs() {
+            document.getElementById('stage-tabs').innerHTML = stageMeta.map(s => `
+                <button class="tab-btn shrink-0 ${s.id === 0 ? 'active' : ''}" id="tab-stage-${s.id}" onclick="scrollToSection('stage-${s.id}')">${s.tab}</button>
+            `).join('');
+        }
 
         function setActiveTab(stageId) {
             document.querySelectorAll('.topbar-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
             const activeBtn = document.getElementById(`tab-${stageId}`);
-            if (activeBtn) {
-                activeBtn.classList.add('active');
-            }
+            if (activeBtn) activeBtn.classList.add('active');
         }
 
         function scrollToSection(id) {
             const el = document.getElementById(id);
             if (el) {
                 setActiveTab(id);
-                const scrollLeft = el.offsetLeft - 32;
-                scrollContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
-        scrollContainer.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('.stage-section');
-            let currentStage = 'stage-1';
-            sections.forEach(section => {
-                const sectionLeft = section.offsetLeft - scrollContainer.offsetLeft;
-                if (scrollContainer.scrollLeft >= sectionLeft - 100) {
-                    currentStage = section.id;
-                }
+        window.addEventListener('scroll', () => {
+            let currentStage = 'stage-0';
+            document.querySelectorAll('.stage-section').forEach(section => {
+                if (section.getBoundingClientRect().top <= 160) currentStage = section.id;
             });
+            if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) currentStage = 'stage-6';
             setActiveTab(currentStage);
         });
 
         document.addEventListener('DOMContentLoaded', () => {
+            renderTabs();
             renderPipeline();
         });
     </script>

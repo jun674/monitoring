@@ -250,7 +250,7 @@ function _renderSection(section) {
                 card.innerHTML = `
                     <div class="modal-kpi-label">${kpi.label}</div>
                     <div class="modal-kpi-val" style="color:${kpi.color || '#0F172A'}">
-                        ${kpi.value}${kpi.unit ? `<span class="modal-kpi-unit">${kpi.unit}</span>` : ''}
+                        ${kpi.value}${kpiUnit(kpi) ? `<span class="modal-kpi-unit">${kpiUnit(kpi)}</span>` : ''}
                     </div>
                 `;
                 grid.appendChild(card);

@@ -15,6 +15,24 @@
             color: #0F172A;
         }
 
+        /* ── Photo Sections ── */
+        .hero {
+            background:
+                linear-gradient(100deg, rgba(25, 31, 40, 0.94) 0%, rgba(25, 31, 40, 0.78) 45%, rgba(25, 31, 40, 0.45) 100%),
+                url('images/bg_factory.jpg') center 40% / cover no-repeat;
+        }
+        .split-photo {
+            background:
+                linear-gradient(rgba(25, 31, 40, 0.15), rgba(25, 31, 40, 0.15)),
+                url('images/bg_datacenter.jpg') center / cover no-repeat;
+        }
+
+        /* ── Full-width Section Bands ── */
+        .band { border-top: 1px solid #E2E8F0; }
+        .band-a { background: #F1F5F9; border-top: none; padding-top: 1px; /* 음수 margin 겹침 유지 */ }
+        .band-b { background: #FFFFFF; }
+        .band-c { background: #F1F5F9; }
+
         /* ── Soft Modern SaaS Card Design ── */
         .saas-card {
             background: #FFFFFF;
@@ -23,10 +41,11 @@
             box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .saas-card:hover {
-            border-color: #CBD5E1;
-            box-shadow: 0 14px 32px -4px rgba(15, 23, 42, 0.14), 0 6px 12px -2px rgba(15, 23, 42, 0.06);
-            transform: translateY(-2px);
+        .saas-card.cursor-pointer:hover {
+            background: #FBFDFF;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 1px #3B82F6, 0 20px 40px -12px rgba(37, 99, 235, 0.35);
+            transform: translateY(-4px);
         }
 
         /* ── Modern Topbar ── */
@@ -52,6 +71,7 @@
         }
 
         /* ── Domain Tag Colors ── */
+        /* 도메인별 구분 색 (6대 핵심 도메인 · WBS) */
         .domain-tag-organizing { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
         .domain-tag-data { background: #CCFBF1; color: #115E59; border: 1px solid #99F6E4; }
         .domain-tag-ai { background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; }
@@ -77,7 +97,8 @@
             font-size: 13px;
         }
         .wbs-table tr:last-child td { border-bottom: none; }
-        .wbs-table tr:hover td { background-color: #F8FAFC; }
+        .wbs-table tr:hover td { background-color: #EFF6FF; }
+        .wbs-table tr:hover td:first-child { color: #2563EB; box-shadow: inset 3px 0 0 #2563EB; }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 10px; }
@@ -86,37 +107,41 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Topbar Header -->
-    <div class="topbar shrink-0 flex items-center justify-between p-3.5 sm:px-7 min-h-[56px] sm:h-14">
-        <div class="flex items-center gap-3">
-            <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-            <span class="text-sm font-bold text-slate-900 tracking-tight">OVERVIEW</span>
-            <span class="text-xs text-slate-400 font-medium hidden sm:inline-block">| 초거대 제조 AI 서비스 개발 및 실증</span>
+    <!-- Top Navigation Header (페이지명 + 탭 한 줄) -->
+    <div class="topbar shrink-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 flex flex-col md:flex-row md:items-center md:justify-between md:gap-8 md:h-14">
+            <div class="flex items-center gap-2.5 h-12 md:h-auto shrink-0">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                <span class="text-sm font-bold text-slate-900 tracking-tight">OVERVIEW</span>
+                <span class="text-xs text-slate-400 font-medium hidden sm:inline-block">| 초거대 제조 AI 서비스 개발 및 실증</span>
+            </div>
         </div>
     </div>
 
-    <main class="flex-1 overflow-y-auto p-6 md:p-10">
-        <div class="max-w-7xl mx-auto space-y-10 pb-16">
-
-            <!-- 1. HEADER SECTION & MAIN 4 KPI CARDS -->
-            <section class="space-y-6">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200/80 pb-5">
-                    <div>
-                        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-600 text-[11px] font-bold uppercase tracking-wider mb-2">
-                            PROJECT
-                        </div>
-                        <h1 class="text-2xl font-bold text-slate-900 tracking-tight leading-tight" id="project-title">
-                            스마트그린 산업단지 제조산업 특화 초거대 제조 AI 서비스 개발 및 실증
-                        </h1>
-                        <p class="text-xs font-medium text-slate-500 mt-1 flex items-center gap-3">
-                            <span>사업 기간: 2024.05.01 ~ 2026.12.31</span>
-                            <span>•</span>
-                            <span>3차년도 진행 중</span>
-                        </p>
-                    </div>
+    <main class="flex-1">
+        <!-- Hero: 사업 개요 (사진 배경) -->
+        <div class="hero">
+            <div class="max-w-7xl mx-auto px-6 md:px-10 pt-10 md:pt-14 pb-24 md:pb-28">
+                <div class="inline-flex items-center px-2.5 py-1 rounded-md bg-white/10 border border-white/20 text-white/80 text-[11px] font-bold uppercase tracking-wider mb-4">
+                    PROJECT
                 </div>
+                <h1 class="text-2xl md:text-4xl font-extrabold text-white tracking-tight leading-tight max-w-3xl break-keep" id="project-title">
+                    스마트그린 산업단지 제조산업 특화<br class="hidden md:block"> 초거대 제조 AI 서비스 개발 및 실증
+                </h1>
+                <p class="text-xs md:text-sm font-medium text-slate-300 mt-4 flex flex-wrap items-center gap-3">
+                    <span>사업 기간: 2024.05.01 ~ 2026.12.31</span>
+                    <span class="text-slate-500 hidden sm:inline">|</span>
+                    <span>3차년도 진행 중</span>
+                </p>
+            </div>
+        </div>
 
-                <!-- 4 Top KPI Cards -->
+        <!-- Band A: KPI · 성과 하이라이트 -->
+        <div class="band band-a">
+        <div class="max-w-7xl mx-auto space-y-10 px-6 md:px-10 pb-10 md:pb-12">
+
+            <!-- 1. MAIN 4 KPI CARDS (히어로 위로 겹침) -->
+            <section class="-mt-16 md:-mt-20 relative">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="saas-card p-5">
                         <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">총 사업비</div>
@@ -145,6 +170,40 @@
             </section>
 
 
+            <!-- 1-1. ACHIEVEMENT HIGHLIGHTS (성과 하이라이트) -->
+            <section class="space-y-4">
+                <div class="flex items-center gap-2.5">
+                    <h2 class="text-lg font-bold text-slate-900">성과 하이라이트</h2>
+                    <span class="text-xs text-slate-400 font-medium hidden sm:inline">참여기관 주요 성과 · 수상 · 실증사례</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="highlight-tiles"></div>
+
+                <div class="saas-card p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3" id="highlight-awards"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="highlight-cases"></div>
+            </section>
+
+
+        </div>
+        </div>
+
+        <!-- Split Banner: 사업 추진 체계 -->
+        <div class="split-banner grid grid-cols-1 md:grid-cols-2">
+            <div class="bg-[#191F28] flex items-center">
+                <div class="w-full max-w-[640px] ml-auto px-6 md:px-10 py-12 md:py-16">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3">Roadmap &amp; Domains</div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight">사업 추진 체계</h2>
+                    <p class="text-sm text-slate-300 mt-3 leading-relaxed">연차별 로드맵과 DAINOS 6대 핵심 도메인으로<br class="hidden md:block"> 참여기관의 역할을 한눈에 확인합니다.</p>
+                </div>
+            </div>
+            <div class="split-photo min-h-[200px]"></div>
+        </div>
+
+        <!-- Band B: 로드맵 · 6대 핵심 도메인 -->
+        <div class="band band-b">
+        <div class="max-w-7xl mx-auto space-y-10 px-6 md:px-10 py-10 md:py-12">
+
             <!-- 2. PROJECT TIMELINE (연차별 로드맵) -->
             <section class="space-y-4">
                 <div class="flex items-center justify-between">
@@ -169,13 +228,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     
                     <!-- Domain 1: Data -->
-                    <div class="saas-card p-5 flex flex-col justify-between cursor-pointer hover:border-teal-300 transition-all group" onclick="goToPartnersDomain('DATA')">
+                    <div class="saas-card p-5 flex flex-col justify-between cursor-pointer hover:border-blue-300 transition-all group" onclick="goToPartnersDomain('DATA')">
                         <div>
                             <div class="flex items-center justify-between mb-2.5">
                                 <span class="text-[10px] font-bold px-2 py-0.5 rounded domain-tag-data">DATA</span>
-                                <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-teal-600 transition-colors"></i>
+                                <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-blue-600 transition-colors"></i>
                             </div>
-                            <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-teal-700 transition-colors">제조 데이터 수집 및 교환</h3>
+                            <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-blue-700 transition-colors">제조 데이터 수집 및 교환</h3>
                             <p class="text-xs text-slate-500 leading-relaxed mb-3">OT/IT 데이터 고속 수집·전처리, AAS 기반 데이터 표준화 및 국제 교환체계 구축</p>
                         </div>
                         <div class="pt-3 border-t border-slate-100 space-y-2">
@@ -210,13 +269,13 @@
                     </div>
 
                     <!-- Domain 3: Infrastructure -->
-                    <div class="saas-card p-5 flex flex-col justify-between cursor-pointer hover:border-purple-300 transition-all group" onclick="goToPartnersDomain('INFRA')">
+                    <div class="saas-card p-5 flex flex-col justify-between cursor-pointer hover:border-blue-300 transition-all group" onclick="goToPartnersDomain('INFRA')">
                         <div>
                             <div class="flex items-center justify-between mb-2.5">
                                 <span class="text-[10px] font-bold px-2 py-0.5 rounded domain-tag-infra">INFRASTRUCTURE</span>
-                                <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-purple-600 transition-colors"></i>
+                                <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-blue-600 transition-colors"></i>
                             </div>
-                            <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-purple-700 transition-colors">하이브리드 클라우드 & MLOps</h3>
+                            <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-blue-700 transition-colors">하이브리드 클라우드 & MLOps</h3>
                             <p class="text-xs text-slate-500 leading-relaxed mb-3">EBC 센터 인프라 구축, 온프레미스+GCP 하이브리드 연동 및 MLOps 자동화</p>
                         </div>
                         <div class="pt-3 border-t border-slate-100 space-y-2">
@@ -228,13 +287,13 @@
                     </div>
 
                     <!-- Domain 4: Network -->
-                    <div class="saas-card p-5 flex flex-col justify-between cursor-pointer hover:border-orange-300 transition-all group" onclick="goToPartnersDomain('NETWORK')">
+                    <div class="saas-card p-5 flex flex-col justify-between cursor-pointer hover:border-blue-300 transition-all group" onclick="goToPartnersDomain('NETWORK')">
                         <div>
                             <div class="flex items-center justify-between mb-2.5">
                                 <span class="text-[10px] font-bold px-2 py-0.5 rounded domain-tag-network">NETWORK</span>
-                                <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-orange-600 transition-colors"></i>
+                                <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-blue-600 transition-colors"></i>
                             </div>
-                            <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-orange-700 transition-colors">차세대 초고속 통신망</h3>
+                            <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-blue-700 transition-colors">차세대 초고속 통신망</h3>
                             <p class="text-xs text-slate-500 leading-relaxed mb-3">공장 내 5G 특화망 및 WiFi 7 인프라 구축, NMS 통합 관제망 운영</p>
                         </div>
                         <div class="pt-3 border-t border-slate-100 space-y-2">
@@ -246,13 +305,13 @@
                     </div>
 
                     <!-- Domain 5: Organizing -->
-                    <div class="saas-card p-5 flex flex-col justify-between cursor-pointer hover:border-amber-300 transition-all group" onclick="goToPartnersDomain('ORG')">
+                    <div class="saas-card p-5 flex flex-col justify-between cursor-pointer hover:border-blue-300 transition-all group" onclick="goToPartnersDomain('ORG')">
                         <div>
                             <div class="flex items-center justify-between mb-2.5">
                                 <span class="text-[10px] font-bold px-2 py-0.5 rounded domain-tag-organizing">ORGANIZING</span>
-                                <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-amber-600 transition-colors"></i>
+                                <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-blue-600 transition-colors"></i>
                             </div>
-                            <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-amber-700 transition-colors">사업관리 및 생태계 활성화</h3>
+                            <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-blue-700 transition-colors">사업관리 및 생태계 활성화</h3>
                             <p class="text-xs text-slate-500 leading-relaxed mb-3">전반적 사업 운영체계 설계, 기술개발 체계 종합 및 산학연관 협업 환경 조성</p>
                         </div>
                         <div class="pt-3 border-t border-slate-100 space-y-2">
@@ -265,13 +324,13 @@
                     </div>
 
                     <!-- Domain 6: Service -->
-                    <div class="saas-card p-5 flex flex-col justify-between cursor-pointer hover:border-rose-300 transition-all group" onclick="goToPartnersDomain('SERVICE')">
+                    <div class="saas-card p-5 flex flex-col justify-between cursor-pointer hover:border-blue-300 transition-all group" onclick="goToPartnersDomain('SERVICE')">
                         <div>
                             <div class="flex items-center justify-between mb-2.5">
                                 <span class="text-[10px] font-bold px-2 py-0.5 rounded domain-tag-service">SERVICE</span>
-                                <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-rose-600 transition-colors"></i>
+                                <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-blue-600 transition-colors"></i>
                             </div>
-                            <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-rose-700 transition-colors">현장 응용 서비스 및 실증</h3>
+                            <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-blue-700 transition-colors">현장 응용 서비스 및 실증</h3>
                             <p class="text-xs text-slate-500 leading-relaxed mb-3">QMS, 불량 원인 역추적, IIoT 센싱, 한국어 음성인식 STT/TTS 현장 실증</p>
                         </div>
                         <div class="pt-3 border-t border-slate-100 space-y-2">
@@ -290,6 +349,13 @@
             </section>
 
 
+        </div>
+        </div>
+
+        <!-- Band C: WBS -->
+        <div class="band band-c pb-16">
+        <div class="max-w-7xl mx-auto space-y-10 px-6 md:px-10 py-10 md:py-12">
+
             <!-- 4. WBS CONTROL ACCOUNT TABLE (WBS 주요 추진 현황) -->
             <section class="space-y-4">
                 <div class="flex items-center justify-between">
@@ -304,10 +370,10 @@
                         <table class="wbs-table">
                             <thead>
                                 <tr>
-                                    <th style="width: 18%;">기관명</th>
-                                    <th style="width: 14%;">도메인</th>
-                                    <th style="width: 43%;">3차년도 목표 / 역할</th>
-                                    <th style="width: 25%;">주요 성과 지표</th>
+                                    <th style="width: 15%;">기관명</th>
+                                    <th style="width: 12%;">도메인</th>
+                                    <th style="width: 38%;">3차년도 목표 / 역할</th>
+                                    <th style="width: 35%;">주요 성과 지표</th>
                                 </tr>
                             </thead>
                             <tbody id="wbs-tbody">
@@ -322,12 +388,14 @@
             </section>
 
         </div>
+        </div>
     </main>
 
     <script src="data.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             renderKpiTotalCount();
+            renderHighlights();
             renderTimeline();
             renderWBSTable();
         });
@@ -344,7 +412,7 @@
                 if (totalKpis > 0) {
                     animateCounter(el, totalKpis);
                     if (statusEl) {
-                        statusEl.innerHTML = `달성 <span class="font-bold text-emerald-600">${achievedKpis}</span>개 / 전체 <span class="font-bold text-slate-600">${totalKpis}</span>개 지표`;
+                        statusEl.innerHTML = `달성 <span class="font-bold text-blue-600">${achievedKpis}</span>개 / 전체 <span class="font-bold text-slate-600">${totalKpis}</span>개 지표`;
                     }
                 }
             }
@@ -376,6 +444,64 @@
             window.location.href = `partners.html?type=${domainType}`;
         }
 
+        function openCompany(id) {
+            const c = getCompanyById(id);
+            if (c) showCompanyPopup(c);
+        }
+
+        function partnerChips(ids) {
+            return ids.map(id => {
+                const c = getCompanyById(id);
+                if (!c) return '';
+                return `<button type="button" onclick="event.stopPropagation(); openCompany('${id}')"
+                    class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-colors">${c.name}</button>`;
+            }).join('');
+        }
+
+        function renderHighlights() {
+            if (typeof highlights === 'undefined') return;
+
+            document.getElementById('highlight-tiles').innerHTML = highlights.tiles.map(t => `
+                <div class="saas-card p-5 cursor-pointer group flex flex-col justify-between" onclick="openCompany('${t.partners[0]}')">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="text-xs font-semibold tracking-wider text-slate-500">${t.label}</div>
+                        <i class="${t.icon} text-sm text-slate-300 group-hover:text-blue-600 transition-colors"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight">${t.value} <span class="text-sm font-semibold text-slate-500">${t.unit}</span></div>
+                        <p class="text-[11px] text-slate-400 mt-2">${t.sub}</p>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 pt-3 mt-3 border-t border-slate-100">${partnerChips(t.partners)}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('highlight-awards').innerHTML = highlights.awards.map(a => `
+                <div class="group flex items-start gap-3 p-2.5 rounded-xl hover:bg-blue-50 cursor-pointer transition-colors" onclick="openCompany('${a.partners[0]}')">
+                    <div class="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                        <i class="${a.icon} text-sm"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="text-xs font-bold text-slate-900 leading-snug group-hover:text-blue-700 transition-colors">${a.title}</div>
+                        <div class="text-[11px] text-slate-500 mt-0.5">${a.desc}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('highlight-cases').innerHTML = highlights.cases.map((cs, i) => `
+                <div class="saas-card p-5 cursor-pointer group" onclick="openCompany('${cs.partners[0]}')">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-600 text-white">실증사례 ${i + 1}</span>
+                        <span class="text-xs font-semibold text-slate-500">${cs.site}</span>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-blue-700 transition-colors">${cs.title}</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed mb-3">${cs.desc}</p>
+                    <div class="flex flex-wrap items-center gap-1.5 pt-3 border-t border-slate-100">
+                        <span class="text-[11px] text-slate-400 mr-1">참여</span>${partnerChips(cs.partners)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
         function renderTimeline() {
             const container = document.getElementById('timeline-container');
             container.innerHTML = '';
@@ -402,9 +528,9 @@
                         `).join('')}
                     </div>
                     <div class="w-full md:w-28 shrink-0 text-left md:text-right pt-2.5 md:pt-0 border-t md:border-t-0 border-slate-200/60">
-                        <div class="text-xs font-bold ${isCurrent ? 'text-blue-600' : 'text-emerald-600'}">진행률 ${t.progress}%</div>
+                        <div class="text-xs font-bold ${isCurrent ? 'text-blue-600' : 'text-[#191F28]'}">진행률 ${t.progress}%</div>
                         <div class="kpi-bar mt-1.5">
-                            <div class="kpi-bar-inner ${isCurrent ? 'bg-blue-600' : 'bg-emerald-500'}" style="width: ${t.progress}%"></div>
+                            <div class="kpi-bar-inner ${isCurrent ? 'bg-blue-600' : 'bg-[#191F28]'}" style="width: ${t.progress}%"></div>
                         </div>
                     </div>
                 `;
@@ -429,7 +555,10 @@
 
             companies.forEach(c => {
                 const mainKpi = c.results && c.results.kpis && c.results.kpis.length > 0 ? c.results.kpis[0] : null;
-                const kpiText = mainKpi ? `${mainKpi.label}: <strong class="text-slate-900">${mainKpi.value}${mainKpi.unit || ''}</strong>` : '-';
+                const kpiText = !mainKpi ? '-'
+                    : /\d/.test(String(mainKpi.value))
+                        ? `${mainKpi.label}: <strong class="text-slate-900">${mainKpi.value}${kpiUnit(mainKpi)}</strong>`
+                        : `${mainKpi.label}: <strong class="text-slate-900">${mainKpi.value === '-' ? '측정 전' : mainKpi.value}</strong>${mainKpi.target ? ` <span class="text-slate-400">(목표 ${mainKpi.target}${mainKpi.unit || ''})</span>` : ''}`;
                 const tagInfo = domainTagMap[c.type] || { label: c.type, cls: 'bg-slate-100 text-slate-600' };
 
                 // 1) Desktop Table Row
@@ -448,7 +577,7 @@
                             <div class="font-medium text-slate-800">${c.role}</div>
                             <div class="text-xs text-slate-400 truncate max-w-md">${c.desc}</div>
                         </td>
-                        <td class="text-xs text-slate-600">
+                        <td class="text-xs text-slate-600 whitespace-nowrap overflow-hidden text-ellipsis" style="max-width: 0;" title="${kpiText.replace(/<[^>]+>/g, '')}">
                             ${kpiText}
                         </td>
                     `;

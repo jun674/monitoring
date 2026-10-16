@@ -136,6 +136,9 @@
                 toggleIcon.classList.remove('rotate-180');
             }
         });
+
+        // 모바일(768px 미만)에서는 사이드바를 접은 상태로 시작
+        if (window.innerWidth < 768) sidebarToggle.click();
     </script>
 </body>
 </html>

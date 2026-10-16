@@ -23,6 +23,14 @@
             border-bottom: 1px solid #E2E8F0;
         }
 
+        /* ── Photo Hero ── */
+        .page-hero {
+            background:
+                linear-gradient(100deg, rgba(25, 31, 40, 0.94) 0%, rgba(25, 31, 40, 0.80) 45%, rgba(25, 31, 40, 0.50) 100%),
+                url('images/bg_team.jpg') center 62% / cover no-repeat;
+        }
+        .page-body { background: #F1F5F9; padding-top: 1px; }
+
         /* ── SaaS Card Design ── */
         .saas-card {
             background: #FFFFFF;
@@ -31,42 +39,41 @@
             box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .saas-card:hover {
-            border-color: #CBD5E1;
-            box-shadow: 0 14px 32px -4px rgba(15, 23, 42, 0.14), 0 6px 12px -2px rgba(15, 23, 42, 0.06);
-            transform: translateY(-3px);
+        .saas-card.cursor-pointer:hover {
+            background: #FBFDFF;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 1px #3B82F6, 0 20px 40px -12px rgba(37, 99, 235, 0.35);
+            transform: translateY(-4px);
         }
 
-        /* ── Filter Tab Buttons ── */
+        /* ── Header Tabs (밑줄형, 페이지명과 한 줄) ── */
         .tab-pill {
-            padding: 6px 14px;
-            border-radius: 12px;
-            font-size: 12px;
+            position: relative;
+            padding: 12px 2px;
+            font-size: 13px;
             font-weight: 600;
             color: #64748B;
-            background: #F1F5F9;
-            border: 1px solid transparent;
-            transition: all 0.2s;
+            background: none;
+            border: none;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            white-space: nowrap;
+            transition: color 0.2s;
         }
-        @media (max-width: 639px) {
-            .tab-pill {
-                padding: 5px 10px;
-                min-width: 32px;
-                font-size: 11px;
-            }
+        @media (min-width: 768px) { .tab-pill { padding: 19px 2px; } }
+        .tab-pill::after {
+            content: '';
+            position: absolute; left: 0; right: 0; bottom: 0;
+            height: 2px; border-radius: 2px;
+            background: transparent;
+            transition: background 0.2s;
         }
-        .tab-pill:hover {
-            background: #E2E8F0;
-            color: #0F172A;
-        }
-        .tab-pill.active {
-            background: #0F172A;
-            color: #FFFFFF;
-        }
+        .tab-pill:hover { color: #191F28; }
+        .tab-pill:hover::after { background: #CBD5E1; }
+        .tab-pill.active { color: #191F28; }
+        .tab-pill.active::after { background: #191F28; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; height: 0; width: 0; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 10px; }
@@ -75,45 +82,40 @@
 </head>
 <body class="min-h-screen flex flex-col overflow-x-hidden">
 
-    <!-- Top Navigation Header -->
-    <div class="topbar shrink-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 p-3 sm:px-7 sm:py-0 min-h-[56px] sm:h-14">
-        <div class="flex items-center gap-2.5 shrink-0">
-            <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-            <span class="text-sm font-bold text-slate-900 tracking-tight">PARTNERS</span>
-            <span class="text-xs text-slate-400 font-medium hidden sm:inline-block">| 총 16개 참여기관</span>
-        </div>
-
-        <!-- Filter Tabs -->
-        <div class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto py-0.5 no-scrollbar">
-            <button class="tab-pill active shrink-0" onclick="filterCards('ALL')" id="tab-ALL" title="ALL">
-                <span class="sm:hidden">A</span><span class="hidden sm:inline">ALL</span>
-            </button>
-            <button class="tab-pill shrink-0" onclick="filterCards('DATA')" id="tab-DATA" title="DATA">
-                <span class="sm:hidden">D</span><span class="hidden sm:inline">DATA</span>
-            </button>
-            <button class="tab-pill shrink-0" onclick="filterCards('AI')" id="tab-AI" title="AI">
-                <span class="sm:hidden">A</span><span class="hidden sm:inline">AI</span>
-            </button>
-            <button class="tab-pill shrink-0" onclick="filterCards('INFRA')" id="tab-INFRA" title="INFRASTRUCTURE">
-                <span class="sm:hidden">I</span><span class="hidden sm:inline">INFRASTRUCTURE</span>
-            </button>
-            <button class="tab-pill shrink-0" onclick="filterCards('NETWORK')" id="tab-NETWORK" title="NETWORK">
-                <span class="sm:hidden">N</span><span class="hidden sm:inline">NETWORK</span>
-            </button>
-            <button class="tab-pill shrink-0" onclick="filterCards('ORG')" id="tab-ORG" title="ORGANIZING">
-                <span class="sm:hidden">O</span><span class="hidden sm:inline">ORGANIZING</span>
-            </button>
-            <button class="tab-pill shrink-0" onclick="filterCards('SERVICE')" id="tab-SERVICE" title="SERVICE">
-                <span class="sm:hidden">S</span><span class="hidden sm:inline">SERVICE</span>
-            </button>
+    <!-- Top Navigation Header (페이지명 + 탭 한 줄) -->
+    <div class="topbar shrink-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 flex flex-col md:flex-row md:items-center md:justify-between md:gap-8 md:h-14">
+            <div class="flex items-center gap-2.5 h-12 md:h-auto shrink-0">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                <span class="text-sm font-bold text-slate-900 tracking-tight">PARTNERS</span>
+                
+            </div>
+            <nav class="flex items-center gap-5 md:gap-6 overflow-x-auto no-scrollbar">
+                <button class="tab-pill active shrink-0" onclick="filterCards('ALL')" id="tab-ALL">ALL</button>
+                <button class="tab-pill shrink-0" onclick="filterCards('DATA')" id="tab-DATA">DATA</button>
+                <button class="tab-pill shrink-0" onclick="filterCards('AI')" id="tab-AI">AI</button>
+                <button class="tab-pill shrink-0" onclick="filterCards('INFRA')" id="tab-INFRA">INFRASTRUCTURE</button>
+                <button class="tab-pill shrink-0" onclick="filterCards('NETWORK')" id="tab-NETWORK">NETWORK</button>
+                <button class="tab-pill shrink-0" onclick="filterCards('ORG')" id="tab-ORG">ORGANIZING</button>
+                <button class="tab-pill shrink-0" onclick="filterCards('SERVICE')" id="tab-SERVICE">SERVICE</button>
+            </nav>
         </div>
     </div>
 
-    <main class="flex-1 p-6 md:p-10">
-        <div class="max-w-7xl mx-auto space-y-6 pb-20">
+    <!-- Photo Hero -->
+    <div class="page-hero">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 pt-9 md:pt-11 pb-20 md:pb-24">
+            <div class="inline-flex items-center px-2.5 py-1 rounded-md bg-white/10 border border-white/20 text-white/80 text-[11px] font-bold uppercase tracking-wider mb-4">Partners</div>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight break-keep">함께하는 참여기관</h1>
+            <p class="text-xs md:text-sm font-medium text-slate-300 mt-3 break-keep">주관기관 1곳과 참여기관 15곳이 데이터 · AI · 인프라 · 네트워크 · 사업관리 · 서비스 6대 도메인에서 함께합니다.</p>
+        </div>
+    </div>
 
-            <!-- Sub Header Info Bar -->
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+    <main class="flex-1 page-body">
+        <div class="max-w-7xl mx-auto space-y-6 px-6 md:px-10 pb-20">
+
+            <!-- Sub Header Info Bar (히어로 위로 겹침) -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden -mt-14 md:-mt-16 relative">
                 <div class="flex items-center justify-between p-3.5 px-4 cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleChipBar()" id="chip-bar-header">
                     <div class="flex items-center gap-2">
                         <span class="text-xs font-bold text-slate-800" id="chip-bar-title">참여기관 빠른 바로가기</span>
@@ -181,7 +183,7 @@
             chipBar.innerHTML = '';
             list.forEach(c => {
                 const chip = document.createElement('button');
-                chip.className = "text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 transition-colors flex items-center gap-1.5";
+                chip.className = "text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-[#191F28] hover:text-white hover:border-[#191F28] text-slate-600 border border-slate-200 transition-colors flex items-center gap-1.5";
                 chip.innerHTML = `${c.name}`;
                 chip.onclick = () => scrollToCard(c.id);
                 chipBar.appendChild(chip);
@@ -231,7 +233,7 @@
                             <div class="mb-4 p-3 rounded-xl bg-white border border-slate-200/80">
                                 <div class="text-[10px] font-medium text-slate-400 truncate mb-1">${primaryKpi.label}</div>
                                 <div class="flex items-baseline justify-between">
-                                    <span class="text-sm font-extrabold text-slate-900">${primaryKpi.value} <span class="text-[10px] font-normal text-slate-500">${primaryKpi.unit || ''}</span></span>
+                                    <span class="text-sm font-extrabold text-slate-900">${primaryKpi.value} <span class="text-[10px] font-normal text-slate-500">${kpiUnit(primaryKpi)}</span></span>
                                     ${primaryKpi.target ? `<span class="text-[10px] font-medium text-slate-400">목표: ${primaryKpi.target}${primaryKpi.unit||''}</span>` : ''}
                                 </div>
                             </div>

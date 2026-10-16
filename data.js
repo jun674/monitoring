@@ -1299,6 +1299,11 @@ const statusColors = {
     'danger':  { bg: 'bg-red-400',   label: '장애' }
 };
 
+// 값이 숫자가 아닐 때('실증진행중', '-' 등)는 단위를 붙이지 않음
+function kpiUnit(kpi) {
+    return kpi && kpi.unit && /\d/.test(String(kpi.value)) ? kpi.unit : '';
+}
+
 function getCompaniesByDomain(domain) {
     if (!domain || domain === 'ALL') return companies;
     if (domain === 'REAL') return companies.filter(c => c.isRealData);
@@ -1329,3 +1334,68 @@ function getDomainAchievement(domain) {
     if (allKpis.length === 0) return 0;
     return Math.round(allKpis.reduce((sum, k) => sum + k.achievement, 0) / allKpis.length * 10) / 10;
 }
+
+// ═══════════════════════════════════════════════════════════════
+// 🏆 성과 하이라이트 (OVERVIEW)
+//   partners: 클릭 시 열릴 기관 id (companies[].id)
+// ═══════════════════════════════════════════════════════════════
+const highlights = {
+    tiles: [
+        { label: '제조데이터 수집 성능', value: '167만', unit: '건/초', sub: '설비 59개 · 태그 2,884종 · 누적 8.2TB', icon: 'fas fa-database', partners: ['markbase'] },
+        { label: '학습용 공개데이터셋', value: '10', unit: 'TB', sub: '초거대제조AI 학습용 데이터 수집', icon: 'fas fa-layer-group', partners: ['kaist'] },
+        { label: 'AI 모델 · Use Case', value: '2', unit: '식', sub: '언어·비전 AI 모델 · Use Case 6건 도출', icon: 'fas fa-brain', partners: ['kaist'] },
+        { label: 'AAS 표준 메타모델', value: '2', unit: '종', sub: '시계열·관계형 데이터 메타모델 및 웹 구축', icon: 'fas fa-sitemap', partners: ['nestfield', 'kyungnam'] },
+        { label: 'AIoT 엣지 모듈', value: '3', unit: '종', sub: 'MPU·GPU 연산 모듈, 다종 센싱 모듈 시제품', icon: 'fas fa-microchip', partners: ['keti'] },
+        { label: 'WiFi7 무선통신망', value: '5', unit: '구역', sub: 'KG모빌리티 · 신성델타테크 2개사 구축', icon: 'fas fa-wifi', partners: ['limecsi'] }
+    ],
+    awards: [
+        { title: 'UC버클리 LLM AgentX 경진대회 아키텍처 부문 1위', desc: 'GNAIX팀 (경남대 · 넥스트스튜디오)', icon: 'fas fa-trophy', partners: ['kyungnam', 'nextstudio'] },
+        { title: 'ITAM 국제학술대회 우수논문상', desc: '초대형 AI 프로젝트 관리방법론 제시', icon: 'fas fa-award', partners: ['gntp'] },
+        { title: '연계사업 국비 6,197억원 확보', desc: '피지컬AI 시범사업 · 선도사업으로 확장', icon: 'fas fa-arrow-trend-up', partners: ['gntp'] },
+        { title: '제조AI 전문인력 38명 수료 · 신규채용 47명', desc: '교육 목표 대비 112% · 만족도 96%', icon: 'fas fa-user-graduate', partners: ['kyungnam'] }
+    ],
+    cases: [
+        { site: '신성델타테크', title: '제조불량 원인 분석 서비스', desc: '공정 불량 원인 데이터를 학습한 생성형 AI(LLM)가 불량 원인을 추적하고 조치 방법을 제시', partners: ['dxsolutions', 'metaisquare', 'keti'] },
+        { site: 'KG모빌리티', title: '비전AI 제작공정 검사 자동화', desc: '실런트 도포, 조립 불량 등 제작공정의 미세불량을 비전AI로 초고속 감지', partners: ['sortech', 'keti'] }
+    ]
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 🔗 PIPELINE 단계 간 연계 흐름
+//   links['A-B']: A단계 → B단계로 넘어가는 내용 (stage 0 = 수요기업 현장)
+//   nodeText: 흐름도에서 기관별로 보여줄 한 줄 역할 (없으면 desc 사용)
+//   hubIds: EBC 허브로 강조할 기관 id
+// ═══════════════════════════════════════════════════════════════
+const pipelineFlow = {
+    fieldSites: [
+        { name: 'KG모빌리티', text: '엔진 조립 공정 · 제조데이터 누적 5.8TB · 연간 14.4TB 수집 예정' },
+        { name: '신성델타테크', text: '제조데이터 누적 2.4TB · 연간 3.7TB 수집 예정' }
+    ],
+    fieldLoop: '응용 서비스 실증 결과가 다시 수요기업 현장(00)에 적용되고, 현장 데이터가 다시 수집되는 순환 구조',
+    hubIds: ['megazone', 'kyungnam'],
+    links: {
+        '0-1': '현장 설비(OT) · ERP(IT) · 센서 데이터 수집',
+        '1-2': 'WiFi7 · 광대역 유선망으로 EBC에 전송',
+        '2-3': 'EBC 데이터센터 DB 적재 · AAS 표준화 · 기밀 데이터 비식별화',
+        '3-4': '표준 API · MCP 인터페이스로 AI 모델·서비스와 연계',
+        '4-5': 'AI 모델을 현장 서비스에 탑재해 실증'
+    },
+    nodeText: {
+        markbase:    '양 수요기업 OT 수집서버 · 167만 건/초, 태그 2,884종',
+        amiqu:       'ERP 데이터 ETL · 정형 데이터 전송 자동화 플랫폼',
+        keti:        'AIoT 센서·엣지 모듈 · 현장 공정 품질 데이터 수집',
+        limecsi:     'WiFi7 무선망 2개사 5구역 · EBC↔수요기업 광대역 유선 2회선 · 통합관제(NMS)',
+        megazone:    'EBC GPU 인프라 · GCP 하이브리드 (aiops / datahub.gnaix.org)',
+        kyungnam:    'EBC 데이터센터 공동 구축 · AAS Infer-Repository · 비식별화 SW',
+        nestfield:   'AAS 메타모델 2종 · 데이터 교환 프레임워크 (표준 API · MCP)',
+        kaist:       'MoE Vision AI · Cause Tracking AI · RAG 제조 지식 질의응답',
+        nextstudio:  'ESG 규제 대응 AI Agent · EBC 환경으로 이전',
+        sortech:     '엔진 조립 공정 품질검사 자동화',
+        sdtech:      'IIoT 기반 공정품질 데이터 수집',
+        dxsolutions: '웨어러블 연계 불량 역추적 · 조치',
+        metaisquare: '현장 한국어 STT/TTS 불량 조치 안내',
+        sysnova:     'AI 도입 큐레이터 서비스',
+        gntp:        'PMBOK 기반 사업 총괄 · 총괄협의체 운영',
+        ktl:         'SE 기반 기술문서 · 시험평가 검증'
+    }
+};
