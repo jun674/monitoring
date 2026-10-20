@@ -2,48 +2,12 @@
 // 📋 사업 메타데이터
 // ═══════════════════════════════════════════════════════════════
 const projectMeta = {
-    name: '스마트그린 산업단지 제조산업 특화 초거대 제조 AI 서비스 개발 및 실증',
-    shortName: '초거대 제조AI',
-    period: {
-        total: '2024.05.01 ~ 2026.12.31',
-        year3: '2026.01.01 ~ 2026.12.31'
-    },
-    summary: {
-        totalBudget: '229.4억원',
-        year3Budget: '97.35억원',
-        totalOrgs: 16,
-        demandOrgs: 2,
-        framework: 'DAINOS'
-    },
-    budget: {
-        government: { label: '정부출연금', amount: 62, unit: '억원', ratio: 63.7 },
-        local:      { label: '지방비',     amount: 29, unit: '억원', ratio: 29.8 },
-        private:    { label: '민간부담금', amount: 6.35, unit: '억원', ratio: 6.5 }
-    },
     timeline: [
         { year: 1, label: '기반 구축',   period: '2024', progress: 100, phases: ['설계 완료', '요구사항 분석', '아키텍처 설계', '프로토타입'] },
         { year: 2, label: '고도화',       period: '2025', progress: 100, phases: ['핵심기술 개발', '인프라 구축', '통신망 구축', 'AI 모델 개발', '서비스 개발'] },
         { year: 3, label: '통합 완성',    period: '2026', progress: 85,  phases: ['EBC 구축', 'AI 모델 고도화', '실증·검증', '성과 측정', '사업 종료'] }
-    ],
-    controlAccounts: [
-        { id: 'CA1', name: '사업관리',          ratio: 8 },
-        { id: 'CA2', name: '운영환경/핵심기술', ratio: 45 },
-        { id: 'CA3', name: '응용서비스',        ratio: 40 },
-        { id: 'CA4', name: '인력양성',          ratio: 7 }
     ]
 };
-
-// ═══════════════════════════════════════════════════════════════
-// 🔧 서비스 플로우 단계 설정
-// ═══════════════════════════════════════════════════════════════
-const stageConfig = [
-    { id: 1, name: '데이터 수집',    nameEn: 'Data Collection', icon: 'fas fa-database',   color: 'blue' },
-    { id: 2, name: '데이터 전송',    nameEn: 'Transfer',        icon: 'fas fa-wifi',       color: 'emerald' },
-    { id: 3, name: '플랫폼 & AAS',  nameEn: 'Platform & AAS',  icon: 'fas fa-server',     color: 'indigo' },
-    { id: 4, name: 'AI 분석',       nameEn: 'AI Analysis',     icon: 'fas fa-brain',      color: 'purple' },
-    { id: 5, name: '서비스 활용',    nameEn: 'Application',     icon: 'fas fa-cogs',       color: 'rose' },
-    { id: 6, name: '운영 관리',      nameEn: 'Management',      icon: 'fas fa-chart-line', color: 'orange' }
-];
 
 // ═══════════════════════════════════════════════════════════════
 // 🏢 참여기관 데이터 (16개)
@@ -57,14 +21,18 @@ const stageConfig = [
 //   - 'list'       : 제목(title, 선택) + 불릿 목록(items)
 //   - 'tags'       : 태그 뱃지 나열 (items)
 //   - 'kpi-static' : 하드코딩 수치 카드 (items: [{label, value, unit, color}])
-//   - 'kpi-api'    : API 실시간 수치 카드
-//                    (endpoints: [{label, url, key, unit, color}])
 //
 // preview 객체: 우측 패널 미리보기 방식
 //   - type: 'iframe'      → url 필요
 //   - type: 'youtube'     → videoId 필요
-//   - type: 'image'       → url 필요, caption 선택
-//   - type: 'placeholder' → 준비 중 표시 (url 선택, externalUrl 대체)
+//   - type: 'image'       → url 필요 (.mp4면 영상), caption 선택
+//   - type: 'slideshow'   → slides: [{url, caption}]
+//   - type: 'tab-video'   → tabs: [{id, label, subLabel, caption, url 또는 videoId}]
+//   - type: 'placeholder' → 준비 중 표시 (icon 사용)
+//
+// results: 카드·WBS 표·성과지표 집계에 사용
+//   - kpis: [{label, value, unit, target, achievement, status}]
+//   - deliverables: 산출물 목록 (카드에 건수 표시)
 //
 // ═══════════════════════════════════════════════════════════════
 const companies = [
@@ -79,7 +47,6 @@ const companies = [
         role: '데이터 표준화 / 인력양성',
         roleEn: 'Data Standardization / Capacity Building',
         desc: '제조데이터 표준화와 AI 인재양성 거점',
-        status: 'normal',
         stage: 3,
         details: 'AAS 기반 제조데이터 표준화 및 중요 데이터 보호 기술 개발, 초거대 제조 AI 통합 운영환경 구축·운영, 제조 현장 활용형 AI 전문인력 교육 및 산학협력 추진',
         sections: [
@@ -137,13 +104,11 @@ const companies = [
         id: 'markbase',
         type: 'DATA',
         category: '참여',
-        ca: 'CA2',
         isRealData: true,
         name: '마크베이스',
         role: '시계열DB',
         roleEn: 'High-Speed DB',
         desc: '초고속·대용량 시계열 데이터 처리 기술 자체 보유',
-        status: 'normal',
         stage: 1,
         details: '설비의 PLC, 센서 등 OT(운영 기술) 환경에서 발생하는 대용량 시계열 데이터를 초당 200만 건 이상 처리할 수 있는 고성능 데이터베이스를 제공합니다.',
         sections: [
@@ -171,8 +136,8 @@ const companies = [
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '데이터 수집 성능', value: '167만', unit: '건/초', color: '#2563EB', target: '200만' },
-                    { label: '수집 태그 수', value: '2,884', unit: '개', color: '#059669', target: '3,000' }
+                    { label: '데이터 수집 성능', value: '167만', unit: '건/초', color: '#2563EB' },
+                    { label: '수집 태그 수', value: '2,884', unit: '개', color: '#059669' }
                 ]
             }
         ],
@@ -199,8 +164,6 @@ const companies = [
         },
         externalUrl: 'https://www.machbase.com/',
         results: {
-            title: '초고속·대용량 시계열 데이터 처리 기술',
-            year3Goal: '초당 200만 건 이상 데이터 수집 성능 확보 및 수집 설비 태그 수 3000개 이상 달성',
             kpis: [
                 { label: '데이터 수집 성능', value: '167만', unit: '건/초', target: '200만', achievement: 83.5, status: 'in-progress' },
                 { label: '수집 태그 수', value: '2,884', unit: '개', target: '3,000', achievement: 96.1, status: 'in-progress' }
@@ -210,8 +173,7 @@ const companies = [
                 '설비 데이터 LLM 자연어 질의 및 리포트 생성 기능 설명서',
                 '데이터 수집 성능 시험 성적서',
                 '설비 태그 명세서'
-            ],
-            screenshot: null
+            ]
         }
     },
     {
@@ -223,7 +185,6 @@ const companies = [
         role: 'IT 데이터 파이프라인',
         roleEn: 'IT Data Pipeline',
         desc: '초당 10만 건의 IT 데이터 전송 성능 확보',
-        status: 'normal',
         stage: 1,
         details: [
             '인공지능이 기업의 복잡한 IT 데이터를 쉽게 학습할 수 있도록 데이터를 가공하고 초고속으로 전달하는 IT 데이터 파이프라인 구축 역할.',
@@ -279,15 +240,11 @@ const companies = [
         id: 'nestfield',
         type: 'DATA',
         category: '참여',
-        ca: 'CA3',
         isRealData: true,
         name: '네스트필드',
         role: '데이터 교환',
         roleEn: 'Data Exchange',
         desc: '국제 표준(AAS) 기반 제조데이터 교환 체계 구축',
-        icon: 'fas fa-exchange-alt',
-        color: 'blue',
-        status: 'normal',
         stage: 3,
         details: '국제 표준 AAS 기반의 데이터 교환 인터페이스를 제공하여, 기업보안 제조데이터의 글로벌 데이터 공유 생태계 연계 기반을 확보합니다.',
         sections: [
@@ -347,29 +304,22 @@ const companies = [
         },
         externalUrl: 'http://www.nestfield.co.kr/',
         results: {
-            title: 'AAS 기반 데이터 교환 체계 구축',
-            year3Goal: 'AAS 기반 데이터 교환 프레임워크 고도화 및 IDTA 사례 등록',
             kpis: [
                 { label: 'AAS 메타데이터 모델', value: '3', unit: '종', target: '3', achievement: 100.0, status: 'achieved' },
                 { label: 'IDTA 사례등록', value: '1', unit: '건', target: '1', achievement: 100.0, status: 'achieved' }
             ],
-            deliverables: ['AAS 메타 데이터 모델', 'AAS 기반 데이터 교환 프레임워크', 'EDC 기반 데이터 커넥터 기술', 'IDTA USE CASE'],
-            screenshot: null
+            deliverables: ['AAS 메타 데이터 모델', 'AAS 기반 데이터 교환 프레임워크', 'EDC 기반 데이터 커넥터 기술', 'IDTA USE CASE']
         }
     },
     {
         id: 'keti',
         type: 'DATA',
         category: '참여',
-        ca: 'CA2',
         isRealData: true,
         name: '한국전자기술연구원',
         role: 'AIoT 및 Edge 컴퓨팅 기술 개발',
         roleEn: 'Development of AIoT & Edge computing',
         desc: '현장의 작업자/품질 데이터를 실시간 수집·분석하는 지능형 엣지 AI 기술',
-        icon: 'fas fa-microchip',
-        color: 'blue',
-        status: 'normal',
         stage: 1,
         details: [
             '제조 현장의 센서·이미지·영상 데이터를 가까운 엣지 장치에서 실시간으로 수집하고 분석하는 AIoT 기술을 개발합니다.',
@@ -400,9 +350,9 @@ const companies = [
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '배포 디바이스 수', value: '12', unit: '개', color: '#2563EB', target: '5' },
-                    { label: '영상 처리 성능', value: '18', unit: 'FPS', color: '#059669', target: '15' },
-                    { label: 'AI 추론 지연', value: '90', unit: 'ms', color: '#7C3AED', target: '100' }
+                    { label: '배포 디바이스 수', value: '12', unit: '개', color: '#2563EB' },
+                    { label: '영상 처리 성능', value: '18', unit: 'FPS', color: '#059669' },
+                    { label: 'AI 추론 지연', value: '90', unit: 'ms', color: '#7C3AED' }
                 ]
             }
         ],
@@ -427,8 +377,6 @@ const companies = [
         },
         externalUrl: 'https://www.keti.re.kr/',
         results: {
-            title: 'AIoT 및 Edge 컴퓨팅 기술 개발',
-            year3Goal: 'AI 모델이 탑재된 엣지 모듈을 개발하고, AI를 엣지 환경에 최적화하여 제조 현장에 적용 가능한 AIoT·엣지 통합 시스템 구축',
             kpis: [
                 { label: '배포 디바이스 수', value: '12', unit: '개', target: '5', achievement: 240.0, status: 'achieved' },
                 { label: '영상 처리 성능', value: '18', unit: 'FPS', target: '15', achievement: 120.0, status: 'achieved' },
@@ -439,8 +387,7 @@ const companies = [
                 '제조 현장 AIoT 데이터 수집 모듈',
                 '엣지 환경에 최적화된 작업자 행동/제품 품질 분석 AI 소프트웨어',
                 '현장 실증용 AIoT·엣지 통합 시스템'
-            ],
-            screenshot: null
+            ]
         }
     },
 
@@ -449,15 +396,11 @@ const companies = [
         id: 'kaist',
         type: 'AI',
         category: '참여',
-        ca: 'CA2',
         isRealData: true,
         name: 'KAIST',
         role: '제조 특화 AI 모델 개발',
         roleEn: 'Manufacturing AI',
         desc: '품질 설비 이상 통합 대응 제조 AI',
-        icon: 'fas fa-brain',
-        color: 'purple',
-        status: 'normal',
         stage: 4,
         details: [
             '제품 조립 공정과 설비 운영 공정에서 발생하는 품질 이상과 설비 이상을 AI로 감지 예측하는 통합 제조 AI 서비스입니다.',
@@ -520,30 +463,23 @@ const companies = [
         },
         externalUrl: 'https://www.kaist.ac.kr/',
         results: {
-            title: '품질 설비 이상 통합 대응 제조 AI',
-            year3Goal: '품질 이상 검출과 설비 이상 사전 대응 및 작업자의 의사결정 지원 체계 구축',
             kpis: [
                 { label: '비전 기반 불량 검출 평균 Accuracy', value: '98', unit: '%', target: '95', achievement: 103.2, status: 'achieved' },
                 { label: '시계열 기반 설비 이상 예측 평균 F1-Score', value: '85', unit: '%', target: '85', achievement: 100.0, status: 'achieved' },
                 { label: '제조 특화 LLM 응답 정확도', value: '100', unit: '%', target: '95', achievement: 105.3, status: 'achieved' }
             ],
-            deliverables: ['비전 기반 불량 역추적 모델', '시계열 기반 불량 예측 모델', '제조 특화 LLM 챗봇'],
-            screenshot: null
+            deliverables: ['비전 기반 불량 역추적 모델', '시계열 기반 불량 예측 모델', '제조 특화 LLM 챗봇']
         }
     },
     {
         id: 'nextstudio',
         type: 'AI',
         category: '참여',
-        ca: 'CA3',
         isRealData: true,
         name: '넥스트스튜디오',
         role: '제조 데이터 ESG 대응 AI 모델 개발',
         roleEn: 'Manufacturing ESG Regulatory Compliance AI Development',
         desc: '경남 주요 제조 수출품을 위한 글로벌 ESG 규제 기반 질의응답 AI',
-        icon: 'fas fa-leaf',
-        color: 'purple',
-        status: 'normal',
         stage: 4,
         details: '넥스트스튜디오는 제조기업이 주요 수출국의 ESG 규제와 공급망 준수 요구사항을 빠르게 찾고 이해할 수 있도록 온프레미스 환경에서 운영 가능한 웹 기반 제조 ESG 규제 대응 AI를 개발합니다. 사용자의 질문과 관련된 공식 규제문서를 검색해 문서명과 근거 페이지를 함께 제시하며, 국가별 규제 대응 검토를 지원합니다. 도메인 특화 학습과 RAG 구조를 적용하고 RAGAS 지표로 응답 성능을 평가합니다.',
         sections: [
@@ -570,9 +506,9 @@ const companies = [
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: 'Faithfulness (근거 충실도)', value: '0.934', unit: '점', color: '#2563EB', target: '0.738 이상' },
-                    { label: 'Answer Relevancy (질문 적합도)', value: '0.751', unit: '점', color: '#059669', target: '0.720 이상' },
-                    { label: 'Context Precision (검색 유용성)', value: '0.838', unit: '점', color: '#7C3AED', target: '0.765 이상' }
+                    { label: 'Faithfulness (근거 충실도)', value: '0.934', unit: '점', color: '#2563EB' },
+                    { label: 'Answer Relevancy (질문 적합도)', value: '0.751', unit: '점', color: '#059669' },
+                    { label: 'Context Precision (검색 유용성)', value: '0.838', unit: '점', color: '#7C3AED' }
                 ]
             }
         ],
@@ -603,8 +539,6 @@ const companies = [
         },
         externalUrl: 'https://nextstud.io/',
         results: {
-            title: '제조 데이터 ESG 대응 AI 모델 개발',
-            year3Goal: '글로벌 제조 공급망의 ESG 준수 요구사항을 분석하고 규제 대응 프로세스를 정립하여, 온프레미스 환경에서 운영 가능한 웹 기반 제조 ESG 규제 대응용 sLM Agent를 개발·연동하고 성능평가를 완료합니다.',
             kpis: [
                 { label: 'Faithfulness (근거 충실도)', value: '0.934', unit: '점', target: '0.738', achievement: 126.6, status: 'achieved' },
                 { label: 'Answer Relevancy (질문 적합도)', value: '0.751', unit: '점', target: '0.720', achievement: 104.3, status: 'achieved' },
@@ -614,8 +548,7 @@ const companies = [
                 '글로벌 제조 공급망 ESG 준수 요구사항 분석서',
                 '제조 ESG 규제 대응용 sLM Agent 1종',
                 '성능평가 결과보고서 1건'
-            ],
-            screenshot: './images/nextstud_1.png'
+            ]
         }
     },
 
@@ -624,15 +557,11 @@ const companies = [
         id: 'megazone',
         type: 'INFRA',
         category: '참여',
-        ca: 'CA2',
         isRealData: true,
         name: '메가존클라우드',
         role: '인프라스트럭처',
         roleEn: 'Infrastructure',
         desc: '초거대제조 AI 연구를 위한 EBC 구축 및 구글-EBC 하이브리드환경 구축',
-        icon: 'fas fa-cloud',
-        color: 'gray',
-        status: 'normal',
         stage: 3,
         details: [
             '초거대제조 AI 연구를 위한 AI 데이터센터 구축 (경남대에 시설공사 및 장비도입)하고 클라우드 환경과 EBC(온프렘)의 하이브리드 환경을 통합된 관점에서 관리할 수 있는 MLOps(AIOps) 플랫폼을 구축합니다.',
@@ -664,10 +593,10 @@ const companies = [
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: 'GPU 장비도입', value: '1', unit: '식', color: '#2563EB', target: '3' },
-                    { label: '보안장비도입', value: '0', unit: '식', color: '#059669', target: '2' },
-                    { label: 'AIOps 온프렘 확대적용', value: '1', unit: '식', color: '#7C3AED', target: '2' },
-                    { label: 'Datahub 온프렘 확대적용', value: '1', unit: '식', color: '#f59e0b', target: '2' }
+                    { label: 'GPU 장비도입', value: '1', unit: '식', color: '#2563EB' },
+                    { label: '보안장비도입', value: '0', unit: '식', color: '#059669' },
+                    { label: 'AIOps 온프렘 확대적용', value: '1', unit: '식', color: '#7C3AED' },
+                    { label: 'Datahub 온프렘 확대적용', value: '1', unit: '식', color: '#f59e0b' }
                 ]
             }
         ],
@@ -690,8 +619,6 @@ const companies = [
         },
         externalUrl: 'https://www.megazone.com/',
         results: {
-            title: 'EBC 및 구글-EBC 하이브리드 MLOps/Datahub 구축',
-            year3Goal: '추가 GPU 2식을 도입하여 GPU 클러스터를 완성하고 방화벽을 도입하여 보안을 강화합니다. 아울러 GCP 기반으로 개발된 AIOps와 Datahub를 EBC에 적용하는 개발을 완료합니다.',
             kpis: [
                 { label: 'GPU 장비도입', value: '1', unit: '식', target: '3', achievement: 33.3, status: 'in-progress' },
                 { label: '보안장비도입', value: '0', unit: '식', target: '2', achievement: 0.0, status: 'in-progress' },
@@ -704,8 +631,7 @@ const companies = [
                 '클라우드 환경 (gnaix 구글 메일 계정 40개 이상)',
                 'MLOps/AIOps (Aiops.gnaix 사용자 및 관리자 프로그램)',
                 'AI Asset (Datahub.gnaix 사용자 프로그램 및 샘플 데이터)'
-            ],
-            screenshot: './images/mzc_2.png'
+            ]
         }
     },
 
@@ -714,15 +640,11 @@ const companies = [
         id: 'limecsi',
         type: 'NETWORK',
         category: '참여',
-        ca: 'CA2',
         isRealData: true,
         name: '라임씨에스아이',
         role: '차세대 통신망 구축 및 NMS 관제',
         roleEn: 'Next-Generation Network & Integrated Monitoring',
         desc: 'WiFi7·전용회선·NMS 기반 제조 통신환경 구축',
-        icon: 'fas fa-wifi',
-        color: 'emerald',
-        status: 'normal',
         stage: 2,
         details: '신성델타테크와 KG 모빌리티의 산업용 WiFi7 무선망을 기반으로, 각 수요기업과 경남대학교 EBC 간 광대역 전용회선을 구축합니다. 또한 NMS 기반 통합관제 환경을 구성하여 네트워크 상태, 장애 및 트래픽·Throughput 등 성능 정보를 통합 모니터링하고 안정적인 제조 데이터 전송을 지원합니다.',
         sections: [
@@ -749,9 +671,9 @@ const companies = [
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '무선통신 Throughput', value: '885', unit: 'Mbps', color: '#2563EB', target: '890 이상' },
-                    { label: '통합관제센터 구축', value: '0', unit: '건', color: '#059669', target: '1' },
-                    { label: '수요처-EBC 데이터 회선', value: '0', unit: '회선', color: '#7C3AED', target: '2' }
+                    { label: '무선통신 Throughput', value: '885', unit: 'Mbps', color: '#2563EB' },
+                    { label: '통합관제센터 구축', value: '0', unit: '건', color: '#059669' },
+                    { label: '수요처-EBC 데이터 회선', value: '0', unit: '회선', color: '#7C3AED' }
                 ]
             }
         ],
@@ -762,8 +684,6 @@ const companies = [
         },
         externalUrl: 'http://www.limecsi.com/',
         results: {
-            title: '차세대 통신망 구축 및 NMS 관제',
-            year3Goal: '기 구축된 2개 수요처의 WiFi7 무선망을 기반으로 수요기업-EBC 간 광대역 전용회선 2회선과 통합관제(NMS) 시스템 1식을 구축하고, 무선통신 Throughput 890 Mbps 이상을 확보하여 안정적인 제조 데이터 전송 및 네트워크 운영체계를 완성합니다.',
             kpis: [
                 { label: '무선통신 Throughput', value: '885', unit: 'Mbps', target: '890', achievement: 99.4, status: 'in-progress' },
                 { label: '통합관제센터 구축', value: '0', unit: '건', target: '1', achievement: 0.0, status: 'in-progress' },
@@ -773,8 +693,7 @@ const companies = [
                 '수요기업-EBC 간 광대역 전용 유선통신망 2회선',
                 '통합관제(NMS) 시스템 및 관제센터 1식',
                 '네트워크 통합관제 시스템 1식'
-            ],
-            screenshot: './images/csi_1.png'
+            ]
         }
     },
 
@@ -783,14 +702,11 @@ const companies = [
         id: 'gntp',
         type: 'ORG',
         category: '주관',
-        ca: 'CA1',
         name: '경남TP',
         role: '사업 총괄',
         roleEn: 'Project Management',
         desc: '사업 총괄 및 참여 기관 관리',
         icon: 'fas fa-clipboard',
-        color: 'orange',
-        status: 'normal',
         stage: 6,
         details: '프로젝트의 전반적인 운영 및 관리를 책임지며, 참여 기관 간의 협력을 조율하고 사업 목표 달성을 위한 전략을 수립합니다.',
         sections: [
@@ -818,30 +734,24 @@ const companies = [
         preview: { type: 'placeholder' },
         externalUrl: 'https://www.gntp.or.kr/',
         results: {
-            title: '사업 관리 및 인력양성/확산',
-            year3Goal: '3차년도 사업 목표 달성, EBC 운영, 기업 확산, 인력양성',
             kpis: [
                 { label: '사업 진행률',  value: '85',  unit: '%',    target: '100', achievement: 85.0, status: 'in-progress' },
                 { label: '교육 수료생',  value: '120', unit: '명',   target: '150', achievement: 80.0, status: 'in-progress' },
                 { label: '확산 기업 수', value: '5',   unit: '기업', target: '8',   achievement: 62.5, status: 'in-progress' }
             ],
-            deliverables: ['사업 관리 보고서', 'EBC 운영 보고서', '인력양성 교육과정', '기업 확산 실적 보고서'],
-            screenshot: null
+            deliverables: ['사업 관리 보고서', 'EBC 운영 보고서', '인력양성 교육과정', '기업 확산 실적 보고서']
         }
     },
     {
         id: 'ktl',
         type: 'ORG',
         category: '참여',
-        ca: 'CA3',
         isRealData: true,
         name: '한국산업기술시험원',
         role: '조직 지원',
         roleEn: 'Organization',
         desc: '시스템엔지니어링 기반 기술개발 지원 및 기술문서 작성',
         icon: 'fas fa-check-double',
-        color: 'orange',
-        status: 'normal',
         stage: 6,
         details: [
             '시스템엔지니어링 적용 컨설팅',
@@ -871,16 +781,14 @@ const companies = [
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '품질문서 개정', value: '2', unit: '건', color: '#2563EB', target: '3' },
-                    { label: '적합성 확인', value: '0', unit: '건', color: '#059669', target: '1' }
+                    { label: '품질문서 개정', value: '2', unit: '건', color: '#2563EB' },
+                    { label: '적합성 확인', value: '0', unit: '건', color: '#059669' }
                 ]
             }
         ],
         preview: { type: 'placeholder' },
         externalUrl: 'https://www.ktl.re.kr/',
         results: {
-            title: '시스템엔지니어링 기반 기술개발 지원 및 기술문서 작성',
-            year3Goal: '초거대 제조 AI 서비스 적합성 확인',
             kpis: [
                 { label: '품질문서 개정', value: '2', unit: '건', target: '3', achievement: 66.7, status: 'in-progress' },
                 { label: '적합성 확인', value: '0', unit: '건', target: '1', achievement: 0.0, status: 'in-progress' }
@@ -888,8 +796,7 @@ const companies = [
             deliverables: [
                 '시스템엔지니어링 관리 품질문서',
                 '적합성 확인서'
-            ],
-            screenshot: null
+            ]
         }
     },
 
@@ -898,15 +805,11 @@ const companies = [
         id: 'sortech',
         type: 'SERVICE',
         category: '참여',
-        ca: 'CA3',
         isRealData: true,
         name: '소르테크',
         role: '품질 관리(Quality Control, QC)',
         roleEn: 'Quality Control (QC)',
         desc: '엔진 조립 공정 품질 검사 자동화 서비스',
-        icon: 'fas fa-camera-retro',
-        color: 'rose',
-        status: 'normal',
         stage: 5,
         details: [
             '엔진 조립 공정 품질 검사 자동화 서비스 제공.',
@@ -952,8 +855,6 @@ const companies = [
         },
         externalUrl: 'http://www.sortech.co.kr/',
         results: {
-            title: '엔진 조립 공정 품질 검사 자동화 서비스',
-            year3Goal: '품질검사시스템, 비전검사시스템, 광학문자인식 / 사무자동화, 전자문서 플랫폼, AI기반 통합관리 대시보드 실증',
             kpis: [
                 { label: '생산성(P) 향상', value: '5', unit: '%', target: '5', achievement: 100.0, status: 'achieved' },
                 { label: '불량률(Q) 감소', value: '5', unit: '%', target: '5', achievement: 100.0, status: 'achieved' },
@@ -965,23 +866,18 @@ const companies = [
                 '비전검사시스템(Finger Follower, 블록매핑, 실런트) 실증 보고서',
                 '광학문자인식/사무자동화 실증 보고서',
                 'AI 기반 통합관리 대시보드 실증 보고서'
-            ],
-            screenshot: null
+            ]
         }
     },
     {
         id: 'dxsolutions',
         type: 'SERVICE',
         category: '참여',
-        ca: 'CA3',
         isRealData: true,
         name: '디엑스솔루션즈',
         role: '웨어러블 및 제조 AI 현장 서비스',
         roleEn: 'Wearable & Manufacturing AI Field Service',
         desc: '웨어러블과 제조 AI를 연계한 현장 대응 서비스 구현',
-        icon: 'fas fa-glasses',
-        color: 'rose',
-        status: 'normal',
         stage: 5,
         details: '디엑스솔루션즈는 신성델타테크 D/T라인을 대상으로 웨어러블 디바이스와 제조 AI를 연계한 현장 서비스의 개발 및 실증을 수행합니다. 타임체크, 무작업관리, 불량역추적 서비스를 통해 현장 점검·이상 대응·불량 조치 과정을 AI 기반으로 지원하고, 작업 결과를 대시보드와 이력 데이터로 통합 관리합니다.',
         sections: [
@@ -1010,9 +906,9 @@ const companies = [
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '라인 비가동 시간 감소율', value: '실증진행중', unit: '%', color: '#2563EB', target: '15' },
-                    { label: '공정 불량률 감소율', value: '실증진행중', unit: '%', color: '#059669', target: '18' },
-                    { label: '현장 작업자 작업공수 절감율', value: '실증진행중', unit: '%', color: '#7C3AED', target: '15' }
+                    { label: '라인 비가동 시간 감소율', value: '실증진행중', unit: '%', color: '#2563EB' },
+                    { label: '공정 불량률 감소율', value: '실증진행중', unit: '%', color: '#059669' },
+                    { label: '현장 작업자 작업공수 절감율', value: '실증진행중', unit: '%', color: '#7C3AED' }
                 ]
             }
         ],
@@ -1044,8 +940,6 @@ const companies = [
         },
         externalUrl: 'http://www.dxsolutions.co.kr/',
         results: {
-            title: '웨어러블과 제조 AI를 연계한 현장 대응 서비스 구현',
-            year3Goal: '웨어러블·제조데이터·AI 모델을 연계한 현장 서비스 및 지능형 관제 체계를 구축하고, 신성델타테크 D/T라인에서 통합 실증을 완료',
             kpis: [
                 { label: '라인 비가동 시간 감소율', value: '실증진행중', unit: '%', target: '15', achievement: 0, status: 'in-progress' },
                 { label: '공정 불량률 감소율', value: '실증진행중', unit: '%', target: '18', achievement: 0, status: 'in-progress' },
@@ -1057,23 +951,19 @@ const companies = [
                 '타임체크 서비스',
                 '웨어러블 현장지원 애플리케이션',
                 '초거대 제조 AI 통합 관제 대시보드'
-            ],
-            screenshot: null
+            ]
         }
     },
     {
         id: 'sdtech',
         type: 'SERVICE',
         category: '참여',
-        ca: 'CA3',
         isRealData: true,
         name: '에스디테크',
         role: '공정품질 데이터 수집·정합성 확보',
         roleEn: 'Process-Quality Data Collection & Consistency',
         desc: 'IIoT 기반 데이터 수집 실증',
         icon: 'fas fa-wave-square',
-        color: 'rose',
-        status: 'normal',
         stage: 5,
         details: '엔진 조립 가공공정에 IIoT 센서를 구축해 설비의 물리 데이터를 실시간으로 수집하고, IT/OT 이기종 데이터의 정합성을 확보해 참여기관 간 공유 가능한 체계로 실증',
         sections: [
@@ -1098,39 +988,32 @@ const companies = [
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: 'IIoT기반 공정품질 데이터 수집 시스템 구축', value: '1', unit: '건', color: '#2563EB', target: '1 (2025년 구축 완료)' },
-                    { label: '공구불량 감소율', value: '-', unit: '%', color: '#059669', target: '10' }
+                    { label: 'IIoT기반 공정품질 데이터 수집 시스템 구축', value: '1', unit: '건', color: '#2563EB' },
+                    { label: '공구불량 감소율', value: '-', unit: '%', color: '#059669' }
                 ]
             }
         ],
         preview: { type: 'placeholder' },
         externalUrl: 'http://www.sd-tech.kr/',
         results: {
-            title: '공정품질 데이터 수집·정합성 확보',
-            year3Goal: 'IIoT 기반 공정품질 데이터 정합성 확보 및 공유 체계 실증',
             kpis: [
                 { label: 'IIoT기반 공정품질 데이터 수집 시스템 구축', value: '1', unit: '건', target: '1', achievement: 100.0, status: 'achieved' },
                 { label: '공구불량 감소율', value: '-', unit: '%', target: '10', achievement: 0.0, status: 'in-progress' }
             ],
             deliverables: [
                 '공정품질 데이터 정합성 확보 및 공유 체계 실증(기술문서 2건)'
-            ],
-            screenshot: null
+            ]
         }
     },
     {
         id: 'metaisquare',
         type: 'SERVICE',
         category: '참여',
-        ca: 'CA3',
         isRealData: true,
         name: '메타아이스퀘어',
         role: '한국어 음성인식',
         roleEn: 'Korean Speech Recognition (STT)',
         desc: '공장 소음 속에서도 정확한 한국어 음성인식·불량 조치 음성 안내',
-        icon: 'fas fa-microphone-alt',
-        color: 'rose',
-        status: 'normal',
         stage: 5,
         details: '공장 소음, 마스크 착용, 현장 발화 습관 등 악조건에서도 높은 인식률을 갖는 한국어 STT 모델을 고도화합니다. SLM으로 발음 모호성을 교정하고, TTS로 불량 원인과 조치방법을 오퍼레이터에게 음성으로 안내하는 AI 기반 불량 역추적 서비스를 실증합니다.',
         sections: [
@@ -1157,7 +1040,7 @@ const companies = [
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '한국어 STT 인식 오차율 (CER)', value: '14.43', unit: '%', color: '#2563EB', target: '25' }
+                    { label: '한국어 STT 인식 오차율 (CER)', value: '14.43', unit: '%', color: '#2563EB' }
                 ]
             }
         ],
@@ -1168,28 +1051,21 @@ const companies = [
         },
         externalUrl: 'https://metaisquare.com/',
         results: {
-            title: 'AI 기반 불량 역추적 음성 안내 서비스 실증',
-            year3Goal: '잡음 환경에서도 CER을 최소화한 한국어 음성인식(STT) 모델을 고도화하고, SLM·TTS 기반 불량 역추적 음성 안내 서비스를 실증한다.',
             kpis: [
                 { label: '한국어 STT 인식 오차율(CER)', value: '14.43', unit: '%', target: '25', achievement: 142.28, status: 'achieved' }
             ],
-            deliverables: ['STT 개발 보고서', '공인시험 성적서', 'AI 기반 불량 역추적 서비스'],
-            screenshot: './images/metaisquare_1.png'
+            deliverables: ['STT 개발 보고서', '공인시험 성적서', 'AI 기반 불량 역추적 서비스']
         }
     },
     {
         id: 'sysnova',
         type: 'SERVICE',
         category: '참여',
-        ca: 'CA3',
         isRealData: true,
         name: '시스노바',
         role: 'AI 도입지원 큐레이터 서비스 개발',
         roleEn: 'AI Adoption Support Curator Service Development',
         desc: 'RAG 기반 맞춤형 큐레이션으로 제조기업의 효율적인 AI 도입을 지원',
-        icon: 'fas fa-robot',
-        color: 'rose',
-        status: 'normal',
         stage: 5,
         details: 'AI 도입에 어려움을 겪는 제조기업을 위해 기업의 규모와 상황에 맞는 맞춤형 AI 솔루션을 추천하고 진단해 주는 서비스입니다. 복잡한 전문 지식이 없어도 쉬운 웹 화면과 AI 상담을 통해 현장에 필요한 AI 도입 방향부터 구체적인 가이드까지 한눈에 안내받을 수 있습니다. 진단 결과를 바탕으로 컨설팅과 실증 사업 등 실제 AI 구축까지 연계해 기업의 성공적인 디지털 전환을 돕습니다.',
         sections: [
@@ -1218,9 +1094,9 @@ const companies = [
                 label: '성과 지표',
                 type: 'kpi-static',
                 items: [
-                    { label: '큐레이터 서비스 기능 구축률', value: '75', unit: '%', color: '#2563EB', target: '100' },
-                    { label: '큐레이터 기반 AI 도입 진단·추천 리포트 발행 건수', value: '0', unit: '건', color: '#059669', target: '30' },
-                    { label: '큐레이터 서비스 만족도', value: '0', unit: '%', color: '#7C3AED', target: '85' }
+                    { label: '큐레이터 서비스 기능 구축률', value: '75', unit: '%', color: '#2563EB' },
+                    { label: '큐레이터 기반 AI 도입 진단·추천 리포트 발행 건수', value: '0', unit: '건', color: '#059669' },
+                    { label: '큐레이터 서비스 만족도', value: '0', unit: '%', color: '#7C3AED' }
                 ]
             }
         ],
@@ -1255,8 +1131,6 @@ const companies = [
         },
         externalUrl: 'http://www.sysnova.com/',
         results: {
-            title: 'AI 도입지원 큐레이터 서비스 개발',
-            year3Goal: '제조기업 AI 도입 지원 큐레이터 서비스 개발',
             kpis: [
                 { label: '큐레이터 서비스 기능 구축률', value: '75', unit: '%', target: '100', achievement: 75.0, status: 'in-progress' },
                 { label: '큐레이터 기반 AI 도입 진단·추천 리포트 발행 건수', value: '0', unit: '건', target: '30', achievement: 0.0, status: 'in-progress' },
@@ -1268,8 +1142,7 @@ const companies = [
                 'RAG 연계 아키텍처 설계서',
                 '큐레이터 Web Agent',
                 '기업별 AI 도입 진단·추천 리포트'
-            ],
-            screenshot: './images/sysnova_1.png'
+            ]
         }
     }
 ];
@@ -1278,27 +1151,6 @@ const companies = [
 // 🔧 유틸리티 함수
 // ═══════════════════════════════════════════════════════════════
 
-const domainColors = {
-    DATA:    { bg: 'bg-blue-50',    text: 'text-blue-600',    border: 'border-blue-200',    badge: 'bg-blue-100' },
-    AI:      { bg: 'bg-purple-50',  text: 'text-purple-600',  border: 'border-purple-200',  badge: 'bg-purple-100' },
-    INFRA:   { bg: 'bg-gray-50',    text: 'text-gray-600',    border: 'border-gray-200',    badge: 'bg-gray-100' },
-    NETWORK: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200', badge: 'bg-emerald-100' },
-    ORG:     { bg: 'bg-orange-50',  text: 'text-orange-600',  border: 'border-orange-200',  badge: 'bg-orange-100' },
-    SERVICE: { bg: 'bg-rose-50',    text: 'text-rose-600',    border: 'border-rose-200',    badge: 'bg-rose-100' }
-};
-
-const kpiStatusColors = {
-    'achieved':    { bg: 'bg-green-100', text: 'text-green-700', label: '달성' },
-    'in-progress': { bg: 'bg-amber-100', text: 'text-amber-700', label: '진행중' },
-    'not-started': { bg: 'bg-gray-100',  text: 'text-gray-500',  label: '미착수' }
-};
-
-const statusColors = {
-    'normal':  { bg: 'bg-green-400', label: '정상' },
-    'warning': { bg: 'bg-amber-400', label: '점검' },
-    'danger':  { bg: 'bg-red-400',   label: '장애' }
-};
-
 // 값이 숫자가 아닐 때('실증진행중', '-' 등)는 단위를 붙이지 않음
 function kpiUnit(kpi) {
     return kpi && kpi.unit && /\d/.test(String(kpi.value)) ? kpi.unit : '';
@@ -1306,12 +1158,7 @@ function kpiUnit(kpi) {
 
 function getCompaniesByDomain(domain) {
     if (!domain || domain === 'ALL') return companies;
-    if (domain === 'REAL') return companies.filter(c => c.isRealData);
     return companies.filter(c => c.type === domain);
-}
-
-function getRealDataCompanies() {
-    return companies.filter(c => c.isRealData);
 }
 
 function getCompaniesByStage(stageId) {
@@ -1320,19 +1167,6 @@ function getCompaniesByStage(stageId) {
 
 function getCompanyById(id) {
     return companies.find(c => c.id === id);
-}
-
-function getOverallAchievement() {
-    const allKpis = companies.flatMap(c => c.results.kpis.filter(k => typeof k.achievement === 'number'));
-    if (allKpis.length === 0) return 0;
-    return Math.round(allKpis.reduce((sum, k) => sum + k.achievement, 0) / allKpis.length * 10) / 10;
-}
-
-function getDomainAchievement(domain) {
-    const domainCompanies = getCompaniesByDomain(domain);
-    const allKpis = domainCompanies.flatMap(c => c.results.kpis.filter(k => typeof k.achievement === 'number'));
-    if (allKpis.length === 0) return 0;
-    return Math.round(allKpis.reduce((sum, k) => sum + k.achievement, 0) / allKpis.length * 10) / 10;
 }
 
 // ═══════════════════════════════════════════════════════════════
