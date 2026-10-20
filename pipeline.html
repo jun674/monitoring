@@ -58,7 +58,17 @@
         .page-body { background: #F1F5F9; padding-top: 1px; }
 
         /* ── Stage Band ── */
-        .stage-section { scroll-margin-top: 112px; }
+        .stage-section { scroll-margin-top: 112px; transition: box-shadow 0.5s ease, border-color 0.5s ease; }
+        /* 상단 탭으로 이동한 단계 표시 */
+        .stage-section.is-target {
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 2px #3B82F6, 0 20px 40px -12px rgba(37, 99, 235, 0.35);
+        }
+        .stage-section.is-target .stage-badge { animation: stage-pulse 0.9s ease-out 2; }
+        @keyframes stage-pulse {
+            0%   { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.55); }
+            100% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+        }
         .layer-band {
             background: #FFFFFF;
             border: 1px solid #E2E8F0;
@@ -200,7 +210,7 @@
                 return `
                     <section id="stage-${stage.id}" class="stage-section layer-band p-4 sm:p-5">
                         <div class="flex items-center gap-3 mb-3">
-                            <span class="w-8 h-8 rounded-xl ${stage.id === 0 ? 'bg-blue-500 text-white' : 'bg-slate-900 text-white'} font-bold text-xs flex items-center justify-center shrink-0">
+                            <span class="stage-badge w-8 h-8 rounded-xl ${stage.id === 0 ? 'bg-blue-500 text-white' : 'bg-slate-900 text-white'} font-bold text-xs flex items-center justify-center shrink-0">
                                 ${stage.id === 0 ? '<i class="fas fa-industry"></i>' : String(stage.id).padStart(2, '0')}
                             </span>
                             <div>
@@ -251,11 +261,18 @@
             if (activeBtn) activeBtn.classList.add('active');
         }
 
+        let targetTimer = null;
         function scrollToSection(id) {
             const el = document.getElementById(id);
             if (el) {
                 setActiveTab(id);
                 el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // 이동한 단계를 잠시 파란 테두리로 표시
+                document.querySelectorAll('.stage-section.is-target').forEach(s => s.classList.remove('is-target'));
+                clearTimeout(targetTimer);
+                el.classList.add('is-target');
+                targetTimer = setTimeout(() => el.classList.remove('is-target'), 2200);
             }
         }
 
