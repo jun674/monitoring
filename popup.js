@@ -679,6 +679,9 @@ function showCompanyPopup(item) {
 function closeCompanyPopup() {
     _stopSlideshowTimer();
     if (!modal) return;
+    // 숨기기만 하면 YouTube iframe·영상이 계속 재생되므로 미리보기를 비움
+    const preview = document.getElementById('modal-preview');
+    if (preview) preview.innerHTML = '';
     modal.classList.add('hidden');
     setTimeout(() => {
         modal.style.display = 'none';
