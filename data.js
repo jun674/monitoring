@@ -3,9 +3,9 @@
 // ═══════════════════════════════════════════════════════════════
 const projectMeta = {
     timeline: [
-        { year: 1, label: '기반 구축',   period: '2024', progress: 100, phases: ['설계 완료', '요구사항 분석', '아키텍처 설계', '프로토타입'] },
-        { year: 2, label: '고도화',       period: '2025', progress: 100, phases: ['핵심기술 개발', '인프라 구축', '통신망 구축', 'AI 모델 개발', '서비스 개발'] },
-        { year: 3, label: '통합 완성',    period: '2026', progress: 85,  phases: ['EBC 구축', 'AI 모델 고도화', '실증·검증', '성과 측정', '사업 종료'] }
+        { year: 1, label: '분석·설계',   period: '2024', done: true,  phases: ['설계 완료', '요구사항 분석', '아키텍처 설계', '프로토타입'] },
+        { year: 2, label: '개발·구축',   period: '2025', done: true,  phases: ['핵심기술 개발', '인프라 구축', '통신망 구축', 'AI 모델 개발', '서비스 개발'] },
+        { year: 3, label: '고도화·실증', period: '2026', done: false, phases: ['EBC 구축', 'AI 모델 고도화', '실증·검증', '성과 측정', '사업 종료'] }
     ]
 };
 
@@ -380,7 +380,7 @@ const companies = [
             kpis: [
                 { label: '배포 디바이스 수', value: '12', unit: '개', target: '5', achievement: 240.0, status: 'achieved' },
                 { label: '영상 처리 성능', value: '18', unit: 'FPS', target: '15', achievement: 120.0, status: 'achieved' },
-                { label: 'AI 추론 지연', value: '90', unit: 'ms', target: '100', achievement: 111.1, status: 'achieved' }
+                { label: 'AI 추론 지연', value: '90', unit: 'ms', target: '100', achievement: 111.1, status: 'achieved', lowerIsBetter: true }
             ],
             deliverables: [
                 '작업자 행동/제품 품질 분석용 엣지 AI 연산 모듈',
@@ -1052,7 +1052,7 @@ const companies = [
         externalUrl: 'https://metaisquare.com/',
         results: {
             kpis: [
-                { label: '한국어 STT 인식 오차율(CER)', value: '14.43', unit: '%', target: '25', achievement: 142.28, status: 'achieved' }
+                { label: '한국어 STT 인식 오차율(CER)', value: '14.43', unit: '%', target: '25', achievement: 142.28, status: 'achieved', lowerIsBetter: true }
             ],
             deliverables: ['STT 개발 보고서', '공인시험 성적서', 'AI 기반 불량 역추적 서비스']
         }
@@ -1156,6 +1156,21 @@ function kpiUnit(kpi) {
     return kpi && kpi.unit && /\d/.test(String(kpi.value)) ? kpi.unit : '';
 }
 
+// 목표 표기 — 낮을수록 좋은 지표(CER, 지연 등)는 '이하'를 붙임
+function kpiTarget(kpi) {
+    if (!kpi || !kpi.target) return '';
+    return `${kpi.target}${kpi.unit || ''}${kpi.lowerIsBetter ? ' 이하' : ''}`;
+}
+
+// 값이 숫자가 아니면 달성률을 계산하지 않음 (측정 전·실증 진행 중)
+function isKpiMeasured(kpi) {
+    return /\d/.test(String(kpi.value));
+}
+
+function isKpiAchieved(kpi) {
+    return kpi.status === 'achieved' || kpi.achievement >= 100;
+}
+
 function getCompaniesByDomain(domain) {
     if (!domain || domain === 'ALL') return companies;
     return companies.filter(c => c.type === domain);
@@ -1171,26 +1186,19 @@ function getCompanyById(id) {
 
 // ═══════════════════════════════════════════════════════════════
 // 🏆 성과 하이라이트 (OVERVIEW)
+//   기관 타일은 companies에서 무작위로 골라 각 기관의 최고 달성 지표를 표시 (overview.html)
+//   awards: 2025 연차보고서(2차년도) 수록 성과 — 팝업 수치와 별개
 //   partners: 클릭 시 열릴 기관 id (companies[].id)
 // ═══════════════════════════════════════════════════════════════
 const highlights = {
-    tiles: [
-        { label: '제조데이터 수집 성능', value: '167만', unit: '건/초', sub: '설비 59개 · 태그 2,884종 · 누적 8.2TB', icon: 'fas fa-database', partners: ['markbase'] },
-        { label: '학습용 공개데이터셋', value: '10', unit: 'TB', sub: '초거대제조AI 학습용 데이터 수집', icon: 'fas fa-layer-group', partners: ['kaist'] },
-        { label: 'AI 모델 · Use Case', value: '2', unit: '식', sub: '언어·비전 AI 모델 · Use Case 6건 도출', icon: 'fas fa-brain', partners: ['kaist'] },
-        { label: 'AAS 표준 메타모델', value: '2', unit: '종', sub: '시계열·관계형 데이터 메타모델 및 웹 구축', icon: 'fas fa-sitemap', partners: ['nestfield', 'kyungnam'] },
-        { label: 'AIoT 엣지 모듈', value: '3', unit: '종', sub: 'MPU·GPU 연산 모듈, 다종 센싱 모듈 시제품', icon: 'fas fa-microchip', partners: ['keti'] },
-        { label: 'WiFi7 무선통신망', value: '5', unit: '구역', sub: 'KG모빌리티 · 신성델타테크 2개사 구축', icon: 'fas fa-wifi', partners: ['limecsi'] }
-    ],
     awards: [
-        { title: 'UC버클리 LLM AgentX 경진대회 아키텍처 부문 1위', desc: 'GNAIX팀 (경남대 · 넥스트스튜디오)', icon: 'fas fa-trophy', partners: ['kyungnam', 'nextstudio'] },
+        { title: 'UC버클리 LLM AgentX 경진대회 아키텍처 부문 1위', desc: 'GNAIX팀 (경남대 · 넥스트스튜디오 · 애니토이)', icon: 'fas fa-trophy', partners: ['kyungnam', 'nextstudio'] },
         { title: 'ITAM 국제학술대회 우수논문상', desc: '초대형 AI 프로젝트 관리방법론 제시', icon: 'fas fa-award', partners: ['gntp'] },
-        { title: '연계사업 국비 6,197억원 확보', desc: '피지컬AI 시범사업 · 선도사업으로 확장', icon: 'fas fa-arrow-trend-up', partners: ['gntp'] },
-        { title: '제조AI 전문인력 38명 수료 · 신규채용 47명', desc: '교육 목표 대비 112% · 만족도 96%', icon: 'fas fa-user-graduate', partners: ['kyungnam'] }
+        { title: '연계사업 국비 6,197억원 확보', desc: '피지컬AI 시범사업 · 선도사업으로 확장', icon: 'fas fa-arrow-trend-up', partners: ['gntp'] }
     ],
     cases: [
         { site: '신성델타테크', title: '제조불량 원인 분석 서비스', desc: '공정 불량 원인 데이터를 학습한 생성형 AI(LLM)가 불량 원인을 추적하고 조치 방법을 제시', partners: ['dxsolutions', 'metaisquare', 'keti'] },
-        { site: 'KG모빌리티', title: '비전AI 제작공정 검사 자동화', desc: '실런트 도포, 조립 불량 등 제작공정의 미세불량을 비전AI로 초고속 감지', partners: ['sortech', 'keti'] }
+        { site: 'KG모빌리티', title: '비전AI 제작공정 검사 자동화', desc: '실런트 도포, 조립 불량 등 제작공정의 미세불량을 비전AI로 초고속 감지', partners: ['sortech', 'sdtech', 'keti'] }
     ]
 };
 

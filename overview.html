@@ -152,13 +152,13 @@
                     <div class="saas-card p-5">
                         <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">참여기관</div>
                         <div class="text-2xl font-extrabold text-slate-900 tracking-tight">16 <span class="text-sm font-semibold text-slate-500">개</span></div>
-                        <p class="text-[11px] text-slate-400 mt-2">주관 1 · 참여 15 (수요처 2)</p>
+                        <p class="text-[11px] text-slate-400 mt-2">주관 1 · 참여 15 · 수요기업 2개사 실증</p>
                     </div>
 
                     <div class="saas-card p-5">
-                        <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">성과지표 목표</div>
-                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight">총 <span id="kpi-target-count">25</span> <span class="text-sm font-semibold text-slate-500">개</span></div>
-                        <p class="text-[11px] text-slate-400 mt-2" id="kpi-status-count">핵심 산출물 정량 목표 수치</p>
+                        <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">3차년도 성과지표 달성</div>
+                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight"><span id="kpi-achieved-count">-</span> <span class="text-sm font-semibold text-slate-500">/ <span id="kpi-total-count">-</span>개</span></div>
+                        <p class="text-[11px] text-slate-400 mt-2" id="kpi-status-count">기관 제출자료 기준</p>
                     </div>
 
                     <div class="saas-card p-5">
@@ -174,12 +174,21 @@
             <section class="space-y-4">
                 <div class="flex items-center gap-2.5">
                     <h2 class="text-lg font-bold text-slate-900">성과 하이라이트</h2>
-                    <span class="text-xs text-slate-400 font-medium hidden sm:inline">참여기관 주요 성과 · 수상 · 실증사례</span>
+                    <span class="text-xs text-slate-400 font-medium hidden sm:inline">측정 완료 기관 중 무작위 6곳의 대표 성과 · 카드를 누르면 상세 결과물을 볼 수 있습니다</span>
+                    <button type="button" onclick="renderHighlightTiles()" class="ml-auto text-xs font-semibold text-slate-500 hover:text-blue-600 transition-colors flex items-center gap-1.5">
+                        <i class="fas fa-rotate-right text-[11px]"></i>다른 기관 보기
+                    </button>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="highlight-tiles"></div>
 
-                <div class="saas-card p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3" id="highlight-awards"></div>
+                <div class="saas-card p-4">
+                    <div class="flex items-center justify-between px-2.5 pb-2">
+                        <span class="text-xs font-bold text-slate-700">수상 · 연계 성과</span>
+                        <span class="text-[11px] text-slate-400">출처: 2025 연차보고서 (2차년도)</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="highlight-awards"></div>
+                </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="highlight-cases"></div>
             </section>
@@ -257,7 +266,7 @@
                                 <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-blue-600 transition-colors"></i>
                             </div>
                             <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-blue-700 transition-colors">제조 특화 AI 모델 개발</h3>
-                            <p class="text-xs text-slate-500 leading-relaxed mb-3">비전/시계열 이상 예측, 제조 특화 LLM 챗봇 개발 및 탄소 배출 저감 ESG 모델링</p>
+                            <p class="text-xs text-slate-500 leading-relaxed mb-3">비전/시계열 이상 예측, 제조 특화 LLM 챗봇 및 글로벌 ESG 규제 대응 AI 개발</p>
                         </div>
                         <div class="pt-3 border-t border-slate-100 space-y-2">
                             <div class="text-[11px] text-slate-400">MoE, YOLO, LSTM, RAG, 제조 특화 LLM</div>
@@ -294,10 +303,10 @@
                                 <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-blue-600 transition-colors"></i>
                             </div>
                             <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-blue-700 transition-colors">차세대 초고속 통신망</h3>
-                            <p class="text-xs text-slate-500 leading-relaxed mb-3">공장 내 5G 특화망 및 WiFi 7 인프라 구축, NMS 통합 관제망 운영</p>
+                            <p class="text-xs text-slate-500 leading-relaxed mb-3">수요기업 WiFi7 무선망, 수요기업-EBC 광대역 전용회선, NMS 통합관제 구축</p>
                         </div>
                         <div class="pt-3 border-t border-slate-100 space-y-2">
-                            <div class="text-[11px] text-slate-400">5G 특화망, WiFi 7, NMS 관제</div>
+                            <div class="text-[11px] text-slate-400">WiFi7, 광대역 전용회선, NMS 관제</div>
                             <div class="flex flex-wrap gap-1.5">
                                 <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-700">라임씨에스아이</span>
                             </div>
@@ -331,10 +340,10 @@
                                 <i class="fas fa-chevron-right text-xs text-slate-300 group-hover:text-blue-600 transition-colors"></i>
                             </div>
                             <h3 class="text-sm font-bold text-slate-900 mb-1 group-hover:text-blue-700 transition-colors">현장 응용 서비스 및 실증</h3>
-                            <p class="text-xs text-slate-500 leading-relaxed mb-3">QMS, 불량 원인 역추적, IIoT 센싱, 한국어 음성인식 STT/TTS 현장 실증</p>
+                            <p class="text-xs text-slate-500 leading-relaxed mb-3">품질·비전검사, 웨어러블 불량 역추적, IIoT 센싱, 한국어 STT/TTS, AI 도입 큐레이터 현장 실증</p>
                         </div>
                         <div class="pt-3 border-t border-slate-100 space-y-2">
-                            <div class="text-[11px] text-slate-400">sLM QMS, 불량역추적, 음성인식 STT</div>
+                            <div class="text-[11px] text-slate-400">비전검사, 불량역추적, STT/TTS, AI 큐레이터</div>
                             <div class="flex flex-wrap gap-1.5">
                                 <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-700">소르테크</span>
                                 <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-700">디엑스솔루션즈</span>
@@ -372,7 +381,7 @@
                                 <tr>
                                     <th style="width: 15%;">기관명</th>
                                     <th style="width: 12%;">도메인</th>
-                                    <th style="width: 38%;">3차년도 목표 / 역할</th>
+                                    <th style="width: 38%;">역할 / 3차년도 목표</th>
                                     <th style="width: 35%;">주요 성과 지표</th>
                                 </tr>
                             </thead>
@@ -401,21 +410,34 @@
         });
 
         function renderKpiTotalCount() {
-            const el = document.getElementById('kpi-target-count');
-            const statusEl = document.getElementById('kpi-status-count');
-            if (el && typeof companies !== 'undefined') {
-                const realCompanies = companies.filter(c => c.isRealData);
-                const allKpis = realCompanies.flatMap(c => (c.results && c.results.kpis) ? c.results.kpis : []);
-                const totalKpis = allKpis.length;
-                const achievedKpis = allKpis.filter(k => k.status === 'achieved' || k.achievement >= 100).length;
+            const realCompanies = companies.filter(c => c.isRealData);
+            const allKpis = realCompanies.flatMap(c => (c.results && c.results.kpis) ? c.results.kpis : []);
+            const totalKpis = allKpis.length;
+            const achievedKpis = allKpis.filter(isKpiAchieved).length;
+            if (totalKpis === 0) return;
 
-                if (totalKpis > 0) {
-                    animateCounter(el, totalKpis);
-                    if (statusEl) {
-                        statusEl.innerHTML = `달성 <span class="font-bold text-blue-600">${achievedKpis}</span>개 / 전체 <span class="font-bold text-slate-600">${totalKpis}</span>개 지표`;
-                    }
-                }
-            }
+            animateCounter(document.getElementById('kpi-achieved-count'), achievedKpis);
+            document.getElementById('kpi-total-count').textContent = totalKpis;
+            document.getElementById('kpi-status-count').innerHTML =
+                `진행 중 <span class="font-bold text-slate-600">${totalKpis - achievedKpis}</span>개 · ${realCompanies.length}개 기관 제출자료 기준`;
+        }
+
+        // 목표 대비 상태 배지: 달성(100% 초과면 비율 병기) / 진행 중이면 비율 / 측정 전
+        function kpiBadgeHtml(kpi) {
+            const base = 'text-[11px] font-bold px-1.5 py-0.5 rounded shrink-0';
+            if (!isKpiMeasured(kpi)) return `<span class="${base} bg-slate-100 text-slate-400">측정 전</span>`;
+            const rate = Math.round(kpi.achievement || 0);
+            if (isKpiAchieved(kpi)) return `<span class="${base} bg-blue-50 text-blue-600">달성${rate > 100 ? ` ${rate}%` : ''}</span>`;
+            return `<span class="${base} bg-slate-100 text-slate-600">${rate}%</span>`;
+        }
+
+        function kpiTargetLine(kpi) {
+            return `
+                <div class="flex items-center justify-between gap-2 text-[11px]">
+                    <span class="text-slate-400 truncate">${kpi.target ? `목표 ${kpiTarget(kpi)}` : ''}</span>
+                    ${kpiBadgeHtml(kpi)}
+                </div>
+            `;
         }
 
         function animateCounter(element, target, duration = 800) {
@@ -458,22 +480,54 @@
             }).join('');
         }
 
+        const domainIcons = {
+            DATA: 'fas fa-database', AI: 'fas fa-brain', INFRA: 'fas fa-server',
+            NETWORK: 'fas fa-wifi', ORG: 'fas fa-clipboard-check', SERVICE: 'fas fa-industry'
+        };
+
+        // 측정된 지표 중 달성률이 가장 높은 것 (측정값이 없으면 첫 지표)
+        function bestKpi(c) {
+            const kpis = (c.results && c.results.kpis) || [];
+            const measured = kpis.filter(isKpiMeasured);
+            if (measured.length === 0) return kpis[0];
+            return measured.reduce((best, k) => (k.achievement || 0) > (best.achievement || 0) ? k : best);
+        }
+
+        function pickRandom(list, count) {
+            const pool = [...list];
+            for (let i = pool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [pool[i], pool[j]] = [pool[j], pool[i]];
+            }
+            return pool.slice(0, count);
+        }
+
+        function renderHighlightTiles() {
+            // 측정값이 아직 없는 기관(실증 진행 중 등)은 후보에서 제외
+            const candidates = companies.filter(c => { const k = bestKpi(c); return k && isKpiMeasured(k); });
+            const picked = pickRandom(candidates, 6);
+            document.getElementById('highlight-tiles').innerHTML = picked.map(c => {
+                const kpi = bestKpi(c);
+                return `
+                <div class="saas-card p-5 cursor-pointer group flex flex-col justify-between" onclick="openCompany('${c.id}')">
+                    <div class="flex items-start justify-between gap-3 mb-3">
+                        <div class="text-xs font-semibold tracking-wider text-slate-500">${kpi.label}</div>
+                        <i class="${domainIcons[c.type] || 'fas fa-circle'} text-sm text-slate-300 group-hover:text-blue-600 transition-colors"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight mb-3">${kpi.value} <span class="text-sm font-semibold text-slate-500">${kpiUnit(kpi)}</span></div>
+                        ${kpiTargetLine(kpi)}
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 pt-3 mt-3 border-t border-slate-100">${partnerChips([c.id])}</div>
+                </div>
+            `;
+            }).join('');
+        }
+
         function renderHighlights() {
             if (typeof highlights === 'undefined') return;
 
-            document.getElementById('highlight-tiles').innerHTML = highlights.tiles.map(t => `
-                <div class="saas-card p-5 cursor-pointer group flex flex-col justify-between" onclick="openCompany('${t.partners[0]}')">
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="text-xs font-semibold tracking-wider text-slate-500">${t.label}</div>
-                        <i class="${t.icon} text-sm text-slate-300 group-hover:text-blue-600 transition-colors"></i>
-                    </div>
-                    <div>
-                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight">${t.value} <span class="text-sm font-semibold text-slate-500">${t.unit}</span></div>
-                        <p class="text-[11px] text-slate-400 mt-2">${t.sub}</p>
-                    </div>
-                    <div class="flex flex-wrap gap-1.5 pt-3 mt-3 border-t border-slate-100">${partnerChips(t.partners)}</div>
-                </div>
-            `).join('');
+            renderHighlightTiles();
 
             document.getElementById('highlight-awards').innerHTML = highlights.awards.map(a => `
                 <div class="group flex items-start gap-3 p-2.5 rounded-xl hover:bg-blue-50 cursor-pointer transition-colors" onclick="openCompany('${a.partners[0]}')">
@@ -507,7 +561,7 @@
             container.innerHTML = '';
 
             projectMeta.timeline.forEach(t => {
-                const isCurrent = t.year === 3;
+                const isCurrent = !t.done;
                 const yearBadge = isCurrent
                     ? `<span class="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-600 text-white">${t.year}차년도</span>`
                     : `<span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">${t.year}차년도</span>`;
@@ -516,9 +570,10 @@
                 row.className = `flex flex-col md:flex-row md:items-center gap-4 px-3.5 py-2.5 rounded-xl ${isCurrent ? 'bg-blue-50/40 border border-blue-100' : 'bg-slate-50/60'}`;
                 
                 row.innerHTML = `
-                    <div class="w-36 shrink-0 flex items-center gap-2">
+                    <div class="w-48 shrink-0 flex items-center gap-2">
                         ${yearBadge}
                         <span class="text-xs font-semibold text-slate-500">${t.period}</span>
+                        <span class="text-xs font-bold text-slate-800">${t.label}</span>
                     </div>
                     <div class="flex-1 flex flex-wrap gap-1.5">
                         ${t.phases.map(p => `
@@ -528,10 +583,7 @@
                         `).join('')}
                     </div>
                     <div class="w-full md:w-28 shrink-0 text-left md:text-right pt-2.5 md:pt-0 border-t md:border-t-0 border-slate-200/60">
-                        <div class="text-xs font-bold ${isCurrent ? 'text-blue-600' : 'text-[#191F28]'}">진행률 ${t.progress}%</div>
-                        <div class="kpi-bar mt-1.5">
-                            <div class="kpi-bar-inner ${isCurrent ? 'bg-blue-600' : 'bg-[#191F28]'}" style="width: ${t.progress}%"></div>
-                        </div>
+                        <span class="text-xs font-bold ${isCurrent ? 'text-blue-600' : 'text-slate-500'}">${isCurrent ? '진행 중' : '완료'}</span>
                     </div>
                 `;
                 container.appendChild(row);
@@ -554,11 +606,19 @@
             };
 
             companies.forEach(c => {
-                const mainKpi = c.results && c.results.kpis && c.results.kpis.length > 0 ? c.results.kpis[0] : null;
-                const kpiText = !mainKpi ? '-'
-                    : /\d/.test(String(mainKpi.value))
-                        ? `${mainKpi.label}: <strong class="text-slate-900">${mainKpi.value}${kpiUnit(mainKpi)}</strong>`
-                        : `${mainKpi.label}: <strong class="text-slate-900">${mainKpi.value === '-' ? '측정 전' : mainKpi.value}</strong>${mainKpi.target ? ` <span class="text-slate-400">(목표 ${mainKpi.target}${mainKpi.unit || ''})</span>` : ''}`;
+                const kpis = (c.results && c.results.kpis) || [];
+                const mainKpi = kpis[0] || null;
+                const achievedCount = kpis.filter(isKpiAchieved).length;
+                const goalSection = (c.sections || []).find(s => s.label === '3차년도 목표');
+                const goalText = goalSection ? goalSection.title : c.desc;
+                const kpiHtml = !mainKpi ? '-' : `
+                    <div class="truncate text-slate-500 mb-0.5" title="${mainKpi.label}">${mainKpi.label}</div>
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="truncate"><strong class="text-slate-900">${mainKpi.value}${kpiUnit(mainKpi)}</strong>${mainKpi.target ? `<span class="text-slate-400"> / 목표 ${kpiTarget(mainKpi)}</span>` : ''}</span>
+                        ${kpiBadgeHtml(mainKpi)}
+                    </div>
+                `;
+                const countHtml = kpis.length ? `<div class="text-[11px] font-medium text-slate-400 mt-0.5">지표 ${achievedCount}/${kpis.length} 달성</div>` : '';
                 const tagInfo = domainTagMap[c.type] || { label: c.type, cls: 'bg-slate-100 text-slate-600' };
 
                 // 1) Desktop Table Row
@@ -569,16 +629,17 @@
                     tr.innerHTML = `
                         <td class="font-bold text-slate-900">
                             <span>${c.name}</span>
+                            ${countHtml}
                         </td>
                         <td>
                             <span class="text-[10px] font-bold px-2 py-0.5 rounded ${tagInfo.cls}">${tagInfo.label}</span>
                         </td>
                         <td class="text-slate-600">
                             <div class="font-medium text-slate-800">${c.role}</div>
-                            <div class="text-xs text-slate-400 truncate max-w-md">${c.desc}</div>
+                            <div class="text-xs text-slate-400 line-clamp-2 max-w-md" title="${goalText}">${goalText}</div>
                         </td>
-                        <td class="text-xs text-slate-600 whitespace-nowrap overflow-hidden text-ellipsis" style="max-width: 0;" title="${kpiText.replace(/<[^>]+>/g, '')}">
-                            ${kpiText}
+                        <td class="text-xs" style="max-width: 0;">
+                            ${kpiHtml}
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -591,16 +652,18 @@
                     card.onclick = () => showCompanyPopup(c);
                     card.innerHTML = `
                         <div class="flex items-center justify-between">
-                            <span class="font-bold text-slate-900 text-sm">${c.name}</span>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm">${c.name}</span>
+                                ${countHtml}
+                            </div>
                             <span class="text-[10px] font-bold px-2 py-0.5 rounded ${tagInfo.cls}">${tagInfo.label}</span>
                         </div>
                         <div class="text-xs text-slate-600 bg-slate-50/80 p-2.5 rounded-xl border border-slate-100">
                             <div class="font-bold text-slate-800 mb-0.5">${c.role}</div>
-                            <div class="text-[11px] text-slate-500 leading-snug">${c.desc}</div>
+                            <div class="text-[11px] text-slate-500 leading-snug">${goalText}</div>
                         </div>
-                        <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-100">
-                            <span class="text-[11px] text-slate-400 font-medium">주요 지표</span>
-                            <span class="text-xs text-slate-700">${kpiText}</span>
+                        <div class="text-xs pt-2 border-t border-slate-100">
+                            ${kpiHtml}
                         </div>
                     `;
                     mobileCards.appendChild(card);
