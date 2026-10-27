@@ -38,14 +38,14 @@
             background: #FFFFFF;
             border: 1px solid #E2E8F0;
             border-radius: 20px;
-            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .saas-card.cursor-pointer:hover {
             background: #FBFDFF;
             border-color: #3B82F6;
-            box-shadow: 0 0 0 1px #3B82F6, 0 20px 40px -12px rgba(37, 99, 235, 0.35);
-            transform: translateY(-4px);
+            box-shadow: 0 0 0 1px #93B4EE, 0 5px 14px rgba(37, 99, 235, 0.10);
+            transform: translateY(-2px);
         }
 
         /* ── Modern Topbar ── */
@@ -103,7 +103,30 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 10px; }
         ::-webkit-scrollbar-track { background-color: transparent; }
+
+        /* Overview readability; keep popup typography independent. */
+        html { scroll-behavior: smooth; scroll-padding-top: 85px; }
+        .highlight-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+        .highlight-heading-copy { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+        .highlight-controls { display: flex; gap: 8px; margin-left: auto; flex-shrink: 0; }
+        .overview-action { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 8px 11px; font-size: 12px; font-weight: 600; color: #475569; background: #fff; border: 1px solid #CBD5E1; border-radius: 7px; white-space: nowrap; }
+        .overview-action:hover { color: #1D4ED8; border-color: #93B4EE; }
+        .overview-action:focus-visible, .highlight-card:focus-visible { outline: 3px solid #93B4EE; outline-offset: 3px; }
+        .highlight-card { text-align: left; width: 100%; min-width: 0; }
+        .highlight-company { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; font-size: 14px; line-height: 1.5; font-weight: 750; color: #1E293B; }
+        .highlight-domain { color: #64748B; font-size: 11px; font-weight: 500; }
+        .highlight-value { font-size: 25px; font-weight: 800; letter-spacing: -.03em; line-height: 1.4; color: #0F172A; }
+        .highlight-value small { font-size: 12px; font-weight: 500; letter-spacing: 0; color: #64748B; }
+        .highlight-label { font-size: 12px; line-height: 1.65; color: #475569; margin: 5px 0 12px; overflow-wrap: anywhere; }
+        .highlight-target { padding-top: 10px; border-top: 1px solid #E2E8F0; margin-top: auto; }
+        @media (max-width: 640px) {
+            .highlight-controls { width: 100%; margin-left: 0; }
+            .overview-jump { margin-bottom: 12px; align-self: flex-start; }
+            .highlight-value { font-size: 24px; }
+        }
+        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
     </style>
+    <link rel="stylesheet" href="dashboard-readability.css">
 </head>
 <body class="min-h-screen flex flex-col">
 
@@ -115,6 +138,7 @@
                 <span class="text-sm font-bold text-slate-900 tracking-tight">OVERVIEW</span>
                 <span class="text-xs text-slate-400 font-medium hidden sm:inline-block">| 초거대 제조 AI 서비스 개발 및 실증</span>
             </div>
+            <a href="#institution-results" class="overview-action overview-jump">기관별 현황 바로가기 <i class="fas fa-arrow-down" aria-hidden="true"></i></a>
         </div>
     </div>
 
@@ -172,41 +196,50 @@
 
             <!-- 1-1. ACHIEVEMENT HIGHLIGHTS (성과 하이라이트) -->
             <section class="space-y-4">
-                <div class="flex items-center gap-2.5">
-                    <h2 class="text-lg font-bold text-slate-900">성과 하이라이트</h2>
-                    <span class="text-xs text-slate-400 font-medium hidden sm:inline">측정 완료 기관 중 무작위 6곳의 대표 성과 · 카드를 누르면 상세 결과물을 볼 수 있습니다</span>
-                    <button type="button" onclick="renderHighlightTiles()" class="ml-auto text-xs font-semibold text-slate-500 hover:text-blue-600 transition-colors flex items-center gap-1.5">
-                        <i class="fas fa-rotate-right text-[11px]"></i>다른 기관 보기
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="highlight-tiles"></div>
-
-                <div class="saas-card p-4">
-                    <div class="flex items-center justify-between px-2.5 pb-2">
-                        <span class="text-xs font-bold text-slate-700">수상 · 연계 성과</span>
-                        <span class="text-[11px] text-slate-400">출처: 2025 연차보고서 (2차년도)</span>
+                <div class="highlight-heading">
+                    <div class="highlight-heading-copy">
+                        <h2 class="text-lg font-bold text-slate-900">성과 하이라이트</h2>
+                        <span class="text-xs text-slate-600">기관별 지정 대표 지표 · 8개 기관씩 표시 · 카드 선택 시 상세 결과물</span>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="highlight-awards"></div>
+                    <div class="highlight-controls">
+                        <button type="button" onclick="renderHighlightTiles()" class="text-xs font-semibold text-slate-500 hover:text-blue-600 transition-colors flex items-center gap-1.5"><i class="fas fa-rotate-right" aria-hidden="true"></i>다른 기관 보기</button>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="highlight-cases"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="highlight-tiles"></div>
+
+
             </section>
 
 
         </div>
         </div>
 
+        <!-- 실증 및 보고서 수록 성과 -->
+        <section class="band bg-white">
+            <div class="max-w-7xl mx-auto px-6 md:px-10 py-8 space-y-5">
+                <h2 class="text-lg font-bold text-slate-900">현장 실증 · 수상 및 연계 성과</h2>
+                <div class="saas-card p-4">
+                    <div class="px-2.5 pb-2">
+                        <span class="text-xs font-bold text-slate-700">수상 · 연계 성과</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="highlight-awards"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="highlight-cases"></div>
+            </div>
+        </section>
+
         <!-- Split Banner: 사업 추진 체계 -->
         <div class="split-banner grid grid-cols-1 md:grid-cols-2">
             <div class="bg-[#191F28] flex items-center">
-                <div class="w-full max-w-[640px] ml-auto px-6 md:px-10 py-12 md:py-16">
+                <div class="w-full max-w-[640px] ml-auto px-6 md:px-10 py-6 md:py-8">
                     <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3">Roadmap &amp; Domains</div>
                     <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight">사업 추진 체계</h2>
                     <p class="text-sm text-slate-300 mt-3 leading-relaxed">연차별 로드맵과 DAINOS 6대 핵심 도메인으로<br class="hidden md:block"> 참여기관의 역할을 한눈에 확인합니다.</p>
                 </div>
             </div>
-            <div class="split-photo min-h-[200px]"></div>
+            <div class="split-photo min-h-[110px]"></div>
         </div>
 
         <!-- Band B: 로드맵 · 6대 핵심 도메인 -->
@@ -362,14 +395,14 @@
         </div>
 
         <!-- Band C: WBS -->
-        <div class="band band-c pb-16">
+        <div id="institution-results" class="band band-c pb-16">
         <div class="max-w-7xl mx-auto space-y-10 px-6 md:px-10 py-10 md:py-12">
 
             <!-- 4. WBS CONTROL ACCOUNT TABLE (WBS 주요 추진 현황) -->
             <section class="space-y-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-lg font-bold text-slate-900">WBS 주요 추진 현황</h2>
+                        <h2 class="text-lg font-bold text-slate-900">기관별 성과 현황</h2>
                     </div>
                 </div>
 
@@ -398,6 +431,7 @@
 
         </div>
         </div>
+
     </main>
 
     <script src="data.js"></script>
@@ -413,7 +447,7 @@
             const realCompanies = companies.filter(c => c.isRealData);
             const allKpis = realCompanies.flatMap(c => (c.results && c.results.kpis) ? c.results.kpis : []);
             const totalKpis = allKpis.length;
-            const achievedKpis = allKpis.filter(isKpiAchieved).length;
+            const achievedKpis = allKpis.filter(k => isKpiMeasured(k) && isKpiAchieved(k)).length;
             if (totalKpis === 0) return;
 
             animateCounter(document.getElementById('kpi-achieved-count'), achievedKpis);
@@ -425,7 +459,7 @@
         // 목표 대비 상태 배지: 달성(100% 초과면 비율 병기) / 진행 중이면 비율 / 측정 전
         function kpiBadgeHtml(kpi) {
             const base = 'text-[11px] font-bold px-1.5 py-0.5 rounded shrink-0';
-            if (!isKpiMeasured(kpi)) return `<span class="${base} bg-slate-100 text-slate-400">측정 전</span>`;
+            if (!isKpiMeasured(kpi)) return `<span class="${base} bg-slate-100 text-slate-400">${String(kpi.value).includes('진행') ? '실증 중' : '측정 대기'}</span>`;
             const rate = Math.round(kpi.achievement || 0);
             if (isKpiAchieved(kpi)) return `<span class="${base} bg-blue-50 text-blue-600">달성${rate > 100 ? ` ${rate}%` : ''}</span>`;
             return `<span class="${base} bg-slate-100 text-slate-600">${rate}%</span>`;
@@ -480,17 +514,15 @@
             }).join('');
         }
 
-        const domainIcons = {
-            DATA: 'fas fa-database', AI: 'fas fa-brain', INFRA: 'fas fa-server',
-            NETWORK: 'fas fa-wifi', ORG: 'fas fa-clipboard-check', SERVICE: 'fas fa-industry'
+        // 기관별 대표 지표 (results.kpis 순번) — 달성률 최고값이 아니라 기관 역할을 대표하는 지표
+        const representativeKpiIndices = {
+            kyungnam: 3, markbase: 0, amiqu: 0, nestfield: 0, keti: 0,
+            kaist: 0, nextstudio: 0, megazone: 0, limecsi: 0, gntp: 0,
+            ktl: 0, sortech: 3, dxsolutions: 0, sdtech: 0, metaisquare: 0, sysnova: 0
         };
-
-        // 측정된 지표 중 달성률이 가장 높은 것 (측정값이 없으면 첫 지표)
-        function bestKpi(c) {
+        function representativeKpi(c) {
             const kpis = (c.results && c.results.kpis) || [];
-            const measured = kpis.filter(isKpiMeasured);
-            if (measured.length === 0) return kpis[0];
-            return measured.reduce((best, k) => (k.achievement || 0) > (best.achievement || 0) ? k : best);
+            return kpis[representativeKpiIndices[c.id] ?? 0] || kpis[0];
         }
 
         function pickRandom(list, count) {
@@ -502,24 +534,19 @@
             return pool.slice(0, count);
         }
 
+        const highlightDomains = { DATA: '데이터', AI: 'AI 모델', INFRA: '인프라', NETWORK: '통신망', ORG: '사업·기술관리', SERVICE: '현장 서비스' };
         function renderHighlightTiles() {
-            // 측정값이 아직 없는 기관(실증 진행 중 등)은 후보에서 제외
-            const candidates = companies.filter(c => { const k = bestKpi(c); return k && isKpiMeasured(k); });
-            const picked = pickRandom(candidates, 6);
+            const candidates = companies.filter(c => { const k = representativeKpi(c); return c.isRealData && k && isKpiMeasured(k); });
+            const picked = pickRandom(candidates, 8);
             document.getElementById('highlight-tiles').innerHTML = picked.map(c => {
-                const kpi = bestKpi(c);
+                const kpi = representativeKpi(c);
                 return `
-                <div class="saas-card p-5 cursor-pointer group flex flex-col justify-between" onclick="openCompany('${c.id}')">
-                    <div class="flex items-start justify-between gap-3 mb-3">
-                        <div class="text-xs font-semibold tracking-wider text-slate-500">${kpi.label}</div>
-                        <i class="${domainIcons[c.type] || 'fas fa-circle'} text-sm text-slate-300 group-hover:text-blue-600 transition-colors"></i>
-                    </div>
-                    <div>
-                        <div class="text-2xl font-extrabold text-slate-900 tracking-tight mb-3">${kpi.value} <span class="text-sm font-semibold text-slate-500">${kpiUnit(kpi)}</span></div>
-                        ${kpiTargetLine(kpi)}
-                    </div>
-                    <div class="flex flex-wrap gap-1.5 pt-3 mt-3 border-t border-slate-100">${partnerChips([c.id])}</div>
-                </div>
+                <button type="button" class="saas-card highlight-card px-4 py-4 cursor-pointer group flex flex-col" onclick="openCompany('${c.id}')" aria-label="${c.name} 상세 성과 보기">
+                    <span class="highlight-company">${c.name}<span class="highlight-domain">${highlightDomains[c.type] || c.type}</span></span>
+                    <span class="highlight-value">${kpi.value} <small>${kpiUnit(kpi)}</small></span>
+                    <span class="highlight-label">${kpi.label}</span>
+                    <span class="highlight-target w-full">${kpiTargetLine(kpi)}</span>
+                </button>
             `;
             }).join('');
         }
@@ -607,7 +634,7 @@
 
             companies.forEach(c => {
                 const kpis = (c.results && c.results.kpis) || [];
-                const mainKpi = kpis[0] || null;
+                const mainKpi = representativeKpi(c) || null;
                 const achievedCount = kpis.filter(isKpiAchieved).length;
                 const goalSection = (c.sections || []).find(s => s.label === '3차년도 목표');
                 const goalText = goalSection ? goalSection.title : c.desc;

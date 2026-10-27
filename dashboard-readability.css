@@ -1,0 +1,25 @@
+/* Shared page content typography. Popups are outside main and keep their own styles. */
+main .text-xs { font-size: 13px; line-height: 1.65; }
+main .text-\[10px\], main .text-\[11px\] { font-size: 12px; line-height: 1.65; }
+main .text-slate-400 { color: #64748B; }
+main .text-slate-500 { color: #526176; }
+main .node p { font-size: 13px; line-height: 1.75; color: #475569; opacity: 1; }
+main .saas-card, main .layer-band { box-shadow: 0 2px 8px rgba(15, 23, 42, .04); }
+main .saas-card.cursor-pointer:hover, main .node.clickable:hover { box-shadow: 0 0 0 1px #93B4EE, 0 5px 14px rgba(37, 99, 235, .10); transform: translateY(-2px); }
+#highlight-awards .text-xs { font-size: 14px; line-height: 1.75; }
+#highlight-awards .text-\[11px\] { font-size: 13px; line-height: 1.75; }
+#highlight-awards .group { padding: 12px; }
+#highlight-cases p { font-size: 13px; line-height: 1.8; }
+#card-grid .text-\[10px\] { font-size: 12px; }
+#card-grid p { overflow-wrap: anywhere; }
+#card-grid .partner-role { white-space: normal; overflow: visible; font-size: 13px; line-height: 1.7; }
+#card-grid .partner-kpi-label { white-space: normal; overflow: visible; font-size: 12px; line-height: 1.65; }
+#card-grid .partner-kpi-values { align-items: flex-start; flex-wrap: wrap; gap: 6px 12px; }
+#card-grid .partner-kpi-values > span:first-child { font-size: 17px; }
+#chip-bar-header { box-shadow: none; }
+main button:focus-visible, main a:focus-visible { outline: 3px solid #93B4EE; outline-offset: 3px; }
+@media (max-width: 640px) {
+    #highlight-awards .group { padding: 10px 4px; }
+    #card-grid .saas-card { padding: 20px; }
+}
+@media (prefers-reduced-motion: reduce) { main .saas-card, main .node { transition: none; } }
