@@ -289,11 +289,6 @@ function _renderPlaceholderPreview(item) {
             <div class="absolute -bottom-14 -left-14 w-52 h-52 bg-blue-950/40 rounded-full blur-3xl pointer-events-none"></div>
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-slate-800/15 rounded-full blur-2xl pointer-events-none"></div>
 
-            <!-- Glass Icon Box -->
-            <div class="w-16 h-16 rounded-2xl bg-white/[0.06] border border-white/[0.12] backdrop-blur-md flex items-center justify-center text-3xl text-slate-200 mb-3 shadow-lg">
-                <i class="${item.icon || 'fas fa-shield-alt'}"></i>
-            </div>
-
             <!-- Participation Badge -->
             <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-slate-800/80 text-slate-300 border border-slate-700/70 mb-2.5 shadow-2xs">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
