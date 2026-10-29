@@ -78,6 +78,45 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background-color: #CBD5E1; border-radius: 10px; }
         ::-webkit-scrollbar-track { background-color: transparent; }
+
+        /* ── 선택 도메인 안내 줄 (히어로 위로 겹침) ── */
+        .filter-bar { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 16px 20px; background: #fff; border: 1px solid #E2E8F0; border-radius: 16px; box-shadow: 0 12px 32px -14px rgba(15, 23, 42, .22); }
+        .filter-bar strong { font-size: 16px; font-weight: 800; color: #0F172A; }
+        .filter-bar span { font-size: 13px; color: #64748B; }
+
+        /* ── 기관 카드: 글은 줄이고 달성 여부는 아이콘·숫자로 ── */
+        .org-card { display: flex; flex-direction: column; padding: 22px 24px; background: #fff; border: 1px solid #E2E8F0; border-radius: 16px; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+        .org-card:hover { border-color: #93B4EE; box-shadow: 0 10px 24px -16px rgba(37, 99, 235, .45); }
+        .org-card:focus-visible { outline: 3px solid #93B4EE; outline-offset: 3px; }
+        .org-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+        .org-tags { display: flex; align-items: center; gap: 8px; }
+        .org-tag { padding: 1px 7px; border-radius: 4px; border: 1px solid; font-size: 10px; font-weight: 700; letter-spacing: .02em; }
+        .org-lead { font-size: 12px; font-weight: 700; color: #2563EB; }
+        .org-name { margin-top: 10px; font-size: 19px; font-weight: 800; letter-spacing: -.02em; line-height: 1.3; color: #0F172A; transition: color .15s; }
+        .org-card:hover .org-name { color: #1D4ED8; }
+        .org-role { margin-top: 3px; font-size: 13px; line-height: 1.5; color: #64748B; word-break: keep-all; }
+        .org-score { flex-shrink: 0; text-align: right; font-variant-numeric: tabular-nums; }
+        .org-score strong { display: block; font-size: 30px; font-weight: 800; letter-spacing: -.03em; line-height: 1; color: #0F172A; }
+        .org-score strong small { margin-left: 1px; font-size: 16px; font-weight: 700; letter-spacing: 0; color: #94A3B8; }
+        .org-score.is-all strong { color: #2563EB; }
+        .org-score span { display: block; margin-top: 4px; font-size: 11px; font-weight: 600; color: #64748B; }
+        .kpi-list { margin-top: 18px; padding-top: 6px; border-top: 1px solid #F1F5F9; }
+        .kpi-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+        .kpi-row + .kpi-row { border-top: 1px dashed #EEF2F6; }
+        .kpi-icon { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid #CBD5E1; color: transparent; font-size: 7px; }
+        .kpi-icon.is-done { background: #2563EB; border-color: #2563EB; color: #fff; }
+        .kpi-icon.is-pending { border-style: dashed; }
+        .kpi-row-label { flex: 1; min-width: 0; font-size: 13px; line-height: 1.45; color: #334155; word-break: keep-all; overflow-wrap: anywhere; }
+        .kpi-row-value { flex-shrink: 0; max-width: 58%; text-align: right; font-size: 14px; font-weight: 800; color: #0F172A; font-variant-numeric: tabular-nums; }
+        .kpi-row-value > span, .kpi-row-value small { white-space: nowrap; }
+        .kpi-row-value small { display: inline-block; font-size: 12px; font-weight: 500; color: #94A3B8; }
+        .kpi-row-value.is-text { font-size: 12px; font-weight: 600; color: #64748B; }
+        .deliverables { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 16px; }
+        .deliverable-chip { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 4px 10px; border-radius: 9999px; background: #F1F5F9; font-size: 12px; font-weight: 500; color: #475569; }
+        .deliverable-chip i { color: #94A3B8; font-size: 11px; }
+        .deliverable-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .deliverable-chip.is-more { color: #64748B; }
+        @media (max-width: 639px) { .org-card { padding: 20px; } }
     </style>
     <link rel="stylesheet" href="dashboard-readability.css">
 </head>
@@ -106,35 +145,22 @@
     <!-- Photo Hero -->
     <div class="page-hero">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 pt-9 md:pt-11 pb-20 md:pb-24">
-            <div class="inline-flex items-center px-2.5 py-1 rounded-md bg-white/10 border border-white/20 text-white/80 text-[11px] font-bold uppercase tracking-wider mb-4">Partners</div>
             <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight break-keep">함께하는 참여기관</h1>
-            <p class="text-xs md:text-sm font-medium text-slate-300 mt-3 break-keep">주관기관 1곳과 참여기관 15곳이 데이터 · AI · 인프라 · 네트워크 · 사업관리 · 서비스 6대 도메인에서 함께합니다.</p>
+            <p class="text-xs md:text-sm font-medium text-slate-300 mt-3 break-keep">주관기관 1곳과 참여기관 15곳이 데이터, AI, 인프라, 네트워크, 사업관리, 서비스 6대 도메인에서 함께합니다. 카드를 누르면 기관의 상세 자료를 볼 수 있습니다.</p>
         </div>
     </div>
 
     <main class="flex-1 page-body">
         <div class="max-w-7xl mx-auto space-y-6 px-6 md:px-10 pb-20">
 
-            <!-- Sub Header Info Bar (히어로 위로 겹침) -->
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden -mt-14 md:-mt-16 relative">
-                <div class="flex items-center justify-between p-3.5 px-4 cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleChipBar()" id="chip-bar-header">
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-bold text-slate-800" id="chip-bar-title">참여기관 빠른 바로가기</span>
-                        <span id="display-count" class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">16개 기관</span>
-                    </div>
-                    <button class="text-slate-400 hover:text-slate-700 text-xs flex items-center justify-center p-1 rounded hover:bg-slate-100 transition-colors">
-                        <i id="chip-toggle-icon" class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
-                    </button>
-                </div>
-                <div class="p-4 pt-1 border-t border-slate-100 hidden transition-all" id="chip-list-wrapper">
-                    <div class="flex flex-wrap items-center gap-1.5" id="chip-list-bar">
-                        <!-- Quick Jump Chips -->
-                    </div>
-                </div>
+            <!-- 선택한 도메인과 기관 수 (히어로 위로 겹침) -->
+            <div class="filter-bar -mt-14 md:-mt-16 relative">
+                <strong id="filter-title">전체 참여기관</strong>
+                <span id="display-count">16곳</span>
             </div>
 
             <!-- Card Grid -->
-            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             </div>
 
         </div>
@@ -148,23 +174,19 @@
             currentFilter = filterType;
             const grid = document.getElementById('card-grid');
             const countEl = document.getElementById('display-count');
-            const chipBar = document.getElementById('chip-list-bar');
-            const titleEl = document.getElementById('chip-bar-title');
+            const titleEl = document.getElementById('filter-title');
 
-            // Update Header Title according to filter
-            if (titleEl) {
-                const titleMap = {
-                    ALL: '참여기관',
-                    DATA: 'DATA',
-                    AI: 'AI',
-                    INFRA: 'INFRASTRUCTURE',
-                    NETWORK: 'NETWORK',
-                    ORG: 'ORGANIZING',
-                    SERVICE: 'SERVICE'
-                };
-                const label = titleMap[filterType] || filterType;
-                titleEl.innerText = `${label} 빠른 바로가기`;
-            }
+            // 선택한 도메인 이름 (Overview 6대 핵심 도메인과 같은 이름)
+            const titleMap = {
+                ALL: '전체 참여기관',
+                DATA: '제조 데이터 수집 및 교환',
+                AI: '제조 특화 AI 모델 개발',
+                INFRA: '하이브리드 클라우드 & MLOps',
+                NETWORK: '차세대 초고속 통신망',
+                ORG: '사업관리 및 생태계 활성화',
+                SERVICE: '현장 응용 서비스 및 실증'
+            };
+            titleEl.innerText = titleMap[filterType] || filterType;
 
             // Update tab button styles
             document.querySelectorAll('.tab-pill').forEach(btn => {
@@ -178,25 +200,19 @@
 
             // Get filtered list
             let list = getCompaniesByDomain(filterType);
-            countEl.innerText = `${list.length}개 기관`;
-
-            // Quick Chips
-            chipBar.innerHTML = '';
-            list.forEach(c => {
-                const chip = document.createElement('button');
-                chip.className = "text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-[#191F28] hover:text-white hover:border-[#191F28] text-slate-600 border border-slate-200 transition-colors flex items-center gap-1.5";
-                chip.innerHTML = `${c.name}`;
-                chip.onclick = () => scrollToCard(c.id);
-                chipBar.appendChild(chip);
-            });
+            countEl.innerText = `${list.length}곳`;
 
             // Render Card Grid
             grid.innerHTML = '';
             list.forEach(item => {
                 const card = document.createElement('div');
                 card.id = `card-${item.id}`;
-                card.className = `saas-card p-6 flex flex-col justify-between cursor-pointer group`;
+                card.className = 'org-card';
+                card.tabIndex = 0;
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `${item.name} 상세 자료 보기`);
                 card.onclick = () => showCompanyPopup(item);
+                card.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showCompanyPopup(item); } };
 
                 // Domain Tag Colors & Labels
                 const domainTagMap = {
@@ -209,84 +225,62 @@
                 };
                 const tagInfo = domainTagMap[item.type] || { label: item.type, cls: 'bg-slate-100 text-slate-700 border-slate-200' };
 
-                // First KPI value
-                const primaryKpi = item.results && item.results.kpis ? item.results.kpis[0] : null;
+                const kpis = (item.results && item.results.kpis) || [];
+                const deliverables = (item.results && item.results.deliverables) || [];
+                const achievedCount = kpis.filter(k => isKpiMeasured(k) && isKpiAchieved(k)).length;
 
                 card.innerHTML = `
-                    <div>
-                        <!-- Header Badges -->
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${tagInfo.cls}">${tagInfo.label}</span>
-                            <span class="text-[10px] font-semibold text-slate-400">${item.category || '참여'}</span>
-                        </div>
-
-                        <!-- Company Name & Role -->
-                        <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug mb-0.5">${item.name}</h3>
-                        <p class="partner-role text-xs font-semibold text-slate-400 mb-3">${item.role}</p>
-
-                        <!-- Description -->
-                        <p class="text-xs text-slate-600 leading-relaxed line-clamp-3 mb-4 bg-slate-50/70 p-3 rounded-xl border border-slate-100">
-                            ${item.desc}
-                        </p>
-
-                        <!-- Key KPI Preview -->
-                        ${primaryKpi ? `
-                            <div class="mb-4 p-3 rounded-xl bg-white border border-slate-200/80">
-                                <div class="partner-kpi-label text-[10px] font-medium text-slate-400 mb-1">${primaryKpi.label}</div>
-                                <div class="partner-kpi-values flex items-baseline justify-between">
-                                    <span class="text-sm font-extrabold text-slate-900">${primaryKpi.value} <span class="text-[10px] font-normal text-slate-500">${kpiUnit(primaryKpi)}</span></span>
-                                    ${primaryKpi.target ? `<span class="text-[10px] font-medium text-slate-400">목표: ${primaryKpi.target}${primaryKpi.unit||''}</span>` : ''}
-                                </div>
+                    <div class="org-head">
+                        <div class="min-w-0">
+                            <div class="org-tags">
+                                <span class="org-tag ${tagInfo.cls}">${tagInfo.label}</span>
+                                ${item.category === '주관' ? '<span class="org-lead">주관기관</span>' : ''}
                             </div>
-                        ` : ''}
+                            <h3 class="org-name">${item.name}</h3>
+                            <p class="org-role">${item.role}</p>
+                        </div>
+                        ${kpis.length ? `
+                        <div class="org-score${achievedCount === kpis.length ? ' is-all' : ''}">
+                            <strong>${achievedCount}<small>/${kpis.length}</small></strong>
+                            <span>지표 달성</span>
+                        </div>` : ''}
                     </div>
 
-                    <!-- Footer -->
-                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-slate-400">산출물 ${item.results ? item.results.deliverables.length : 0}건</span>
-                        <div class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 group-hover:bg-slate-900 group-hover:text-white flex items-center justify-center transition-all">
-                            <i class="fas fa-arrow-right text-[10px]"></i>
-                        </div>
-                    </div>
+                    ${kpis.length ? `<div class="kpi-list">${kpis.map(kpiRowHtml).join('')}</div>` : ''}
+
+                    ${deliverables.length ? `
+                    <div class="deliverables" title="산출물 ${deliverables.length}건">
+                        ${deliverables.slice(0, 2).map(d => `<span class="deliverable-chip"><i class="fa-regular fa-file-lines" aria-hidden="true"></i><span>${d}</span></span>`).join('')}
+                        ${deliverables.length > 2 ? `<span class="deliverable-chip is-more">외 ${deliverables.length - 2}건</span>` : ''}
+                    </div>` : ''}
                 `;
 
                 grid.appendChild(card);
             });
         }
 
-        function scrollToCard(id) {
-            const card = document.getElementById(`card-${id}`);
-            if (card) {
-                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                card.classList.add('ring-2', 'ring-blue-600');
-                setTimeout(() => card.classList.remove('ring-2', 'ring-blue-600'), 2000);
-            }
-        }
-
-        function toggleChipBar() {
-            const wrapper = document.getElementById('chip-list-wrapper');
-            const icon = document.getElementById('chip-toggle-icon');
-            if (!wrapper) return;
-
-            const isHidden = wrapper.classList.contains('hidden');
-            if (isHidden) {
-                wrapper.classList.remove('hidden');
-                if (icon) icon.classList.add('rotate-180');
-            } else {
-                wrapper.classList.add('hidden');
-                if (icon) icon.classList.remove('rotate-180');
-            }
+        // 지표 한 줄: 달성 아이콘, 지표명, "실적 / 목표"
+        function kpiRowHtml(kpi) {
+            const measured = isKpiMeasured(kpi);
+            const done = measured && isKpiAchieved(kpi);
+            const iconHtml = `<span class="kpi-icon${done ? ' is-done' : measured ? '' : ' is-pending'}" aria-label="${done ? '달성' : measured ? '진행 중' : '측정 전'}">${done ? '<i class="fas fa-check"></i>' : ''}</span>`;
+            const valueHtml = measured
+                ? `<span>${kpi.value}${kpiUnit(kpi)}</span>${kpi.target ? ` <small>/ ${kpiTarget(kpi)}</small>` : ''}`
+                : kpi.value;
+            const rateText = measured && kpi.achievement != null ? ` (달성률 ${Math.round(kpi.achievement)}%)` : '';
+            return `
+                <div class="kpi-row" title="${kpi.label}${rateText}">
+                    ${iconHtml}
+                    <span class="kpi-row-label">${kpi.label}</span>
+                    <span class="kpi-row-value${measured ? '' : ' is-text'}">${valueHtml}</span>
+                </div>
+            `;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const initialType = urlParams.get('type') || 'ALL';
             filterCards(initialType);
-
-            // PC 화면(640px 이상)일 때는 기본으로 펼쳐짐
-            if (window.innerWidth >= 640) {
-                toggleChipBar();
-            }
         });
     </script>
 </body>
