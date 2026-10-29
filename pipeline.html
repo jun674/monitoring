@@ -132,9 +132,8 @@
     <!-- Photo Hero -->
     <div class="page-hero">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 pt-9 md:pt-11 pb-9 md:pb-11">
-            <div class="inline-flex items-center px-2.5 py-1 rounded-md bg-white/10 border border-white/20 text-white/80 text-[11px] font-bold uppercase tracking-wider mb-4">Pipeline</div>
             <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight break-keep">EBC 중심 기관 간 연계 구조</h1>
-            <p class="text-xs md:text-sm font-medium text-slate-300 mt-3 break-keep">수요기업 현장 데이터가 수집 · 전송 · 표준화 · AI 분석을 거쳐 현장 서비스로 돌아오는 흐름입니다. 기관명을 누르면 상세 성과를 볼 수 있습니다.</p>
+            <p class="text-xs md:text-sm font-medium text-slate-300 mt-3 break-keep">수요기업 현장 데이터가 수집, 전송, 표준화, AI 분석을 거쳐 현장 서비스로 돌아오는 흐름입니다. 기관명을 누르면 상세 성과를 볼 수 있습니다.</p>
         </div>
     </div>
 
@@ -151,13 +150,13 @@
     <script src="data.js"></script>
     <script>
         const stageMeta = [
-            { id: 0, tab: '00. Field',    title: '수요기업 현장',   sub: 'Field Sites' },
-            { id: 1, tab: '01. Data',     title: '데이터 수집',     sub: 'Data Collection · OT / IT 데이터 수집' },
-            { id: 2, tab: '02. Transfer', title: '데이터 전송',     sub: 'Transfer · 초고속 특화망' },
-            { id: 3, tab: '03. Platform', title: 'Platform & AAS', sub: 'EBC 통합 운영환경 · 국제 표준화', hub: true },
-            { id: 4, tab: '04. AI',       title: 'AI 분석',         sub: 'AI Analysis · 제조 특화 AI 모델링' },
-            { id: 5, tab: '05. App',      title: '응용 서비스',     sub: 'Application · 현장 응용 서비스 실증' },
-            { id: 6, tab: '06. Mgmt',     title: '전 과정 관리 · 품질 검증', sub: 'Management' }
+            { id: 0, tab: '00 현장',     title: '수요기업 현장',   sub: '' },
+            { id: 1, tab: '01 수집',     title: '데이터 수집',     sub: 'OT/IT 데이터 수집' },
+            { id: 2, tab: '02 전송',     title: '데이터 전송',     sub: '초고속 특화망' },
+            { id: 3, tab: '03 플랫폼',   title: '플랫폼 & AAS',    sub: 'EBC 통합 운영환경과 국제 표준화', hub: true },
+            { id: 4, tab: '04 AI 분석',  title: 'AI 분석',         sub: '제조 특화 AI 모델링' },
+            { id: 5, tab: '05 응용 서비스', title: '응용 서비스',   sub: '현장 응용 서비스 실증' },
+            { id: 6, tab: '06 관리·검증', title: '전 과정 관리와 품질 검증', sub: '' }
         ];
 
         function nodeHtml(node) {
@@ -216,7 +215,7 @@
                             </span>
                             <div>
                                 <h2 class="text-sm font-bold">${stage.title}</h2>
-                                <p class="text-[11px] text-slate-500 font-medium">${stage.sub}</p>
+                                ${stage.sub ? `<p class="text-[11px] text-slate-500 font-medium">${stage.sub}</p>` : ''}
                             </div>
                             ${stage.hub ? '<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 border border-blue-100">HUB</span>' : ''}
                         </div>
